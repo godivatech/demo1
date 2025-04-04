@@ -3,11 +3,101 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   * {
     @apply border-border;
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
+  }
+  
+  /* Global transitions for clickable elements */
+  a, button, input, select, textarea, .transition-default {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  /* Smooth revealing effect for images */
+  img {
+    @apply transition-opacity duration-500;
+  }
+  
+  /* Smooth hover effects */
+  .hover-scale {
+    @apply transition-transform duration-300;
+  }
+  
+  .hover-scale:hover {
+    @apply transform scale-105;
+  }
+  
+  /* Soft pulse animation for CTAs */
+  .pulse-soft {
+    animation: pulse-animation 2s infinite ease-in-out;
+  }
+  
+  @keyframes pulse-animation {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Fade-in animation for page content */
+  .fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Slide-in animation for horizontal elements */
+  .slide-in-left {
+    animation: slide-in-left 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes slide-in-left {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .slide-in-right {
+    animation: slide-in-right 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 }

@@ -1,5 +1,6 @@
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
+import { AnimatePresence, motion } from "framer-motion";
 import HomePage from "./pages/HomePage";
 import NotFound from "./pages/not-found";
 import ServicesPage from "./pages/ServicesPage";
@@ -10,21 +11,69 @@ import ContactPage from "./pages/ContactPage";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import WhatsappButton from "./components/WhatsappButton";
+import { pageTransition } from "./utils/animations";
 
 function App() {
+  const [location] = useLocation();
+
+  // Create a PageWrapper component for animations
+  const PageWrapper = ({ children }) => (
+    <motion.div
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageTransition}
+      className="w-full"
+    >
+      {children}
+    </motion.div>
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/services" component={ServicesPage} />
-          <Route path="/products" component={ProductsPage} />
-          <Route path="/products/:id" component={ProductDetailPage} />
-          <Route path="/about" component={AboutPage} />
-          <Route path="/contact" component={ContactPage} />
-          <Route component={NotFound} />
-        </Switch>
+        <AnimatePresence mode="wait">
+          <Switch key={location} location={location}>
+            <Route path="/">
+              <PageWrapper>
+                <HomePage />
+              </PageWrapper>
+            </Route>
+            <Route path="/services">
+              <PageWrapper>
+                <ServicesPage />
+              </PageWrapper>
+            </Route>
+            <Route path="/products">
+              <PageWrapper>
+                <ProductsPage />
+              </PageWrapper>
+            </Route>
+            <Route path="/products/:id">
+              {(params) => (
+                <PageWrapper>
+                  <ProductDetailPage params={params} />
+                </PageWrapper>
+              )}
+            </Route>
+            <Route path="/about">
+              <PageWrapper>
+                <AboutPage />
+              </PageWrapper>
+            </Route>
+            <Route path="/contact">
+              <PageWrapper>
+                <ContactPage />
+              </PageWrapper>
+            </Route>
+            <Route>
+              <PageWrapper>
+                <NotFound />
+              </PageWrapper>
+            </Route>
+          </Switch>
+        </AnimatePresence>
       </main>
       <Footer />
       <WhatsappButton />
