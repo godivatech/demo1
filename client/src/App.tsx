@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import NotFound from "./pages/not-found";
 import ServicesPage from "./pages/ServicesPage";
 import ProductsPage from "./pages/ProductsPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import Header from "./components/layout/Header";
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" component={HomePage} />
           <Route path="/services" component={ServicesPage} />
           <Route path="/products" component={ProductsPage} />
+          <Route path="/products/:id" component={ProductDetailPage} />
           <Route path="/about" component={AboutPage} />
           <Route path="/contact" component={ContactPage} />
           <Route component={NotFound} />

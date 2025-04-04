@@ -103,7 +103,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section className="py-16">
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <div className="inline-block px-4 py-1 bg-primary bg-opacity-10 rounded-full mb-3">
@@ -115,33 +115,127 @@ const AboutPage = () => {
             </p>
           </div>
           
-          <div className="flex flex-wrap justify-center">
-            <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-4 mb-8">
-              <div className="bg-white rounded-xl overflow-hidden shadow-lg">
-                <div className="h-80 relative">
-                  <div className="w-full h-full bg-gray-300"></div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-white font-montserrat font-bold text-xl">{CONTACT.director}</h3>
-                    <p className="text-gray-200">{CONTACT.title}</p>
+          <div className="relative max-w-5xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-12">
+                <div className="col-span-1 md:col-span-5 bg-primary p-8 md:p-10 flex flex-col justify-center relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mt-20 -mr-20"></div>
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full -mb-20 -ml-20"></div>
+                  
+                  <div className="relative z-10">
+                    <div className="w-32 h-32 bg-white/20 mb-8 rounded-full mx-auto md:mx-0 relative overflow-hidden backdrop-blur-sm border-4 border-white/30">
+                      <div className="absolute inset-0 bg-primary-800"></div>
+                      <div className="absolute bottom-0 left-0 right-0 h-10 bg-white/20 backdrop-blur-sm"></div>
+                      <div className="absolute inset-0 flex items-center justify-center text-white">
+                        <i className="fas fa-user-tie text-4xl"></i>
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-white font-montserrat font-bold text-2xl mb-2 text-center md:text-left">{CONTACT.director}</h3>
+                    <p className="text-white/80 font-medium text-lg mb-4 text-center md:text-left">{CONTACT.title}</p>
+                    
+                    <div className="w-20 h-1 bg-white/50 mb-6 mx-auto md:mx-0"></div>
+                    
+                    <p className="text-white/80 mb-8 text-center md:text-left leading-relaxed">
+                      Civil engineering expert with extensive experience in building repair and waterproofing solutions. Leader of OM Vinayaga Associates since its inception.
+                    </p>
+                    
+                    <div className="flex space-x-4 justify-center md:justify-start">
+                      <a href={`https://www.facebook.com/${CONTACT.social.facebook}`} className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                        <i className="fab fa-facebook-f"></i>
+                      </a>
+                      <a href={`https://twitter.com/${CONTACT.social.twitter}`} className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                        <i className="fab fa-twitter"></i>
+                      </a>
+                      <a href={`https://www.linkedin.com/in/${CONTACT.director.toLowerCase().replace(/\s+/g, '-')}`} className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                        <i className="fab fa-linkedin-in"></i>
+                      </a>
+                    </div>
                   </div>
                 </div>
-                <div className="p-5">
-                  <p className="text-gray-600 mb-4">
-                    Civil engineering expert with extensive experience in building repair and waterproofing solutions. Leader of OM Vinayaga Associates since its inception.
-                  </p>
-                  <div className="flex space-x-3">
-                    <a href="#" className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                      <i className="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                      <i className="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                      <i className="fab fa-linkedin-in"></i>
-                    </a>
+                
+                <div className="col-span-1 md:col-span-7 p-8 md:p-10">
+                  <h3 className="font-montserrat font-bold text-xl text-primary mb-6">Leadership & Expertise</h3>
+                  
+                  <div className="space-y-8">
+                    <div className="flex">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-4 flex-shrink-0">
+                        <i className="fas fa-award"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-montserrat font-semibold text-gray-800 mb-2">Professional Qualifications</h4>
+                        <p className="text-gray-600">
+                          Advanced degrees in Civil Engineering with specializations in structural design and waterproofing technologies. Certified Building Doctor franchise owner with continuous training in the latest industry innovations.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-4 flex-shrink-0">
+                        <i className="fas fa-history"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-montserrat font-semibold text-gray-800 mb-2">Industry Experience</h4>
+                        <p className="text-gray-600">
+                          Over 15 years of hands-on experience in the construction and building repair industry across various climatic conditions and building types. Successfully led over 1000+ projects throughout Tamil Nadu.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mr-4 flex-shrink-0">
+                        <i className="fas fa-users"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-montserrat font-semibold text-gray-800 mb-2">Team Leadership</h4>
+                        <p className="text-gray-600">
+                          Leads a team of 25+ skilled technicians, consultants, and customer service professionals dedicated to providing the highest quality building maintenance solutions with personalized service.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-8 pt-8 border-t border-gray-100">
+                    <Link 
+                      href="/contact"
+                      className="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                    >
+                      <i className="fas fa-envelope mr-2"></i> Get in Touch
+                    </Link>
                   </div>
                 </div>
+              </div>
+            </div>
+            
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                  <i className="fas fa-tools text-2xl"></i>
+                </div>
+                <h3 className="font-montserrat font-semibold text-xl mb-2">Technical Specialists</h3>
+                <p className="text-gray-600">
+                  Our team of technical specialists brings extensive knowledge in waterproofing, structural repairs, and building diagnostics.
+                </p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                  <i className="fas fa-drafting-compass text-2xl"></i>
+                </div>
+                <h3 className="font-montserrat font-semibold text-xl mb-2">Repair Consultants</h3>
+                <p className="text-gray-600">
+                  Experienced consultants who assess building conditions and develop customized solutions for long-lasting results.
+                </p>
+              </div>
+              
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                  <i className="fas fa-headset text-2xl"></i>
+                </div>
+                <h3 className="font-montserrat font-semibold text-xl mb-2">Customer Support</h3>
+                <p className="text-gray-600">
+                  Dedicated support staff ensuring excellent communication and service throughout your project lifecycle.
+                </p>
               </div>
             </div>
           </div>
@@ -156,10 +250,11 @@ const AboutPage = () => {
               Being a part of the Building Doctor network enables us to bring the latest technologies and proven solutions to Madurai. We combine the national expertise of Building Doctor with our local understanding to provide superior services.
             </p>
             <div className="aspect-video w-full mb-8 bg-gray-200 rounded-xl"></div>
-            <Link href="/contact">
-              <a className="inline-block bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium transition">
-                Contact Us Today
-              </a>
+            <Link 
+              href="/contact"
+              className="inline-block bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium transition"
+            >
+              Contact Us Today
             </Link>
           </div>
         </div>

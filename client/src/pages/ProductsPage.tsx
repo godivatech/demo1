@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "wouter";
 import { PRODUCT_CATEGORIES, FEATURED_PRODUCTS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Product, ProductCategory } from "@/types";
@@ -186,12 +187,11 @@ const ProductsPage = () => {
                           <p className="text-sm text-gray-600 mb-3">{product.description}</p>
                           <div className="flex justify-between items-center">
                             <span className="font-medium text-primary">₹{product.price.toLocaleString('en-IN')}</span>
-                            <a 
-                              href={`#product-${product.id}`}
-                              className="bg-primary hover:bg-primary/90 text-white px-3 py-1 rounded text-sm transition"
-                            >
-                              View Details
-                            </a>
+                            <Link href={`/products/${product.id}`}>
+                              <a className="bg-primary hover:bg-primary/90 text-white px-3 py-1 rounded text-sm transition">
+                                View Details
+                              </a>
+                            </Link>
                           </div>
                         </div>
                       </div>

@@ -19,13 +19,13 @@ const Footer = () => {
             </div>
             <p className="text-gray-300 mb-6">{COMPANY_DESCRIPTION}</p>
             <div className="flex space-x-4">
-              <a href={`https://www.facebook.com/${CONTACT.social.facebook}`} className="text-gray-300 hover:text-white transition" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+              <a href={`https://www.facebook.com/${CONTACT.social.facebook}`} className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/80 transition" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-facebook-f"></i>
               </a>
-              <a href={`https://twitter.com/${CONTACT.social.twitter}`} className="text-gray-300 hover:text-white transition" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+              <a href={`https://twitter.com/${CONTACT.social.twitter}`} className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/80 transition" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-twitter"></i>
               </a>
-              <a href={`https://www.instagram.com/${CONTACT.social.instagram}`} className="text-gray-300 hover:text-white transition" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+              <a href={`https://www.instagram.com/${CONTACT.social.instagram}`} className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/80 transition" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                 <i className="fab fa-instagram"></i>
               </a>
             </div>
@@ -36,28 +36,28 @@ const Footer = () => {
             <h4 className="font-montserrat font-semibold text-lg mb-6">Quick Links</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/">
-                  <a className="text-gray-300 hover:text-primary transition">Home</a>
+                <Link href="/" className="text-gray-300 hover:text-primary transition">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/services">
-                  <a className="text-gray-300 hover:text-primary transition">Services</a>
+                <Link href="/services" className="text-gray-300 hover:text-primary transition">
+                  Services
                 </Link>
               </li>
               <li>
-                <Link href="/products">
-                  <a className="text-gray-300 hover:text-primary transition">Products</a>
+                <Link href="/products" className="text-gray-300 hover:text-primary transition">
+                  Products
                 </Link>
               </li>
               <li>
-                <Link href="/about">
-                  <a className="text-gray-300 hover:text-primary transition">About Us</a>
+                <Link href="/about" className="text-gray-300 hover:text-primary transition">
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact">
-                  <a className="text-gray-300 hover:text-primary transition">Contact Us</a>
+                <Link href="/contact" className="text-gray-300 hover:text-primary transition">
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -69,8 +69,8 @@ const Footer = () => {
             <ul className="space-y-3">
               {SERVICES.map((service) => (
                 <li key={service.id}>
-                  <Link href={`/services#${service.slug}`}>
-                    <a className="text-gray-300 hover:text-primary transition">{service.title}</a>
+                  <Link href={`/services#${service.slug}`} className="text-gray-300 hover:text-primary transition">
+                    {service.title}
                   </Link>
                 </li>
               ))}
@@ -82,19 +82,25 @@ const Footer = () => {
             <h4 className="font-montserrat font-semibold text-lg mb-6">Contact Us</h4>
             <ul className="space-y-4">
               <li className="flex items-start">
-                <i className="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white mr-3 flex-shrink-0">
+                  <i className="fas fa-map-marker-alt"></i>
+                </div>
                 <span className="text-gray-300">{CONTACT.address}</span>
               </li>
               {CONTACT.phone.map((phone, index) => (
                 <li key={index} className="flex items-center">
-                  <i className="fas fa-phone-alt mr-3 text-primary"></i>
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white mr-3 flex-shrink-0">
+                    <i className="fas fa-phone-alt"></i>
+                  </div>
                   <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-gray-300 hover:text-white">
                     {phone}
                   </a>
                 </li>
               ))}
               <li className="flex items-center">
-                <i className="fas fa-envelope mr-3 text-primary"></i>
+                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white mr-3 flex-shrink-0">
+                  <i className="fas fa-envelope"></i>
+                </div>
                 <a href={`mailto:${CONTACT.email}`} className="text-gray-300 hover:text-white">
                   {CONTACT.email}
                 </a>
@@ -108,14 +114,14 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row md:justify-between items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">&copy; {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.</p>
           <div className="flex space-x-6">
-            <Link href="/privacy-policy">
-              <a className="text-gray-400 hover:text-gray-300 text-sm">Privacy Policy</a>
+            <Link href="/privacy-policy" className="text-gray-400 hover:text-gray-300 text-sm">
+              Privacy Policy
             </Link>
-            <Link href="/terms-of-service">
-              <a className="text-gray-400 hover:text-gray-300 text-sm">Terms of Service</a>
+            <Link href="/terms-of-service" className="text-gray-400 hover:text-gray-300 text-sm">
+              Terms of Service
             </Link>
-            <Link href="/sitemap">
-              <a className="text-gray-400 hover:text-gray-300 text-sm">Sitemap</a>
+            <Link href="/sitemap" className="text-gray-400 hover:text-gray-300 text-sm">
+              Sitemap
             </Link>
           </div>
         </div>

@@ -79,29 +79,95 @@ const About = () => {
             <p className="text-gray-600 max-w-2xl mx-auto">The experienced professionals behind OM Vinayaga Associates.</p>
           </div>
           
-          <div className="flex flex-wrap justify-center">
-            <div className="w-full sm:w-1/2 md:w-1/3 px-4 mb-8">
-              <div className="bg-white rounded-xl overflow-hidden shadow-lg">
-                <div className="h-64 relative">
-                  <div className="w-full h-full bg-gray-400"></div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-white font-montserrat font-bold text-xl">{CONTACT.director}</h3>
-                    <p className="text-gray-200">{CONTACT.title}</p>
+          <div className="relative">
+            <div className="bg-primary/5 absolute -inset-4 rounded-3xl -z-10"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8">
+              <div className="col-span-1 md:col-span-1">
+                <div className="relative bg-white shadow-xl rounded-xl overflow-hidden h-full transform hover:-translate-y-2 transition-all duration-300">
+                  <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full"></div>
+                  <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/20 rounded-full"></div>
+                  
+                  <div className="relative z-10 p-6">
+                    <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-6 relative overflow-hidden border-4 border-white shadow-md">
+                      <div className="absolute inset-0 bg-gray-300"></div>
+                      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-primary"></div>
+                    </div>
+                    
+                    <div className="text-center mb-6">
+                      <h3 className="font-montserrat font-bold text-xl text-gray-800">{CONTACT.director}</h3>
+                      <p className="text-primary font-medium text-sm uppercase tracking-wider mb-2">{CONTACT.title}</p>
+                      <div className="w-12 h-1 bg-primary mx-auto mb-4"></div>
+                      <p className="text-gray-600 text-sm">Civil engineering expert with over 10 years of experience in building repair and waterproofing solutions. Leads our technical team with a vision for excellence and innovation.</p>
+                    </div>
+                    
+                    <div className="flex justify-center space-x-3">
+                      <a href={`https://www.facebook.com/${CONTACT.social.facebook}`} className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition">
+                        <i className="fab fa-facebook-f"></i>
+                      </a>
+                      <a href={`https://twitter.com/${CONTACT.social.twitter}`} className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition">
+                        <i className="fab fa-twitter"></i>
+                      </a>
+                      <a href={`https://www.linkedin.com/in/${CONTACT.director.toLowerCase().replace(/\s+/g, '-')}`} className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition">
+                        <i className="fab fa-linkedin-in"></i>
+                      </a>
+                    </div>
                   </div>
                 </div>
-                <div className="p-5">
-                  <p className="text-gray-600 mb-4">Civil engineering expert with extensive experience in building repair and waterproofing solutions.</p>
-                  <div className="flex space-x-3">
-                    <a href={`https://www.facebook.com/${CONTACT.social.facebook}`} className="w-8 h-8 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                      <i className="fab fa-facebook-f"></i>
-                    </a>
-                    <a href={`https://twitter.com/${CONTACT.social.twitter}`} className="w-8 h-8 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                      <i className="fab fa-twitter"></i>
-                    </a>
-                    <a href={`https://www.linkedin.com/in/${CONTACT.director.toLowerCase().replace(/\s+/g, '-')}`} className="w-8 h-8 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                      <i className="fab fa-linkedin-in"></i>
-                    </a>
+              </div>
+              
+              <div className="col-span-1 md:col-span-2">
+                <div className="bg-white shadow-xl rounded-xl overflow-hidden h-full p-8">
+                  <h3 className="font-montserrat font-bold text-xl text-primary mb-4">Our Expert Team</h3>
+                  <p className="text-gray-600 mb-6">
+                    Behind our success is a team of dedicated professionals who are experts in their respective domains. Our team includes:
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex items-start">
+                      <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white mr-4 flex-shrink-0">
+                        <i className="fas fa-hard-hat"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-montserrat font-semibold text-gray-800 mb-1">Technical Consultants</h4>
+                        <p className="text-gray-600 text-sm">Experienced civil engineers providing in-depth analysis and solutions for complex building problems.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white mr-4 flex-shrink-0">
+                        <i className="fas fa-tools"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-montserrat font-semibold text-gray-800 mb-1">Application Specialists</h4>
+                        <p className="text-gray-600 text-sm">Skilled professionals trained in the correct application of our specialized products.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white mr-4 flex-shrink-0">
+                        <i className="fas fa-user-tie"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-montserrat font-semibold text-gray-800 mb-1">Project Managers</h4>
+                        <p className="text-gray-600 text-sm">Dedicated professionals ensuring timely completion and quality control of all projects.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white mr-4 flex-shrink-0">
+                        <i className="fas fa-headset"></i>
+                      </div>
+                      <div>
+                        <h4 className="font-montserrat font-semibold text-gray-800 mb-1">Customer Support</h4>
+                        <p className="text-gray-600 text-sm">Responsive team providing ongoing support and guidance for all your building maintenance needs.</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-6 border-t border-gray-100">
+                    <p className="text-gray-600 text-sm">
+                      Together, we bring a combined experience of over 50 years in the building repair and maintenance industry, dedicated to delivering excellence on every project.
+                    </p>
                   </div>
                 </div>
               </div>
