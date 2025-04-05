@@ -1,0 +1,74 @@
+ .\start-dev.bat       
+Starting Building Doctor Website (Windows Compatibility Mode)...
+
+This batch file will attempt to start the application using Node.js
+
+Starting Building Doctor Website (Windows Compatibility Mode)...
+Using Node.js version: v18.18.1
+✓ cross-env is installed
+✓ Windows-compatible Vite config found
+Setting up Windows-compatible Vite config...
+
+Starting server...
+> npx cross-env NODE_NO_WARNINGS=1 tsx server/index.ts
+node:internal/errors:496
+    ErrorCaptureStackTrace(err);
+    ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "paths[0]" argument must be of type string. Received undefined
+    at __node_internal_captureLargerStackTrace (node:internal/errors:496:5)
+    at new NodeError (node:internal/errors:405:5)
+    at validateString (node:internal/validators:162:11)
+    at Object.resolve (node:path:167:9)
+    at <anonymous> (c:\Users\User\Desktop\BuildingDoctorPro\vite.config.ts:23:17)
+    at ModuleJob.run (node:internal/modules/esm/module_job:194:25) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v18.18.1
+
+❌ Error starting the application: Command failed: npx cross-env NODE_NO_WARNINGS=1 tsx server/index.ts
+
+Troubleshooting tips:
+1. Make sure you're using Node.js v18 or newer
+2. Try moving this project to a directory path without spaces
+3. Try running: npm install, then try again
+4. Consider upgrading to Node.js v20 for better compatibility
+
+Restoring original Vite configuration...
+0 was unexpected at this time.
+PS C:\Users\User\Desktop\BuildingDoctorPro> node start-windows.cjs
+Starting Building Doctor Website (Windows Compatibility Mode)...
+Using Node.js version: v18.18.1
+✓ cross-env is installed
+✓ Windows-compatible Vite config found
+Backing up original Vite config...
+Setting up Windows-compatible Vite config...
+
+Starting server...
+> npx cross-env NODE_NO_WARNINGS=1 tsx server/index.ts
+node:internal/errors:496
+    ErrorCaptureStackTrace(err);
+    ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "paths[0]" argument must be of type string. Received undefined
+    at __node_internal_captureLargerStackTrace (node:internal/errors:496:5)
+    at new NodeError (node:internal/errors:405:5)
+    at validateString (node:internal/validators:162:11)
+    at Object.resolve (node:path:167:9)
+    at <anonymous> (c:\Users\User\Desktop\BuildingDoctorPro\vite.config.ts:23:17)
+    at ModuleJob.run (node:internal/modules/esm/module_job:194:25) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v18.18.1
+
+❌ Error starting the application: Command failed: npx cross-env NODE_NO_WARNINGS=1 tsx server/index.ts
+
+Troubleshooting tips:
+1. Make sure you're using Node.js v18 or newer
+2. Try moving this project to a directory path without spaces
+3. Try running: npm install, then try again
+4. Consider upgrading to Node.js v20 for better compatibility
+
+Restoring original Vite configuration...

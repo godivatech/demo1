@@ -1,0 +1,97 @@
+=============================================
+BUILDING DOCTOR WEBSITE - WINDOWS SETUP GUIDE
+=============================================
+
+If you're having trouble running this application on Windows, especially with Node.js v18,
+follow this comprehensive guide to get it working.
+
+----------------------------------
+COMMON ERRORS YOU MIGHT ENCOUNTER:
+----------------------------------
+
+1. "The "paths[0]" argument must be of type string. Received undefined"
+2. "Error: ERR_UNSUPPORTED_ESM_URL_SCHEME"
+3. "Error: Cannot find module 'path/import.meta'"
+4. "ReferenceError: import is not defined"
+
+These errors are common when using Node.js v18 on Windows with Vite/ESM projects.
+
+-------------------------
+SOLUTION 1: RECOMMENDED
+-------------------------
+
+1. Generate the Windows-compatible batch file:
+   - Run this command: node create-batch-file.js
+   - This will create a file called "start-windows-legacy.bat"
+
+2. Run the batch file:
+   - Double-click on "start-windows-legacy.bat"
+   - Or run it from command prompt: start-windows-legacy.bat
+
+This approach uses a simplified CommonJS configuration file that works better on Windows.
+
+-------------------------
+SOLUTION 2: DIRECT METHOD
+-------------------------
+
+If you prefer not to use the batch file, you can:
+
+1. Run: node start-windows-simple.js
+
+This script does the same thing - it creates a temporary Windows-compatible
+configuration file and starts the application.
+
+-------------------------
+SOLUTION 3: MINIMAL METHOD
+-------------------------
+
+If you're still having problems:
+
+1. Run: node start-windows-minimal.js
+
+This is the most bare-bones approach and should work on even the most
+problematic Windows systems.
+
+--------------------------
+SOLUTION 4: UPGRADE NODE.JS
+--------------------------
+
+The best solution is to upgrade to Node.js v20, which has much better ESM support:
+
+1. Download Node.js v20 from: https://nodejs.org/
+2. Install it (you may need to uninstall your current version first)
+3. Restart your computer
+4. Run the standard command: npm run dev
+
+-----------------------
+ADDITIONAL TIPS
+-----------------------
+
+1. PROJECT PATH: Avoid spaces in your project path
+   - Bad: "C:\My Projects\Building Doctor\"
+   - Good: "C:\Projects\BuildingDoctor\"
+
+2. DEPENDENCIES: Make sure all dependencies are installed
+   - Run: npm install
+   - If you see errors about missing packages
+
+3. ENVIRONMENT: Make sure you're using Node.js v18.18.1 or higher
+   - Run: node -v
+   - If it's lower than v18.18.1, please upgrade
+
+4. PERMISSION ISSUES: Run as administrator if needed
+   - Right-click on Command Prompt or PowerShell and select "Run as administrator"
+
+-----------------------
+TECHNICAL DETAILS
+-----------------------
+
+The root issue is that Node.js v18 on Windows has limitations with:
+1. ESM (ECMAScript Modules) URL scheme handling
+2. Path resolution, especially with spaces in paths
+3. The import.meta features which are fully supported in Node.js v20
+
+Our solution temporarily replaces the ESM Vite configuration with a CommonJS
+version that's more compatible with Node.js v18 on Windows.
+
+If you continue to have problems, please contact technical support.
