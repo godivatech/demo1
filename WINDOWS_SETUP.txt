@@ -1,41 +1,52 @@
 # Running the Building Doctor Website on Windows
 
-If you're experiencing issues running this project on Windows, especially with errors like `ERR_UNSUPPORTED_ESM_URL_SCHEME`, follow these steps:
+If you're experiencing issues running this project on Windows, especially with errors like `ERR_UNSUPPORTED_ESM_URL_SCHEME` or `ERR_INVALID_ARG_TYPE` with Node.js v18, follow these steps:
 
-## SOLUTION 1: USE THE WINDOWS BATCH FILE (RECOMMENDED)
+## IMPORTANT UPDATE FOR NODE.JS V18 USERS
+
+We've created a special compatibility solution for Windows users running Node.js v18.18.1. This new approach should fix the "paths[0]" error and other ESM-related issues.
+
+## SOLUTION 1: USE THE WINDOWS COMPATIBILITY SCRIPT (RECOMMENDED)
 
 1. Open your command prompt (cmd) or PowerShell window
 2. Navigate to the project directory
 3. Run the following command:
    
-   start-dev.bat
+   node start-windows.cjs
    
 
-## SOLUTION 2: USE THE COMMONJS STARTER SCRIPT
+This script will:
+- Temporarily set up a Windows-compatible Vite configuration
+- Run the application with the right environment settings
+- Restore the original configuration when done
 
-If the batch file doesn't work, try running the CommonJS script directly:
+## SOLUTION 2: INSTALL NODE.JS VERSION 20 (BEST OPTION)
 
-node start-windows.cjs
+For the smoothest experience, we recommend upgrading to Node.js v20 which has better ESM support:
+
+1. Download Node.js v20.x from: https://nodejs.org/
+2. Install it on your system
+3. Restart your computer
+4. Run the application using the standard npm command:
+   
+   npm run dev
+   
 
 ## SOLUTION 3: MOVE PROJECT TO A DIRECTORY WITHOUT SPACES
 
-The error often occurs when your project is in a directory path containing spaces. For example:
+Some errors occur when your project is in a directory path containing spaces. For example:
 F:\Godiva Tech Soft Madurai\Building doctors\BuildingDoctorPro
 
 Consider moving the project to a location without spaces in the path, such as:
 F:\Projects\BuildingDoctorPro
 
-## SOLUTION 4: INSTALL NODE.JS VERSION 20
-
-If you're still experiencing issues, consider upgrading to Node.js v20.x which has better ESM support:
-
-1. Download Node.js v20.x from: https://nodejs.org/
-2. Install it on your system
-3. Restart your computer
-4. Try running the application again
-
 ## TECHNICAL EXPLANATION
 
-The error occurs because Node.js ESM (ECMAScript Modules) loader on Windows has limitations with spaces and special characters in paths. Our project uses ESM modules and the 'tsx' package which helps run TypeScript files directly, but it has issues resolving paths on Windows.
+The core issue is that Node.js v18 has limitations with:
+1. ESM (ECMAScript Modules) URL scheme handling on Windows
+2. Path resolution with spaces or special characters
+3. The `import.meta.dirname` property which is only available in Node.js v20+
 
-If you continue to have issues, please contact our support team with the exact error message you're seeing.
+Our compatibility script works around these issues by using alternative path resolution methods and a modified Vite configuration file that is compatible with Node.js v18.
+
+If you continue to have issues, please share the exact error messages you're seeing.
