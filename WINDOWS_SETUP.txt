@@ -1,0 +1,41 @@
+# Running the Building Doctor Website on Windows
+
+If you're experiencing issues running this project on Windows, especially with errors like `ERR_UNSUPPORTED_ESM_URL_SCHEME`, follow these steps:
+
+## SOLUTION 1: USE THE WINDOWS BATCH FILE (RECOMMENDED)
+
+1. Open your command prompt (cmd) or PowerShell window
+2. Navigate to the project directory
+3. Run the following command:
+   
+   start-dev.bat
+   
+
+## SOLUTION 2: USE THE COMMONJS STARTER SCRIPT
+
+If the batch file doesn't work, try running the CommonJS script directly:
+
+node start-windows.cjs
+
+## SOLUTION 3: MOVE PROJECT TO A DIRECTORY WITHOUT SPACES
+
+The error often occurs when your project is in a directory path containing spaces. For example:
+F:\Godiva Tech Soft Madurai\Building doctors\BuildingDoctorPro
+
+Consider moving the project to a location without spaces in the path, such as:
+F:\Projects\BuildingDoctorPro
+
+## SOLUTION 4: INSTALL NODE.JS VERSION 20
+
+If you're still experiencing issues, consider upgrading to Node.js v20.x which has better ESM support:
+
+1. Download Node.js v20.x from: https://nodejs.org/
+2. Install it on your system
+3. Restart your computer
+4. Try running the application again
+
+## TECHNICAL EXPLANATION
+
+The error occurs because Node.js ESM (ECMAScript Modules) loader on Windows has limitations with spaces and special characters in paths. Our project uses ESM modules and the 'tsx' package which helps run TypeScript files directly, but it has issues resolving paths on Windows.
+
+If you continue to have issues, please contact our support team with the exact error message you're seeing.

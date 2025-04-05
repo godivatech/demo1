@@ -1,24 +1,33 @@
 #!/usr/bin/env node
 
 // This script helps run the application on Windows systems
-// where path issues might cause problems with tsx
+// where path issues might cause problems with ESM URL schemes
 
-const { spawnSync } = require('child_process');
-const path = require('path');
+import { spawnSync } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname, resolve, join } from 'path';
 
-// Get the absolute path to server/index.ts without spaces or special characters
-const serverPath = path.resolve(__dirname, 'server', 'index.ts');
+// Get current file directory in ESM compatible way
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Fix for Windows file path URL scheme issue
+process.env.NODE_OPTIONS = '--enable-source-maps';
 
 console.log('Starting server with Windows compatibility mode...');
-console.log(`Server file path: ${serverPath}`);
+console.log('Using Node.js version:', process.version);
 
-// Run the server with node and tsx loader
-const result = spawnSync('node', 
-  ['--no-warnings', '--loader', 'tsx', serverPath],
+// Use cross-env to set environment variables that work across platforms
+const result = spawnSync('npx', 
+  ['cross-env', 'NODE_NO_WARNINGS=1', 'tsx', './server/index.ts'],
   { 
     stdio: 'inherit',
     shell: true,
-    env: { ...process.env }
+    env: {
+      ...process.env,
+      // Force file URL protocol handling
+      NODE_OPTIONS: '--experimental-specifier-resolution=node'
+    }
   }
 );
 
