@@ -1,70 +1,71 @@
-import { 
-  Accordion, 
-  AccordionContent, 
-  AccordionItem, 
-  AccordionTrigger 
-} from "@/components/ui/accordion";
-import { FAQS } from "../../data/company";
+import { useState } from "react";
+import { Link } from "wouter";
+import { FAQS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 
-/**
- * FAQ Item component
- * @param {Object} props - Component props
- * @param {import('../../data/schema').Faq} props.faq - FAQ data
- */
 const FaqItem = ({ faq }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
   return (
-    <AccordionItem value={`item-${faq.id}`} className="border-none">
-      <AccordionTrigger className="text-left font-medium text-gray-900 py-4 px-4 rounded-lg hover:bg-gray-50 hover:no-underline data-[state=open]:bg-gray-50">
-        {faq.question}
-      </AccordionTrigger>
-      <AccordionContent className="text-gray-600 pt-2 pb-4 px-4">
-        {faq.answer}
-      </AccordionContent>
-    </AccordionItem>
+    <div className="bg-gray-50 rounded-xl overflow-hidden">
+      <button 
+        className="w-full flex justify-between items-center p-5 text-left focus:outline-none"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+      >
+        <h3 className="font-montserrat font-semibold text-lg">{faq.question}</h3>
+        <i className={cn(
+          "fas fa-plus text-primary transition-transform",
+          isOpen && "transform rotate-45"
+        )}></i>
+      </button>
+      <div className={cn(
+        "p-5 pt-0 transition-all",
+        isOpen ? "block opacity-100" : "hidden opacity-0"
+      )}>
+        <p className="text-gray-600">{faq.answer}</p>
+      </div>
+    </div>
   );
 };
 
-/**
- * FAQ section component
- */
-const FaqSection = () => {
+const Faq = () => {
   return (
-    <section className="py-16 bg-white" id="faq">
+    <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Find answers to common questions about our building repair services
-            </p>
+        <div className="text-center mb-16">
+          <div className="inline-block px-4 py-1 bg-primary bg-opacity-10 rounded-full mb-3">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">FAQs</p>
           </div>
-
-          <Accordion type="single" collapsible className="space-y-4">
-            {FAQS.map((faq) => (
+          <h2 className="font-montserrat font-bold text-3xl md:text-4xl mb-4">Common <span className="text-primary">Building Problems</span></h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">Answers to frequently asked questions about building issues and our solutions.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            {FAQS.slice(0, 3).map(faq => (
               <FaqItem key={faq.id} faq={faq} />
             ))}
-          </Accordion>
-
-          <div className="mt-12 text-center">
-            <p className="text-gray-700 mb-4">
-              Couldn't find an answer to your question?
-            </p>
-            <a
-              href="/contact"
-              className="inline-flex items-center px-6 py-3 border border-transparent 
-              text-base font-medium rounded-md shadow-sm text-white bg-orange-600 
-              hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
-              focus:ring-orange-500"
-            >
-              Contact Us
-            </a>
           </div>
+          
+          <div className="space-y-6">
+            {FAQS.slice(3, 6).map(faq => (
+              <FaqItem key={faq.id} faq={faq} />
+            ))}
+          </div>
+        </div>
+        
+        <div className="mt-12 text-center">
+          <p className="text-gray-600 mb-4">Still have questions? We're here to help.</p>
+          <Link href="/contact">
+            <a className="inline-block bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium transition">
+              Contact Our Experts
+            </a>
+          </Link>
         </div>
       </div>
     </section>
   );
 };
 
-export default FaqSection;
+export default Faq;
