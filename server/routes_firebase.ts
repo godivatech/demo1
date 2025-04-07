@@ -9,7 +9,7 @@ import {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API routes - prefix all routes with /api
-  
+
   // ======================
   // CONTACT ENDPOINTS
   // ======================
@@ -714,8 +714,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
-  
-  // Create HTTP server
+
+  // Set up authentication if needed
+  // setupAuth(app);
+
   const httpServer = createServer(app);
   
   return httpServer;

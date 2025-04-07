@@ -8,7 +8,7 @@ import ProductsPage from "./pages_jsx/ProductsPage";
 import ProductDetailPage from "./pages_jsx/ProductDetailPage";
 import AboutPage from "./pages_jsx/AboutPage";
 import ContactPage from "./pages_jsx/ContactPage";
-import AdminPage from "./pages_jsx/AdminPage";
+import AdminPage from "./pages/AdminPage";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import WhatsappButton from "./components/WhatsappButton";
