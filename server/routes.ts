@@ -23,7 +23,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const newContact: Contact = {
         ...parsedData,
         id: newId,
-        createdAt: new Date().toISOString()
+        createdAt: new Date()
       };
       
       // Store the contact
@@ -58,9 +58,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate a new ID and create inquiry with timestamp
       const newId = inquiries.length > 0 ? Math.max(...inquiries.map(i => i.id)) + 1 : 1;
       const newInquiry: Inquiry = {
-        ...parsedData,
         id: newId,
-        createdAt: new Date().toISOString()
+        name: parsedData.name,
+        email: parsedData.email || null,
+        phone: parsedData.phone,
+        issueType: parsedData.issueType || "",
+        message: parsedData.message || null,
+        address: parsedData.address || null,
+        createdAt: new Date()
       };
       
       // Store the inquiry
@@ -224,7 +229,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const newProduct: Product = {
         ...parsedData,
-        id: newId
+        id: newId,
+        rating: parsedData.rating || 4.0,
+        isBestseller: parsedData.isBestseller || null, 
+        isNew: parsedData.isNew || null
       };
       
       products.push(newProduct);

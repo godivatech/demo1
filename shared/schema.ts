@@ -38,7 +38,16 @@ export const contactSchema = z.object({
   consent: z.boolean().refine(val => val === true, "You must agree to the terms")
 });
 
-export type Contact = typeof contacts.$inferSelect;
+export interface Contact {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  message: string;
+  consent: boolean;
+  createdAt: Date;
+}
 export type ContactForm = z.infer<typeof contactSchema>;
 
 // Inquiry form schema (for popup)
@@ -55,14 +64,23 @@ export const inquiries = pgTable("inquiries", {
 
 export const inquirySchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address").optional().nullable().or(z.string().length(0)),
+  email: z.string().email("Invalid email address").optional().or(z.string().length(0)),
   phone: z.string().min(5, "Phone number is required"),
-  issueType: z.string().min(1, "Issue type is required"),
-  message: z.string().optional().nullable().or(z.string().length(0)),
-  address: z.string().optional().nullable().or(z.string().length(0))
+  issueType: z.string().optional().or(z.string()),
+  message: z.string().optional().or(z.string().length(0)),
+  address: z.string().optional().or(z.string().length(0))
 });
 
-export type Inquiry = typeof inquiries.$inferSelect;
+export interface Inquiry {
+  id: number;
+  name: string;
+  email: string | null;
+  phone: string;
+  issueType: string;
+  message: string | null;
+  address: string | null;
+  createdAt: Date | null;
+}
 export type InsertInquiry = z.infer<typeof inquirySchema>;
 
 // Product schema
@@ -82,7 +100,17 @@ export const productSchema = createInsertSchema(products).omit({
   id: true
 });
 
-export type Product = typeof products.$inferSelect;
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  rating: number;
+  isBestseller: boolean | null;
+  isNew: boolean | null;
+  category: string;
+}
 export type InsertProduct = z.infer<typeof productSchema>;
 
 // Service schema
