@@ -821,9 +821,9 @@ const ProductManager = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-2">
-                <p className="text-gray-600 text-sm line-clamp-2">
+                <div className="text-gray-600 text-sm line-clamp-2">
                   {product.description}
-                </p>
+                </div>
                 <div className="mt-3 font-semibold text-lg text-orange-600">
                   ₹{product.price.toLocaleString()}
                 </div>
@@ -1264,9 +1264,9 @@ const ServiceManager = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                <div className="text-gray-600 text-sm line-clamp-3 mb-4">
                   {service.description}
-                </p>
+                </div>
                 {service.features && service.features.length > 0 && (
                   <div>
                     <h4 className="text-sm font-medium mb-2">Features:</h4>
@@ -1675,7 +1675,7 @@ const TestimonialManager = () => {
               <CardContent>
                 <div className="relative pl-6">
                   <div className="absolute left-0 top-0 text-4xl text-orange-400">"</div>
-                  <p className="text-gray-600 italic line-clamp-5">{testimonial.content}</p>
+                  <div className="text-gray-600 italic line-clamp-5">{testimonial.content}</div>
                   <div className="absolute bottom-0 right-0 text-4xl text-orange-400">"</div>
                 </div>
                 {testimonial.hasVideo && (
@@ -2027,7 +2027,7 @@ const FAQManager = () => {
               </CardHeader>
               <CardContent className="py-0">
                 <div className="pl-11 pr-2 text-gray-600">
-                  <p className="whitespace-pre-line">{getShortenedAnswer(faq.answer)}</p>
+                  <div className="whitespace-pre-line">{getShortenedAnswer(faq.answer)}</div>
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end gap-2 pt-4 pb-4">

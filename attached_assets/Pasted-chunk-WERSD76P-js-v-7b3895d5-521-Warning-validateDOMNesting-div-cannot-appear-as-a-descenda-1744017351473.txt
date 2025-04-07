@@ -1,0 +1,39 @@
+chunk-WERSD76P.js?v=7b3895d5:521 Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>.
+    at div
+    at p
+    at _c7 (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/components/ui/card.tsx:92:12)
+    at div
+    at _c3 (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/components/ui/card.tsx:45:12)
+    at div
+    at _c (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/components/ui/card.tsx:20:11)
+    at div
+    at div
+    at ProductManager (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/pages_jsx/AdminPage.jsx:1137:49)
+    at div
+    at https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…unner/workspace/node_modules/.vite/deps/chunk-RDHMCQ3E.js?v=7b3895d5:41:13
+    at Presence (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…unner/workspace/node_modules/.vite/deps/chunk-AIXOUZD7.js?v=7b3895d5:24:11)
+    at https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…orkspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=7b3895d5:446:13
+    at _c5 (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/components/ui/tabs.tsx:72:12)
+    at div
+    at https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…unner/workspace/node_modules/.vite/deps/chunk-RDHMCQ3E.js?v=7b3895d5:41:13
+    at Provider (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…unner/workspace/node_modules/.vite/deps/chunk-MLRCWJEU.js?v=7b3895d5:38:15)
+    at https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…workspace/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=7b3895d5:324:7
+    at div
+    at div
+    at div
+    at div
+    at AdminPage (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/pages_jsx/AdminPage.jsx:71:35)
+    at div
+    at MotionComponent (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…nner/workspace/node_modules/.vite/deps/framer-motion.js?v=7b3895d5:6536:40)
+    at PageWrapper (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/App.jsx:37:26)
+    at Route (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=7b3895d5:323:16)
+    at Switch (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=7b3895d5:379:17)
+    at PresenceChild (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…nner/workspace/node_modules/.vite/deps/framer-motion.js?v=7b3895d5:7742:24)
+    at AnimatePresence (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…nner/workspace/node_modules/.vite/deps/framer-motion.js?v=7b3895d5:7800:26)
+    at main
+    at div
+    at App (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.dev/src/App.jsx:36:22)
+    at QueryClientProvider (https://61f8d0b5-336a-4709-a163-4a9632af1788-00-pv318n6sqj5l.kirk.replit.de…rkspace/node_modules/.vite/deps/@tanstack_react-query.js?v=7b3895d5:2805:3)
+printWarning	@	chunk-WERSD76P.js?v=7b3895d5:521
+﻿
+
