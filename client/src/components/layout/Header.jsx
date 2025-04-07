@@ -25,11 +25,11 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: 'Home', path: '/', icon: <Building size={16} className="text-white" /> },
-    { name: 'Services', path: '/services', icon: <Hammer size={16} className="text-white" /> },
-    { name: 'Products', path: '/products', icon: <ShoppingBag size={16} className="text-white" /> },
-    { name: 'About', path: '/about', icon: <Users size={16} className="text-white" /> },
-    { name: 'Contact', path: '/contact', icon: <Phone size={16} className="text-white" /> },
+    { name: 'Home', path: '/', icon: <Building size={16} className="text-white group-hover:text-black transition-colors" /> },
+    { name: 'Services', path: '/services', icon: <Hammer size={16} className="text-white group-hover:text-black transition-colors" /> },
+    { name: 'Products', path: '/products', icon: <ShoppingBag size={16} className="text-white group-hover:text-black transition-colors" /> },
+    { name: 'About', path: '/about', icon: <Users size={16} className="text-white group-hover:text-black transition-colors" /> },
+    { name: 'Contact', path: '/contact', icon: <Phone size={16} className="text-white group-hover:text-black transition-colors" /> },
   ];
 
   // Admin link removed as per client request
@@ -68,7 +68,7 @@ const Header = () => {
                 <motion.div
                   variants={fadeInRight(0.1 * (index + 1), 0.5)}
                   className={cn(
-                    'flex items-center gap-1.5 text-sm font-medium transition-all cursor-pointer hover:text-orange-600 px-3 py-2 rounded-md',
+                    'flex items-center gap-1.5 text-sm font-medium transition-all cursor-pointer hover:text-orange-600 px-3 py-2 rounded-md group',
                     location === link.path
                       ? 'text-orange-600 bg-orange-50'
                       : 'text-gray-700 hover:bg-orange-50/50'
@@ -87,11 +87,14 @@ const Header = () => {
           <motion.button
             variants={fadeIn(0.3, 0.5)}
             onClick={toggleMenu}
-            className="md:hidden text-gray-800 hover:text-orange-600 focus:outline-none"
+            className="md:hidden text-gray-800 hover:text-orange-600 focus:outline-none group"
             aria-expanded={isOpen}
             aria-label="Toggle menu"
           >
-            {isOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
+            {isOpen ? 
+              <X size={24} className="text-white group-hover:text-black transition-colors" /> : 
+              <Menu size={24} className="text-white group-hover:text-black transition-colors" />
+            }
           </motion.button>
         </nav>
 
@@ -114,7 +117,7 @@ const Header = () => {
                   <Link to={link.path}>
                     <span
                       className={cn(
-                        'text-sm flex items-center gap-2 py-2.5 px-4 rounded-md font-medium transition-colors cursor-pointer hover:bg-orange-50 hover:text-orange-600',
+                        'text-sm flex items-center gap-2 py-2.5 px-4 rounded-md font-medium transition-colors cursor-pointer hover:bg-orange-50 hover:text-orange-600 group',
                         location === link.path
                           ? 'bg-orange-50 text-orange-600'
                           : 'text-gray-700'

@@ -31,15 +31,15 @@ const Services = () => {
                 <p className="text-gray-600 mb-4">{service.description}</p>
                 <ul className="space-y-2 mb-6">
                   {service.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <i className="fas fa-check text-primary mt-1 mr-2"></i>
+                    <li key={index} className="flex items-start group">
+                      <i className="fas fa-check text-white mt-1 mr-2 group-hover:text-black transition-colors"></i>
                       <span className="text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <Link href={`/services#${service.slug}`}>
-                  <a className="inline-block text-primary font-medium hover:text-primary/90 transition">
-                    Learn more <i className="fas fa-arrow-right ml-1 text-xs"></i>
+                  <a className="inline-block text-primary font-medium hover:text-primary/90 transition group">
+                    Learn more <i className="fas fa-arrow-right ml-1 text-xs text-white group-hover:text-black transition-colors"></i>
                   </a>
                 </Link>
               </div>

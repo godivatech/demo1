@@ -9,9 +9,9 @@ const Hero = () => {
   const [showDiagnosis, setShowDiagnosis] = useState(false);
 
   const buildingProblems = [
-    { problem: "Leaking Roofs", solution: "Advanced Waterproofing", icon: <Droplets className="h-6 w-6 text-white" /> },
-    { problem: "Wall Cracks", solution: "Structural Reinforcement", icon: <Hammer className="h-6 w-6 text-white" /> },
-    { problem: "Seepage Issues", solution: "Chemical Treatment", icon: <Shield className="h-6 w-6 text-white" /> },
+    { problem: "Leaking Roofs", solution: "Advanced Waterproofing", icon: <Droplets className="h-6 w-6 text-white group-hover:text-black transition-colors" /> },
+    { problem: "Wall Cracks", solution: "Structural Reinforcement", icon: <Hammer className="h-6 w-6 text-white group-hover:text-black transition-colors" /> },
+    { problem: "Seepage Issues", solution: "Chemical Treatment", icon: <Shield className="h-6 w-6 text-white group-hover:text-black transition-colors" /> },
   ];
 
   // Auto rotation of problems
@@ -137,7 +137,7 @@ const Hero = () => {
                       className="h-full"
                     >
                       <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center group">
                           {buildingProblems[currentProblem].icon}
                         </div>
                         <div className="flex-grow">
@@ -145,8 +145,8 @@ const Hero = () => {
                             <h3 className="text-red-600 font-semibold">Detected: {buildingProblems[currentProblem].problem}</h3>
                             <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Critical</span>
                           </div>
-                          <div className="mt-2 flex items-center">
-                            <ArrowRight className="h-4 w-4 text-white mr-2" />
+                          <div className="mt-2 flex items-center group">
+                            <ArrowRight className="h-4 w-4 text-white group-hover:text-black transition-colors mr-2" />
                             <div className="text-green-700 font-semibold">Solution: {buildingProblems[currentProblem].solution}</div>
                           </div>
                           <div className="mt-2 text-xs text-gray-500">
@@ -187,8 +187,8 @@ const Hero = () => {
           {/* Right side content */}
           <div className="lg:col-span-6">
             <div className="bg-orange-50 px-5 py-2 rounded-full inline-flex items-center mb-4">
-              <span className="bg-white p-1 rounded-full mr-2">
-                <Check className="h-4 w-4 text-white" />
+              <span className="bg-white p-1 rounded-full mr-2 group">
+                <Check className="h-4 w-4 text-white group-hover:text-black transition-colors" />
               </span>
               <p className="text-xs font-semibold text-orange-800">Madurai's Most Trusted Building Experts</p>
             </div>
@@ -211,8 +211,8 @@ const Hero = () => {
                 "Guaranteed Leak-Free Results"
               ].map((feature, i) => (
                 <div key={i} className="flex items-center">
-                  <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                    <Check className="h-4 w-4 text-white" />
+                  <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-3 group">
+                    <Check className="h-4 w-4 text-white group-hover:text-black transition-colors" />
                   </div>
                   <p className="text-gray-700">{feature}</p>
                 </div>

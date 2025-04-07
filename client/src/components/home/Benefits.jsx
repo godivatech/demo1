@@ -16,14 +16,14 @@ const Benefits = () => {
               key={benefit.id}
               className="bg-white rounded-lg p-6 shadow-lg border-t-4 border-primary hover:-translate-y-2 hover:shadow-xl transition-all duration-300"
             >
-              <div className="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-5">
-                <i className={`fas fa-${benefit.icon} text-2xl text-primary`}></i>
+              <div className="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-5 group">
+                <i className={`fas fa-${benefit.icon} text-2xl text-white group-hover:text-black transition-colors`}></i>
               </div>
               <h3 className="font-montserrat font-bold text-xl mb-3">{benefit.title}</h3>
               <p className="text-gray-600 mb-4">{benefit.description}</p>
-              <div className="flex items-center text-sm text-primary font-medium">
+              <div className="flex items-center text-sm text-primary font-medium group cursor-pointer">
                 <span>Learn more</span>
-                <i className="fas fa-arrow-right ml-2 text-xs"></i>
+                <i className="fas fa-arrow-right ml-2 text-xs text-white group-hover:text-black transition-colors"></i>
               </div>
             </div>
           ))}
