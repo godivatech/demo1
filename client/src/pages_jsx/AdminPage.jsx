@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogT
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -998,39 +999,1125 @@ const ProductManager = () => {
 
 // Service Manager Component
 const ServiceManager = () => {
-  // To be implemented
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingService, setEditingService] = useState(null);
+  const [serviceForm, setServiceForm] = useState({
+    title: "",
+    description: "",
+    image: "",
+    features: [""],
+    slug: ""
+  });
+
+  // Fetch all services
+  const {
+    data: services = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["services"],
+    queryFn: async () => {
+      try {
+        const res = await apiRequest("GET", "/api/services");
+        return await res.json();
+      } catch (error) {
+        console.error("Failed to fetch services:", error);
+        return [];
+      }
+    }
+  });
+
+  // Add service mutation
+  const addServiceMutation = useMutation({
+    mutationFn: async (newService) => {
+      const res = await apiRequest("POST", "/api/services", newService);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["services"]);
+      toast({
+        title: "Service added",
+        description: "The service has been added successfully.",
+      });
+      setIsAddDialogOpen(false);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to add service",
+        description: error.message || "There was an error adding the service.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Update service mutation
+  const updateServiceMutation = useMutation({
+    mutationFn: async (updatedService) => {
+      const res = await apiRequest("PUT", `/api/services/${updatedService.id}`, updatedService);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["services"]);
+      toast({
+        title: "Service updated",
+        description: "The service has been updated successfully.",
+      });
+      setEditingService(null);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update service",
+        description: error.message || "There was an error updating the service.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete service mutation
+  const deleteServiceMutation = useMutation({
+    mutationFn: async (id) => {
+      await apiRequest("DELETE", `/api/services/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["services"]);
+      toast({
+        title: "Service deleted",
+        description: "The service has been deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete service",
+        description: error.message || "There was an error deleting the service.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Handle form input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setServiceForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle feature changes
+  const handleFeatureChange = (index, value) => {
+    const newFeatures = [...serviceForm.features];
+    newFeatures[index] = value;
+    setServiceForm((prev) => ({
+      ...prev,
+      features: newFeatures,
+    }));
+  };
+
+  // Add a new feature field
+  const addFeatureField = () => {
+    setServiceForm((prev) => ({
+      ...prev,
+      features: [...prev.features, ""],
+    }));
+  };
+
+  // Remove a feature field
+  const removeFeatureField = (index) => {
+    if (serviceForm.features.length > 1) {
+      const newFeatures = [...serviceForm.features];
+      newFeatures.splice(index, 1);
+      setServiceForm((prev) => ({
+        ...prev,
+        features: newFeatures,
+      }));
+    }
+  };
+
+  // Generate slug from title
+  const generateSlug = (title) => {
+    return title
+      .toLowerCase()
+      .replace(/[^\w ]+/g, '')
+      .replace(/ +/g, '-');
+  };
+
+  // Auto-generate slug when title changes
+  useEffect(() => {
+    if (serviceForm.title && !editingService) {
+      setServiceForm((prev) => ({
+        ...prev,
+        slug: generateSlug(prev.title),
+      }));
+    }
+  }, [serviceForm.title, editingService]);
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Filter out empty features
+    const filteredFeatures = serviceForm.features.filter(feature => feature.trim() !== "");
+    
+    const serviceData = {
+      ...serviceForm,
+      features: filteredFeatures,
+    };
+    
+    if (editingService) {
+      updateServiceMutation.mutate({ ...serviceData, id: editingService.id });
+    } else {
+      addServiceMutation.mutate(serviceData);
+    }
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setServiceForm({
+      title: "",
+      description: "",
+      image: "",
+      features: [""],
+      slug: ""
+    });
+  };
+
+  // Edit service
+  const handleEditService = (service) => {
+    setEditingService(service);
+    setServiceForm({
+      title: service.title,
+      description: service.description,
+      image: service.image,
+      features: service.features,
+      slug: service.slug
+    });
+    setIsAddDialogOpen(true);
+  };
+
   return (
-    <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
-      <Settings className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-      <h3 className="text-lg font-medium text-gray-900">Service Management</h3>
-      <p className="text-gray-500 mb-6">Manage your website's service offerings.</p>
-      <p className="text-orange-600">Coming soon...</p>
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Service Management</h2>
+        <Button 
+          onClick={() => {
+            resetForm();
+            setEditingService(null);
+            setIsAddDialogOpen(true);
+          }}
+          className="bg-orange-600 hover:bg-orange-700 flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4 text-white" />
+          Add New Service
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <div className="text-center py-12">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-orange-400 border-r-transparent"></div>
+          <p className="mt-2 text-gray-600">Loading services...</p>
+        </div>
+      ) : isError ? (
+        <div className="text-center py-12 text-red-600">
+          Error loading services. Please try again.
+        </div>
+      ) : services.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+          <Settings className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No services yet</h3>
+          <p className="text-gray-500 mb-6">Get started by adding your first service.</p>
+          <Button 
+            onClick={() => {
+              resetForm();
+              setEditingService(null);
+              setIsAddDialogOpen(true);
+            }}
+            className="bg-orange-600 hover:bg-orange-700"
+          >
+            Add Service
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service) => (
+            <Card key={service.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <div className="aspect-video w-full overflow-hidden bg-gray-100">
+                {service.image ? (
+                  <img 
+                    src={service.image} 
+                    alt={service.title} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                    <Settings className="h-12 w-12 text-gray-400" />
+                  </div>
+                )}
+              </div>
+              <CardHeader>
+                <CardTitle>{service.title}</CardTitle>
+                <CardDescription className="flex items-center mt-1">
+                  <Badge variant="outline">
+                    {service.slug}
+                  </Badge>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-sm line-clamp-3 mb-4">
+                  {service.description}
+                </p>
+                {service.features && service.features.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2">Features:</h4>
+                    <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1">
+                      {service.features.map((feature, index) => (
+                        <li key={index}>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                  onClick={() => handleEditService(service)}
+                >
+                  <Edit className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  onClick={() => deleteServiceMutation.mutate(service.id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Delete
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Add/Edit Service Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>{editingService ? "Edit Service" : "Add New Service"}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label htmlFor="title">Service Title</Label>
+                  <Input
+                    id="title"
+                    name="title"
+                    value={serviceForm.title}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                  />
+                </div>
+                
+                <div className="col-span-2">
+                  <Label htmlFor="slug">Slug</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="slug"
+                      name="slug"
+                      value={serviceForm.slug}
+                      onChange={handleInputChange}
+                      required
+                      className="mt-1"
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="mt-1"
+                      onClick={() => setServiceForm(prev => ({...prev, slug: generateSlug(prev.title)}))}
+                    >
+                      Generate
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="col-span-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    value={serviceForm.description}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    rows={4}
+                  />
+                </div>
+                
+                <div className="col-span-2">
+                  <Label htmlFor="image">Image URL</Label>
+                  <Input
+                    id="image"
+                    name="image"
+                    value={serviceForm.image}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+                
+                <div className="col-span-2">
+                  <div className="flex justify-between items-center">
+                    <Label>Features</Label>
+                    <Button 
+                      type="button" 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={addFeatureField}
+                      className="h-8 px-2"
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Feature
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-2 mt-2">
+                    {serviceForm.features.map((feature, index) => (
+                      <div key={index} className="flex gap-2">
+                        <Input
+                          value={feature}
+                          onChange={(e) => handleFeatureChange(index, e.target.value)}
+                          placeholder={`Feature ${index + 1}`}
+                          className="flex-grow"
+                        />
+                        {serviceForm.features.length > 1 && (
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={() => removeFeatureField(index)}
+                            className="h-10 w-10 text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsAddDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                className="bg-orange-600 hover:bg-orange-700"
+                disabled={addServiceMutation.isPending || updateServiceMutation.isPending}
+              >
+                {addServiceMutation.isPending || updateServiceMutation.isPending ? (
+                  <>
+                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-solid border-white border-r-transparent" />
+                    {editingService ? "Updating..." : "Adding..."}
+                  </>
+                ) : (
+                  <>{editingService ? "Update Service" : "Add Service"}</>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 // Testimonial Manager Component
 const TestimonialManager = () => {
-  // To be implemented
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingTestimonial, setEditingTestimonial] = useState(null);
+  const [testimonialForm, setTestimonialForm] = useState({
+    name: "",
+    location: "",
+    rating: 5,
+    content: "",
+    hasVideo: false
+  });
+
+  // Fetch all testimonials
+  const {
+    data: testimonials = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["testimonials"],
+    queryFn: async () => {
+      try {
+        const res = await apiRequest("GET", "/api/testimonials");
+        return await res.json();
+      } catch (error) {
+        console.error("Failed to fetch testimonials:", error);
+        return [];
+      }
+    }
+  });
+
+  // Add testimonial mutation
+  const addTestimonialMutation = useMutation({
+    mutationFn: async (newTestimonial) => {
+      const res = await apiRequest("POST", "/api/testimonials", newTestimonial);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["testimonials"]);
+      toast({
+        title: "Testimonial added",
+        description: "The testimonial has been added successfully.",
+      });
+      setIsAddDialogOpen(false);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to add testimonial",
+        description: error.message || "There was an error adding the testimonial.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Update testimonial mutation
+  const updateTestimonialMutation = useMutation({
+    mutationFn: async (updatedTestimonial) => {
+      const res = await apiRequest("PUT", `/api/testimonials/${updatedTestimonial.id}`, updatedTestimonial);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["testimonials"]);
+      toast({
+        title: "Testimonial updated",
+        description: "The testimonial has been updated successfully.",
+      });
+      setEditingTestimonial(null);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update testimonial",
+        description: error.message || "There was an error updating the testimonial.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete testimonial mutation
+  const deleteTestimonialMutation = useMutation({
+    mutationFn: async (id) => {
+      await apiRequest("DELETE", `/api/testimonials/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["testimonials"]);
+      toast({
+        title: "Testimonial deleted",
+        description: "The testimonial has been deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete testimonial",
+        description: error.message || "There was an error deleting the testimonial.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Handle form input change
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setTestimonialForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  // Handle rating change
+  const handleRatingChange = (value) => {
+    setTestimonialForm((prev) => ({
+      ...prev,
+      rating: value,
+    }));
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setTestimonialForm({
+      name: "",
+      location: "",
+      rating: 5,
+      content: "",
+      hasVideo: false
+    });
+  };
+
+  // Edit testimonial
+  const handleEditTestimonial = (testimonial) => {
+    setEditingTestimonial(testimonial);
+    setTestimonialForm({
+      name: testimonial.name,
+      location: testimonial.location,
+      rating: testimonial.rating,
+      content: testimonial.content,
+      hasVideo: testimonial.hasVideo
+    });
+    setIsAddDialogOpen(true);
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const testimonialData = {
+      ...testimonialForm,
+      rating: Number(testimonialForm.rating)
+    };
+    
+    if (editingTestimonial) {
+      updateTestimonialMutation.mutate({ ...testimonialData, id: editingTestimonial.id });
+    } else {
+      addTestimonialMutation.mutate(testimonialData);
+    }
+  };
+
+  // Get star rating display
+  const getStarRating = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <Star
+          key={i}
+          className={`h-4 w-4 ${
+            i <= rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+          }`}
+        />
+      );
+    }
+    return stars;
+  };
+
   return (
-    <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
-      <MessageCircle className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-      <h3 className="text-lg font-medium text-gray-900">Testimonial Management</h3>
-      <p className="text-gray-500 mb-6">Manage customer testimonials displayed on your website.</p>
-      <p className="text-orange-600">Coming soon...</p>
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Testimonial Management</h2>
+        <Button 
+          onClick={() => {
+            resetForm();
+            setEditingTestimonial(null);
+            setIsAddDialogOpen(true);
+          }}
+          className="bg-orange-600 hover:bg-orange-700 flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4 text-white" />
+          Add New Testimonial
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <div className="text-center py-12">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-orange-400 border-r-transparent"></div>
+          <p className="mt-2 text-gray-600">Loading testimonials...</p>
+        </div>
+      ) : isError ? (
+        <div className="text-center py-12 text-red-600">
+          Error loading testimonials. Please try again.
+        </div>
+      ) : testimonials.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+          <MessageCircle className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No testimonials yet</h3>
+          <p className="text-gray-500 mb-6">Get started by adding your first customer testimonial.</p>
+          <Button 
+            onClick={() => {
+              resetForm();
+              setEditingTestimonial(null);
+              setIsAddDialogOpen(true);
+            }}
+            className="bg-orange-600 hover:bg-orange-700"
+          >
+            Add Testimonial
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle className="text-lg">{testimonial.name}</CardTitle>
+                    <CardDescription>{testimonial.location}</CardDescription>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    {getStarRating(testimonial.rating)}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="relative pl-6">
+                  <div className="absolute left-0 top-0 text-4xl text-orange-400">"</div>
+                  <p className="text-gray-600 italic line-clamp-5">{testimonial.content}</p>
+                  <div className="absolute bottom-0 right-0 text-4xl text-orange-400">"</div>
+                </div>
+                {testimonial.hasVideo && (
+                  <Badge className="mt-4 bg-orange-100 text-orange-800 hover:bg-orange-200">
+                    <Video className="h-3 w-3 mr-1" />
+                    With Video
+                  </Badge>
+                )}
+              </CardContent>
+              <CardFooter className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                  onClick={() => handleEditTestimonial(testimonial)}
+                >
+                  <Edit className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  onClick={() => deleteTestimonialMutation.mutate(testimonial.id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Delete
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Add/Edit Testimonial Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{editingTestimonial ? "Edit Testimonial" : "Add New Testimonial"}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label htmlFor="name">Customer Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={testimonialForm.name}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    placeholder="John Doe"
+                  />
+                </div>
+                
+                <div className="col-span-2">
+                  <Label htmlFor="location">Location</Label>
+                  <Input
+                    id="location"
+                    name="location"
+                    value={testimonialForm.location}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    placeholder="Madurai, Tamil Nadu"
+                  />
+                </div>
+                
+                <div className="col-span-2">
+                  <Label>Rating</Label>
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <Star
+                          key={value}
+                          className={`h-6 w-6 cursor-pointer ${
+                            value <= testimonialForm.rating
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                          onClick={() => handleRatingChange(value)}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-500">({testimonialForm.rating}/5)</span>
+                  </div>
+                </div>
+                
+                <div className="col-span-2">
+                  <Label htmlFor="content">Testimonial Content</Label>
+                  <Textarea
+                    id="content"
+                    name="content"
+                    value={testimonialForm.content}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    rows={6}
+                    placeholder="What did the customer say about your services?"
+                  />
+                </div>
+                
+                <div className="col-span-2 flex items-center space-x-2">
+                  <Checkbox
+                    id="hasVideo"
+                    name="hasVideo"
+                    checked={testimonialForm.hasVideo}
+                    onCheckedChange={(checked) => {
+                      setTestimonialForm((prev) => ({
+                        ...prev,
+                        hasVideo: checked
+                      }));
+                    }}
+                  />
+                  <Label htmlFor="hasVideo" className="cursor-pointer">
+                    This testimonial has a video
+                  </Label>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsAddDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                className="bg-orange-600 hover:bg-orange-700"
+                disabled={addTestimonialMutation.isPending || updateTestimonialMutation.isPending}
+              >
+                {addTestimonialMutation.isPending || updateTestimonialMutation.isPending ? (
+                  <>
+                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-solid border-white border-r-transparent" />
+                    {editingTestimonial ? "Updating..." : "Adding..."}
+                  </>
+                ) : (
+                  <>{editingTestimonial ? "Update Testimonial" : "Add Testimonial"}</>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 // FAQ Manager Component
 const FAQManager = () => {
-  // To be implemented
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingFaq, setEditingFaq] = useState(null);
+  const [faqForm, setFaqForm] = useState({
+    question: "",
+    answer: ""
+  });
+
+  // Fetch all FAQs
+  const {
+    data: faqs = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["faqs"],
+    queryFn: async () => {
+      try {
+        const res = await apiRequest("GET", "/api/faqs");
+        return await res.json();
+      } catch (error) {
+        console.error("Failed to fetch FAQs:", error);
+        return [];
+      }
+    }
+  });
+
+  // Add FAQ mutation
+  const addFaqMutation = useMutation({
+    mutationFn: async (newFaq) => {
+      const res = await apiRequest("POST", "/api/faqs", newFaq);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["faqs"]);
+      toast({
+        title: "FAQ added",
+        description: "The FAQ has been added successfully.",
+      });
+      setIsAddDialogOpen(false);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to add FAQ",
+        description: error.message || "There was an error adding the FAQ.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Update FAQ mutation
+  const updateFaqMutation = useMutation({
+    mutationFn: async (updatedFaq) => {
+      const res = await apiRequest("PUT", `/api/faqs/${updatedFaq.id}`, updatedFaq);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["faqs"]);
+      toast({
+        title: "FAQ updated",
+        description: "The FAQ has been updated successfully.",
+      });
+      setEditingFaq(null);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update FAQ",
+        description: error.message || "There was an error updating the FAQ.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete FAQ mutation
+  const deleteFaqMutation = useMutation({
+    mutationFn: async (id) => {
+      await apiRequest("DELETE", `/api/faqs/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["faqs"]);
+      toast({
+        title: "FAQ deleted",
+        description: "The FAQ has been deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete FAQ",
+        description: error.message || "There was an error deleting the FAQ.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Handle form input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFaqForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setFaqForm({
+      question: "",
+      answer: ""
+    });
+  };
+
+  // Edit FAQ
+  const handleEditFaq = (faq) => {
+    setEditingFaq(faq);
+    setFaqForm({
+      question: faq.question,
+      answer: faq.answer
+    });
+    setIsAddDialogOpen(true);
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const faqData = { ...faqForm };
+    
+    if (editingFaq) {
+      updateFaqMutation.mutate({ ...faqData, id: editingFaq.id });
+    } else {
+      addFaqMutation.mutate(faqData);
+    }
+  };
+
+  // Get a shortened answer version for preview
+  const getShortenedAnswer = (answer, maxLength = 150) => {
+    if (answer.length <= maxLength) return answer;
+    return answer.slice(0, maxLength) + "...";
+  };
+
   return (
-    <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
-      <HelpCircle className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-      <h3 className="text-lg font-medium text-gray-900">FAQ Management</h3>
-      <p className="text-gray-500 mb-6">Manage frequently asked questions and answers.</p>
-      <p className="text-orange-600">Coming soon...</p>
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">FAQ Management</h2>
+        <Button 
+          onClick={() => {
+            resetForm();
+            setEditingFaq(null);
+            setIsAddDialogOpen(true);
+          }}
+          className="bg-orange-600 hover:bg-orange-700 flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4 text-white" />
+          Add New FAQ
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <div className="text-center py-12">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-orange-400 border-r-transparent"></div>
+          <p className="mt-2 text-gray-600">Loading FAQs...</p>
+        </div>
+      ) : isError ? (
+        <div className="text-center py-12 text-red-600">
+          Error loading FAQs. Please try again.
+        </div>
+      ) : faqs.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+          <HelpCircle className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No FAQs yet</h3>
+          <p className="text-gray-500 mb-6">Get started by adding your first frequently asked question.</p>
+          <Button 
+            onClick={() => {
+              resetForm();
+              setEditingFaq(null);
+              setIsAddDialogOpen(true);
+            }}
+            className="bg-orange-600 hover:bg-orange-700"
+          >
+            Add FAQ
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <Card key={faq.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <CardHeader className="py-4">
+                <div className="flex justify-between items-start">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="font-semibold text-orange-600">{index + 1}</span>
+                    </div>
+                    <CardTitle className="text-lg leading-tight">{faq.question}</CardTitle>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="py-0">
+                <div className="pl-11 pr-2 text-gray-600">
+                  <p className="whitespace-pre-line">{getShortenedAnswer(faq.answer)}</p>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end gap-2 pt-4 pb-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                  onClick={() => handleEditFaq(faq)}
+                >
+                  <Edit className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  onClick={() => deleteFaqMutation.mutate(faq.id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Delete
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Add/Edit FAQ Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>{editingFaq ? "Edit FAQ" : "Add New FAQ"}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <Label htmlFor="question">Question</Label>
+                  <Input
+                    id="question"
+                    name="question"
+                    value={faqForm.question}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    placeholder="What services do you offer?"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="answer">Answer</Label>
+                  <Textarea
+                    id="answer"
+                    name="answer"
+                    value={faqForm.answer}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    rows={8}
+                    placeholder="Provide a detailed answer to the question..."
+                  />
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsAddDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                className="bg-orange-600 hover:bg-orange-700"
+                disabled={addFaqMutation.isPending || updateFaqMutation.isPending}
+              >
+                {addFaqMutation.isPending || updateFaqMutation.isPending ? (
+                  <>
+                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-solid border-white border-r-transparent" />
+                    {editingFaq ? "Updating..." : "Adding..."}
+                  </>
+                ) : (
+                  <>{editingFaq ? "Update FAQ" : "Add FAQ"}</>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
