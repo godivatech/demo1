@@ -3,16 +3,24 @@ import { useLocation, Link } from "wouter";
 import { motion } from "framer-motion";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { 
-  Shield, Lock, LogOut, Users, ClipboardList, 
-  Search, Trash2, ChevronDown, ChevronUp, Eye, 
-  MessageSquare, Phone, Calendar, Mail, Home
+  Shield, Lock, LogOut, Users, ClipboardList, Package, PenTool,
+  Search, Trash2, ChevronDown, ChevronUp, Eye, Edit, Plus, Star,
+  MessageSquare, Phone, Calendar, Mail, Home, HelpCircle, Settings,
+  FileText, Award, DollarSign, Image, MessageCircle, Layers, Save
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { COMPANY_NAME } from "@/lib/constants";
+import { COMPANY_NAME, PRODUCT_CATEGORIES } from "@/lib/constants";
 
 // Admin credentials (hardcoded for simplicity - normally would be in a secure backend)
 const ADMIN_USERNAME = "admin";
@@ -279,14 +287,30 @@ const AdminPage = () => {
             </div>
             
             <Tabs defaultValue="inquiries">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsList className="grid w-full grid-cols-6 mb-6">
                 <TabsTrigger value="inquiries" className="flex items-center gap-2">
-                  <ClipboardList className="h-4 w-4" />
-                  Popup Form Inquiries ({inquiries.length})
+                  <ClipboardList className="h-4 w-4 text-white group-hover:text-black transition-colors" />
+                  Inquiries
                 </TabsTrigger>
                 <TabsTrigger value="contacts" className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  Contact Form Submissions ({contactSubmissions.length})
+                  <MessageSquare className="h-4 w-4 text-white group-hover:text-black transition-colors" />
+                  Contacts
+                </TabsTrigger>
+                <TabsTrigger value="products" className="flex items-center gap-2">
+                  <Package className="h-4 w-4 text-white group-hover:text-black transition-colors" />
+                  Products
+                </TabsTrigger>
+                <TabsTrigger value="services" className="flex items-center gap-2">
+                  <Settings className="h-4 w-4 text-white group-hover:text-black transition-colors" />
+                  Services
+                </TabsTrigger>
+                <TabsTrigger value="testimonials" className="flex items-center gap-2">
+                  <MessageCircle className="h-4 w-4 text-white group-hover:text-black transition-colors" />
+                  Testimonials
+                </TabsTrigger>
+                <TabsTrigger value="faqs" className="flex items-center gap-2">
+                  <HelpCircle className="h-4 w-4 text-white group-hover:text-black transition-colors" />
+                  FAQs
                 </TabsTrigger>
               </TabsList>
               
@@ -529,10 +553,484 @@ const AdminPage = () => {
                   </div>
                 )}
               </TabsContent>
+              
+              <TabsContent value="products">
+                <ProductManager />
+              </TabsContent>
+              
+              <TabsContent value="services">
+                <ServiceManager />
+              </TabsContent>
+              
+              <TabsContent value="testimonials">
+                <TestimonialManager />
+              </TabsContent>
+              
+              <TabsContent value="faqs">
+                <FAQManager />
+              </TabsContent>
             </Tabs>
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+// Product Manager Component
+const ProductManager = () => {
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [productForm, setProductForm] = useState({
+    name: "",
+    description: "",
+    price: 0,
+    category: "",
+    image: "",
+    isBestseller: false,
+    isNew: false,
+    rating: 4.0
+  });
+
+  // Fetch all products
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      try {
+        const res = await apiRequest("GET", "/api/products");
+        const data = await res.json();
+        return data.products || [];
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        return [];
+      }
+    }
+  });
+
+  // Add product mutation
+  const addProductMutation = useMutation({
+    mutationFn: async (newProduct) => {
+      const res = await apiRequest("POST", "/api/products", newProduct);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["products"]);
+      toast({
+        title: "Product added",
+        description: "The product has been added successfully.",
+      });
+      setIsAddDialogOpen(false);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to add product",
+        description: error.message || "There was an error adding the product.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Update product mutation
+  const updateProductMutation = useMutation({
+    mutationFn: async (updatedProduct) => {
+      const res = await apiRequest("PUT", `/api/products/${updatedProduct.id}`, updatedProduct);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["products"]);
+      toast({
+        title: "Product updated",
+        description: "The product has been updated successfully.",
+      });
+      setEditingProduct(null);
+      resetForm();
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to update product",
+        description: error.message || "There was an error updating the product.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete product mutation
+  const deleteProductMutation = useMutation({
+    mutationFn: async (id) => {
+      await apiRequest("DELETE", `/api/products/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["products"]);
+      toast({
+        title: "Product deleted",
+        description: "The product has been deleted successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to delete product",
+        description: error.message || "There was an error deleting the product.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Handle form input change
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setProductForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) : value,
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Ensure price is a number
+    const formattedProduct = {
+      ...productForm,
+      price: parseInt(productForm.price, 10)
+    };
+    
+    if (editingProduct) {
+      updateProductMutation.mutate({ ...formattedProduct, id: editingProduct.id });
+    } else {
+      addProductMutation.mutate(formattedProduct);
+    }
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setProductForm({
+      name: "",
+      description: "",
+      price: 0,
+      category: "",
+      image: "",
+      isBestseller: false,
+      isNew: false,
+      rating: 4.0
+    });
+  };
+
+  // Edit product
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setProductForm({
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      category: product.category,
+      image: product.image,
+      isBestseller: product.isBestseller || false,
+      isNew: product.isNew || false,
+      rating: product.rating
+    });
+    setIsAddDialogOpen(true);
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Product Management</h2>
+        <Button 
+          onClick={() => {
+            resetForm();
+            setEditingProduct(null);
+            setIsAddDialogOpen(true);
+          }}
+          className="bg-orange-600 hover:bg-orange-700 flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4 text-white" />
+          Add New Product
+        </Button>
+      </div>
+
+      {isLoading ? (
+        <div className="text-center py-12">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-orange-400 border-r-transparent"></div>
+          <p className="mt-2 text-gray-600">Loading products...</p>
+        </div>
+      ) : isError ? (
+        <div className="text-center py-12 text-red-600">
+          Error loading products. Please try again.
+        </div>
+      ) : products.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+          <Package className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No products yet</h3>
+          <p className="text-gray-500 mb-6">Get started by adding your first product.</p>
+          <Button 
+            onClick={() => {
+              resetForm();
+              setEditingProduct(null);
+              setIsAddDialogOpen(true);
+            }}
+            className="bg-orange-600 hover:bg-orange-700"
+          >
+            Add Product
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.map((product) => (
+            <Card key={product.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <div className="aspect-video w-full overflow-hidden bg-gray-100">
+                {product.image ? (
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                    <Image className="h-12 w-12 text-gray-400" />
+                  </div>
+                )}
+              </div>
+              <CardHeader className="pb-2">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-lg">{product.name}</CardTitle>
+                  <div>
+                    {product.isBestseller && <Badge className="mr-2 bg-orange-500">Bestseller</Badge>}
+                    {product.isNew && <Badge className="bg-green-500">New</Badge>}
+                  </div>
+                </div>
+                <CardDescription className="flex items-center mt-1">
+                  <div className="flex">
+                    {Array(5).fill(0).map((_, i) => (
+                      <Star 
+                        key={i}
+                        className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+                        fill={i < Math.floor(product.rating) ? 'currentColor' : 'none'}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs ml-2 text-gray-500">({product.rating.toFixed(1)})</span>
+                  <Badge variant="outline" className="ml-auto">
+                    {product.category}
+                  </Badge>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pb-2">
+                <p className="text-gray-600 text-sm line-clamp-2">
+                  {product.description}
+                </p>
+                <div className="mt-3 font-semibold text-lg text-orange-600">
+                  ₹{product.price.toLocaleString()}
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end pt-2 gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                  onClick={() => handleEditProduct(product)}
+                >
+                  <Edit className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  onClick={() => deleteProductMutation.mutate(product.id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-1 text-white group-hover:text-black transition-colors" />
+                  Delete
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Add/Edit Product Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <Label htmlFor="name">Product Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={productForm.name}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                  />
+                </div>
+                <div className="col-span-1">
+                  <Label htmlFor="price">Price (₹)</Label>
+                  <Input
+                    id="price"
+                    name="price"
+                    type="number"
+                    value={productForm.price}
+                    onChange={handleInputChange}
+                    required
+                    min="0"
+                    className="mt-1"
+                  />
+                </div>
+                <div className="col-span-1">
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    name="category"
+                    value={productForm.category}
+                    onValueChange={(value) => setProductForm(prev => ({ ...prev, category: value }))}
+                    required
+                  >
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PRODUCT_CATEGORIES.map(category => (
+                        <SelectItem key={category.id} value={category.name}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="col-span-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    value={productForm.description}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    rows={4}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label htmlFor="image">Image URL</Label>
+                  <Input
+                    id="image"
+                    name="image"
+                    value={productForm.image}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+                <div className="col-span-1">
+                  <Label htmlFor="rating">Rating (0-5)</Label>
+                  <Input
+                    id="rating"
+                    name="rating"
+                    type="number"
+                    value={productForm.rating}
+                    onChange={handleInputChange}
+                    required
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    className="mt-1"
+                  />
+                </div>
+                <div className="col-span-1 flex items-end space-x-6">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isBestseller"
+                      name="isBestseller"
+                      checked={productForm.isBestseller}
+                      onCheckedChange={(checked) => setProductForm(prev => ({ ...prev, isBestseller: checked }))}
+                    />
+                    <Label htmlFor="isBestseller">Bestseller</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="isNew"
+                      name="isNew"
+                      checked={productForm.isNew}
+                      onCheckedChange={(checked) => setProductForm(prev => ({ ...prev, isNew: checked }))}
+                    />
+                    <Label htmlFor="isNew">New Product</Label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsAddDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                className="bg-orange-600 hover:bg-orange-700"
+                disabled={addProductMutation.isPending || updateProductMutation.isPending}
+              >
+                {addProductMutation.isPending || updateProductMutation.isPending ? (
+                  <>
+                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-solid border-white border-r-transparent" />
+                    {editingProduct ? "Updating..." : "Adding..."}
+                  </>
+                ) : (
+                  <>{editingProduct ? "Update Product" : "Add Product"}</>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+// Service Manager Component
+const ServiceManager = () => {
+  // To be implemented
+  return (
+    <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+      <Settings className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+      <h3 className="text-lg font-medium text-gray-900">Service Management</h3>
+      <p className="text-gray-500 mb-6">Manage your website's service offerings.</p>
+      <p className="text-orange-600">Coming soon...</p>
+    </div>
+  );
+};
+
+// Testimonial Manager Component
+const TestimonialManager = () => {
+  // To be implemented
+  return (
+    <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+      <MessageCircle className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+      <h3 className="text-lg font-medium text-gray-900">Testimonial Management</h3>
+      <p className="text-gray-500 mb-6">Manage customer testimonials displayed on your website.</p>
+      <p className="text-orange-600">Coming soon...</p>
+    </div>
+  );
+};
+
+// FAQ Manager Component
+const FAQManager = () => {
+  // To be implemented
+  return (
+    <div className="text-center py-12 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
+      <HelpCircle className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+      <h3 className="text-lg font-medium text-gray-900">FAQ Management</h3>
+      <p className="text-gray-500 mb-6">Manage frequently asked questions and answers.</p>
+      <p className="text-orange-600">Coming soon...</p>
     </div>
   );
 };
