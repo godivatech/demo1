@@ -127,7 +127,7 @@ const HomePageForm = () => {
               {currentStep === 0 ? (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                    <HelpCircle size={18} className="text-orange-500 mr-2" />
+                    <HelpCircle size={18} className="text-white mr-2" />
                     What issue are you facing?
                   </h3>
                   
@@ -173,7 +173,7 @@ const HomePageForm = () => {
                   <div className="space-y-4">
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <User className="h-5 w-5 text-gray-400" />
+                        <User className="h-5 w-5 text-white" />
                       </div>
                       <Input
                         type="text"
@@ -188,7 +188,7 @@ const HomePageForm = () => {
                     
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <Phone className="h-5 w-5 text-gray-400" />
+                        <Phone className="h-5 w-5 text-white" />
                       </div>
                       <Input
                         type="tel"
@@ -203,7 +203,7 @@ const HomePageForm = () => {
                     
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <Mail className="h-5 w-5 text-gray-400" />
+                        <Mail className="h-5 w-5 text-white" />
                       </div>
                       <Input
                         type="email"
@@ -217,7 +217,7 @@ const HomePageForm = () => {
                     
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <Home className="h-5 w-5 text-gray-400" />
+                        <Home className="h-5 w-5 text-white" />
                       </div>
                       <Input
                         type="text"
@@ -231,7 +231,7 @@ const HomePageForm = () => {
                     
                     <div className="relative">
                       <div className="absolute top-3 left-3 pointer-events-none">
-                        <MessageSquare className="h-5 w-5 text-gray-400" />
+                        <MessageSquare className="h-5 w-5 text-white" />
                       </div>
                       <Textarea
                         name="message"

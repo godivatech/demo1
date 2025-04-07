@@ -55,11 +55,11 @@ export const inquiries = pgTable("inquiries", {
 
 export const inquirySchema = z.object({
   name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address").optional().nullable(),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  email: z.string().email("Invalid email address").optional().nullable().or(z.string().length(0)),
+  phone: z.string().min(5, "Phone number is required"),
   issueType: z.string().min(1, "Issue type is required"),
-  message: z.string().optional().nullable(),
-  address: z.string().optional().nullable()
+  message: z.string().optional().nullable().or(z.string().length(0)),
+  address: z.string().optional().nullable().or(z.string().length(0))
 });
 
 export type Inquiry = typeof inquiries.$inferSelect;

@@ -9,9 +9,9 @@ const Hero = () => {
   const [showDiagnosis, setShowDiagnosis] = useState(false);
 
   const buildingProblems = [
-    { problem: "Leaking Roofs", solution: "Advanced Waterproofing", icon: <Droplets className="h-6 w-6 text-blue-400" /> },
-    { problem: "Wall Cracks", solution: "Structural Reinforcement", icon: <Hammer className="h-6 w-6 text-orange-400" /> },
-    { problem: "Seepage Issues", solution: "Chemical Treatment", icon: <Shield className="h-6 w-6 text-green-400" /> },
+    { problem: "Leaking Roofs", solution: "Advanced Waterproofing", icon: <Droplets className="h-6 w-6 text-white" /> },
+    { problem: "Wall Cracks", solution: "Structural Reinforcement", icon: <Hammer className="h-6 w-6 text-white" /> },
+    { problem: "Seepage Issues", solution: "Chemical Treatment", icon: <Shield className="h-6 w-6 text-white" /> },
   ];
 
   // Auto rotation of problems
@@ -127,32 +127,35 @@ const Hero = () => {
               {/* Diagnostic Results */}
               <AnimatePresence>
                 {showDiagnosis && (
-                  <motion.div 
-                    className="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                        {buildingProblems[currentProblem].icon}
+                  <div className="mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200 h-[140px]">
+                    <motion.div 
+                      key={currentProblem}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="h-full"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                          {buildingProblems[currentProblem].icon}
+                        </div>
+                        <div className="flex-grow">
+                          <div className="flex justify-between items-start">
+                            <h3 className="text-red-600 font-semibold">Detected: {buildingProblems[currentProblem].problem}</h3>
+                            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Critical</span>
+                          </div>
+                          <div className="mt-2 flex items-center">
+                            <ArrowRight className="h-4 w-4 text-white mr-2" />
+                            <div className="text-green-700 font-semibold">Solution: {buildingProblems[currentProblem].solution}</div>
+                          </div>
+                          <div className="mt-2 text-xs text-gray-500">
+                            Our building doctors can fix this with professional-grade materials and techniques
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex-grow">
-                        <div className="flex justify-between items-start">
-                          <h3 className="text-red-600 font-semibold">Detected: {buildingProblems[currentProblem].problem}</h3>
-                          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Critical</span>
-                        </div>
-                        <div className="mt-2 flex items-center">
-                          <ArrowRight className="h-4 w-4 text-green-500 mr-2" />
-                          <div className="text-green-700 font-semibold">Solution: {buildingProblems[currentProblem].solution}</div>
-                        </div>
-                        <div className="mt-2 text-xs text-gray-500">
-                          Our building doctors can fix this with professional-grade materials and techniques
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </div>
                 )}
               </AnimatePresence>
             </div>
@@ -185,7 +188,7 @@ const Hero = () => {
           <div className="lg:col-span-6">
             <div className="bg-orange-50 px-5 py-2 rounded-full inline-flex items-center mb-4">
               <span className="bg-white p-1 rounded-full mr-2">
-                <Check className="h-4 w-4 text-orange-500" />
+                <Check className="h-4 w-4 text-white" />
               </span>
               <p className="text-xs font-semibold text-orange-800">Madurai's Most Trusted Building Experts</p>
             </div>
@@ -209,7 +212,7 @@ const Hero = () => {
               ].map((feature, i) => (
                 <div key={i} className="flex items-center">
                   <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                    <Check className="h-4 w-4 text-green-600" />
+                    <Check className="h-4 w-4 text-white" />
                   </div>
                   <p className="text-gray-700">{feature}</p>
                 </div>

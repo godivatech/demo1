@@ -25,15 +25,15 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: 'Home', path: '/', icon: <Building size={16} /> },
-    { name: 'Services', path: '/services', icon: <Hammer size={16} /> },
-    { name: 'Products', path: '/products', icon: <ShoppingBag size={16} /> },
-    { name: 'About', path: '/about', icon: <Users size={16} /> },
-    { name: 'Contact', path: '/contact', icon: <Phone size={16} /> },
+    { name: 'Home', path: '/', icon: <Building size={16} className="text-white" /> },
+    { name: 'Services', path: '/services', icon: <Hammer size={16} className="text-white" /> },
+    { name: 'Products', path: '/products', icon: <ShoppingBag size={16} className="text-white" /> },
+    { name: 'About', path: '/about', icon: <Users size={16} className="text-white" /> },
+    { name: 'Contact', path: '/contact', icon: <Phone size={16} className="text-white" /> },
   ];
 
-  // Add admin link for the admin panel (only show in desktop, hidden in mobile)
-  const adminLink = { name: 'Admin', path: '/admin', icon: <Lock size={16} /> };
+  // Admin link removed as per client request
+  // const adminLink = { name: 'Admin', path: '/admin', icon: <Lock size={16} /> };
 
   return (
     <motion.header 
@@ -80,21 +80,7 @@ const Header = () => {
               </Link>
             ))}
             
-            {/* Admin link with special styling */}
-            <Link to={adminLink.path}>
-              <motion.div
-                variants={fadeInRight(0.7, 0.5)}
-                className={cn(
-                  'flex items-center gap-1.5 text-sm font-medium transition-all cursor-pointer px-3 py-2 rounded-md border border-orange-200',
-                  location === adminLink.path
-                    ? 'text-white bg-orange-600 border-orange-600'
-                    : 'text-orange-600 hover:bg-orange-50'
-                )}
-              >
-                {adminLink.icon}
-                <span>{adminLink.name}</span>
-              </motion.div>
-            </Link>
+            {/* Admin link removed as per client request */}
           </motion.div>
 
           {/* Mobile menu button */}
@@ -105,7 +91,7 @@ const Header = () => {
             aria-expanded={isOpen}
             aria-label="Toggle menu"
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
           </motion.button>
         </nav>
 
@@ -142,28 +128,7 @@ const Header = () => {
                 </motion.div>
               ))}
               
-              {/* Admin Link for Mobile */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3, duration: 0.3 }}
-                className="mt-2 pt-2 border-t border-gray-100"
-              >
-                <Link to={adminLink.path}>
-                  <span
-                    className={cn(
-                      'text-sm flex items-center gap-2 py-2.5 px-4 rounded-md font-medium transition-colors cursor-pointer',
-                      location === adminLink.path
-                        ? 'bg-orange-600 text-white'
-                        : 'text-orange-600 border border-orange-200 hover:bg-orange-50'
-                    )}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {adminLink.icon}
-                    {adminLink.name}
-                  </span>
-                </Link>
-              </motion.div>
+              {/* Admin Link for Mobile - Removed as per client request */}
             </div>
           </motion.div>
         )}
