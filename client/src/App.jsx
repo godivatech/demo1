@@ -8,9 +8,11 @@ import ProductsPage from "./pages_jsx/ProductsPage";
 import ProductDetailPage from "./pages_jsx/ProductDetailPage";
 import AboutPage from "./pages_jsx/AboutPage";
 import ContactPage from "./pages_jsx/ContactPage";
+import AdminPage from "./pages_jsx/AdminPage";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import WhatsappButton from "./components/WhatsappButton";
+import HomePageForm from "./components/HomePageForm";
 import { pageTransition } from "./utils/animations";
 
 function App() {
@@ -28,6 +30,9 @@ function App() {
       {children}
     </motion.div>
   );
+
+  // Show the popup form only on the homepage
+  const showPopupForm = location === "/";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -67,6 +72,11 @@ function App() {
                 <ContactPage />
               </PageWrapper>
             </Route>
+            <Route path="/admin">
+              <PageWrapper>
+                <AdminPage />
+              </PageWrapper>
+            </Route>
             <Route>
               <PageWrapper>
                 <NotFound />
@@ -77,6 +87,7 @@ function App() {
       </main>
       <Footer />
       <WhatsappButton />
+      {showPopupForm && <HomePageForm />}
       <Toaster />
     </div>
   );

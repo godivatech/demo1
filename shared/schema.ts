@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, real, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, real, varchar, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -18,6 +18,17 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
 // Contact form schema
+export const contacts = pgTable("contacts", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  service: text("service").notNull(),
+  message: text("message").notNull(),
+  consent: boolean("consent").notNull(),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
 export const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -27,7 +38,32 @@ export const contactSchema = z.object({
   consent: z.boolean().refine(val => val === true, "You must agree to the terms")
 });
 
+export type Contact = typeof contacts.$inferSelect;
 export type ContactForm = z.infer<typeof contactSchema>;
+
+// Inquiry form schema (for popup)
+export const inquiries = pgTable("inquiries", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email"),
+  phone: text("phone").notNull(),
+  issueType: text("issue_type").notNull(),
+  message: text("message"),
+  address: text("address"),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+export const inquirySchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address").optional().nullable(),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  issueType: z.string().min(1, "Issue type is required"),
+  message: z.string().optional().nullable(),
+  address: z.string().optional().nullable()
+});
+
+export type Inquiry = typeof inquiries.$inferSelect;
+export type InsertInquiry = z.infer<typeof inquirySchema>;
 
 // Product schema
 export const products = pgTable("products", {
