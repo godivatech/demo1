@@ -453,46 +453,54 @@ const AdminPage = () => {
   });
 
   // Filter inquiries based on search term
-  const filteredInquiries = inquiries.filter((inquiry) => {
-    const searchable = `${inquiry.name} ${inquiry.phone} ${inquiry.email} ${inquiry.issueType} ${inquiry.message} ${inquiry.address}`.toLowerCase();
+  const filteredInquiries = Array.isArray(inquiries) ? inquiries.filter((inquiry) => {
+    if (!inquiry) return false;
+    const searchable = `${inquiry.name || ''} ${inquiry.phone || ''} ${inquiry.email || ''} ${inquiry.issueType || ''} ${inquiry.message || ''} ${inquiry.address || ''}`.toLowerCase();
     return searchable.includes(searchTerm.toLowerCase());
-  });
+  }) : [];
 
   // Filter intent form submissions based on search term
-  const filteredIntents = intentSubmissions.filter((intent) => {
-    const searchable = `${intent.name} ${intent.phone} ${intent.service} ${intent.message}`.toLowerCase();
+  const filteredIntents = Array.isArray(intentSubmissions) ? intentSubmissions.filter((intent) => {
+    if (!intent) return false;
+    const searchable = `${intent.name || ''} ${intent.phone || ''} ${intent.service || ''} ${intent.message || ''}`.toLowerCase();
     return searchable.includes(searchTerm.toLowerCase());
-  });
+  }) : [];
 
   // Filter contact submissions based on search term
-  const filteredContacts = contactSubmissions.filter((contact) => {
-    const searchable = `${contact.name} ${contact.phone} ${contact.email} ${contact.service} ${contact.message}`.toLowerCase();
+  const filteredContacts = Array.isArray(contactSubmissions) ? contactSubmissions.filter((contact) => {
+    if (!contact) return false;
+    const searchable = `${contact.name || ''} ${contact.phone || ''} ${contact.email || ''} ${contact.service || ''} ${contact.message || ''}`.toLowerCase();
     return searchable.includes(searchTerm.toLowerCase());
-  });
+  }) : [];
   
   // Filter products based on search term
-  const filteredProducts = products.filter((product) => {
-    const searchable = `${product.name} ${product.description} ${product.category}`.toLowerCase();
+  const filteredProducts = Array.isArray(products) ? products.filter((product) => {
+    if (!product) return false;
+    const searchable = `${product.name || ''} ${product.description || ''} ${product.category || ''}`.toLowerCase();
     return searchable.includes(searchTerm.toLowerCase());
-  });
+  }) : [];
   
   // Filter services based on search term
-  const filteredServices = services.filter((service) => {
-    const searchable = `${service.title} ${service.description} ${service.features?.join(' ')}`.toLowerCase();
+  const filteredServices = Array.isArray(services) ? services.filter((service) => {
+    if (!service) return false;
+    const features = service.features && Array.isArray(service.features) ? service.features.join(' ') : '';
+    const searchable = `${service.title || ''} ${service.description || ''} ${features}`.toLowerCase();
     return searchable.includes(searchTerm.toLowerCase());
-  });
+  }) : [];
   
   // Filter testimonials based on search term
-  const filteredTestimonials = testimonials.filter((testimonial) => {
-    const searchable = `${testimonial.name} ${testimonial.location} ${testimonial.content}`.toLowerCase();
+  const filteredTestimonials = Array.isArray(testimonials) ? testimonials.filter((testimonial) => {
+    if (!testimonial) return false;
+    const searchable = `${testimonial.name || ''} ${testimonial.location || ''} ${testimonial.content || ''}`.toLowerCase();
     return searchable.includes(searchTerm.toLowerCase());
-  });
+  }) : [];
   
   // Filter FAQs based on search term
-  const filteredFaqs = faqs.filter((faq) => {
-    const searchable = `${faq.question} ${faq.answer}`.toLowerCase();
+  const filteredFaqs = Array.isArray(faqs) ? faqs.filter((faq) => {
+    if (!faq) return false;
+    const searchable = `${faq.question || ''} ${faq.answer || ''}`.toLowerCase();
     return searchable.includes(searchTerm.toLowerCase());
-  });
+  }) : [];
 
   // Toggle expanded item with type prefix
   const toggleExpand = (id, type = 'general') => {
@@ -504,21 +512,51 @@ const AdminPage = () => {
 
   // Format date
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
+    try {
+      if (!dateString) return "N/A";
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "Invalid Date";
+      return date.toLocaleString();
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Error";
+    }
   };
   
   // Format date for input fields
   const formatDateForInput = (date) => {
-    return date ? new Date(date).toISOString().split('T')[0] : "";
+    try {
+      if (!date) return "";
+      const parsedDate = new Date(date);
+      if (isNaN(parsedDate.getTime())) {
+        console.error("Invalid date provided to formatDateForInput:", date);
+        return "";
+      }
+      return parsedDate.toISOString().split('T')[0];
+    } catch (error) {
+      console.error("Error in formatDateForInput:", error);
+      return "";
+    }
   };
   
   // Get paginated data
   const getPaginatedData = (data) => {
+    // Ensure data is an array
+    if (!data || !Array.isArray(data)) {
+      console.error("getPaginatedData received invalid data:", data);
+      return [];
+    }
+    
     // Calculate pagination indexes
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    return data.slice(indexOfFirstItem, indexOfLastItem);
+    
+    try {
+      return data.slice(indexOfFirstItem, indexOfLastItem);
+    } catch (error) {
+      console.error("Error in getPaginatedData:", error);
+      return [];
+    }
   };
 
   // Reset to first page when filtering changes
@@ -528,10 +566,22 @@ const AdminPage = () => {
   
   // Filter data by date range
   const filterByDateRange = (data, startDate, endDate) => {
+    // Make sure data is an array before attempting to filter
+    if (!data || !Array.isArray(data)) {
+      console.error("filterByDateRange received invalid data:", data);
+      return [];
+    }
+    
     if (!startDate && !endDate) return data;
     
     return data.filter(item => {
+      // Skip items with missing createdAt
+      if (!item || !item.createdAt) return false;
+      
       const itemDate = new Date(item.createdAt);
+      
+      // Skip invalid dates
+      if (isNaN(itemDate.getTime())) return false;
       
       if (startDate && endDate) {
         const start = new Date(startDate);
