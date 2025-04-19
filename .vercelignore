@@ -17,13 +17,9 @@ yarn-error.log*
 .gitignore
 README.md
 DEPLOY_VERCEL.md
-VERCEL_DEPLOYMENT_GUIDE.md
 LICENSE
 
 # Development scripts
 windows_compat/**
-vercel-build.js
-vercel-build.cjs
-vercel-build.sh
 start-dev.sh
 start-dev.bat

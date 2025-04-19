@@ -66,7 +66,24 @@ For easy deployment, you can use Vercel:
 
 1. Click the "Deploy to Vercel" button at the top of this README
 2. Follow the instructions to deploy, entering your Firebase environment variables
-3. For detailed instructions, see [DEPLOY_VERCEL.md](./DEPLOY_VERCEL.md)
+3. For detailed instructions, see [VERCEL_DEPLOYMENT_GUIDE.md](./VERCEL_DEPLOYMENT_GUIDE.md)
+
+### Environment Variables for Deployment
+
+The following environment variables are required for deployment:
+
+```
+FIREBASE_API_KEY=your_api_key
+FIREBASE_AUTH_DOMAIN=your_auth_domain
+FIREBASE_DATABASE_URL=your_database_url
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_STORAGE_BUCKET=your_storage_bucket
+FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+FIREBASE_APP_ID=your_app_id
+FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
+
+You can copy these from your Firebase project settings.
 
 ## Technology Stack
 
