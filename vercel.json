@@ -4,6 +4,34 @@
   "outputDirectory": "dist/public",
   "routes": [
     {
+      "src": "/api/products(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/inquiries(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/contacts(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/intents(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/services(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/testimonials(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/faqs(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/server.js"
     },

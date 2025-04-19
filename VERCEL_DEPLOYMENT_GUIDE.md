@@ -123,6 +123,20 @@ If you're having issues connecting to Firebase:
    - Check that Firebase rules allow access from your deployed domain
    - Verify CORS settings in Firebase if applicable
 
+### Admin Panel White Screen Issues
+
+If you encounter a white screen or error like "P.filter is not a function" in the Admin Panel after logging in:
+
+1. This is caused by inconsistencies in how data is returned from API endpoints in the Vercel environment
+2. We've created a special API handler (api/firebase-data.js) that ensures data is always returned in a consistent array format
+3. The vercel.json configuration routes all data endpoints to this handler
+
+If you still experience issues after deployment:
+
+1. Check Vercel logs for any error messages
+2. Verify that Firebase environment variables are correctly set in Vercel's environment settings
+3. Make sure the proper routing is in place in vercel.json
+
 ### Need Additional Help?
 
 If you continue to face issues, you can:
