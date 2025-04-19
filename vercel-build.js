@@ -1,54 +1,46 @@
-#!/usr/bin/env node
+import { execSync } from 'child_process';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * This script prepares the project for Vercel deployment
  * It creates all the necessary files and directories
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
-
-// Get current file directory in ESM compatible way
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Check if running in Vercel environment
-const isVercel = process.env.VERCEL === '1';
-
-// Main function to prepare project for Vercel deployment
 async function prepareForVercel() {
-  console.log('Preparing Building Doctor project for Vercel deployment...');
+  console.log('🚀 Preparing project for Vercel deployment...');
   
-  // Make sure .env file exists with defaults if not in production
-  if (!isVercel && !fs.existsSync('.env')) {
-    console.log('Creating default .env file for local development...');
-    fs.copyFileSync('.env.example', '.env');
-  }
-
   // Create dist directory if it doesn't exist
-  if (!fs.existsSync('dist')) {
-    fs.mkdirSync('dist', { recursive: true });
+  const distDir = resolve(__dirname, 'dist');
+  if (!existsSync(distDir)) {
+    mkdirSync(distDir, { recursive: true });
   }
   
-  if (!fs.existsSync('client/dist')) {
-    fs.mkdirSync('client/dist', { recursive: true });
+  // Create public directory inside dist if it doesn't exist
+  const publicDir = resolve(__dirname, 'dist/public');
+  if (!existsSync(publicDir)) {
+    mkdirSync(publicDir, { recursive: true });
   }
   
-  // Build the project
   try {
-    console.log('Building client and server...');
-    execSync('npm run build', { stdio: 'inherit' });
-    console.log('Build completed successfully!');
+    // Build frontend with Vite
+    console.log('📦 Building frontend...');
+    execSync('vite build --config vite.config.vercel.ts', { stdio: 'inherit' });
+    
+    // Build backend with esbuild
+    console.log('📦 Building backend...');
+    execSync('esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist', 
+      { stdio: 'inherit' });
+    
+    console.log('✅ Build completed successfully!');
   } catch (error) {
-    console.error('Build failed:', error.message);
+    console.error('❌ Build failed:', error);
     process.exit(1);
   }
 }
 
-// Run the preparation process
-prepareForVercel().catch(error => {
-  console.error('Error preparing for Vercel deployment:', error);
-  process.exit(1);
-});
+// Run the prepare function
+prepareForVercel();

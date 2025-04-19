@@ -70,13 +70,29 @@ If your build is failing, check the build logs for errors:
 3. Select the failed deployment
 4. Check the build logs for error messages
 
+#### Common Build Issues
+
+##### "No Output Directory found"
+- Make sure the build process is creating files in the expected `dist` directory
+- Check that `vercel-build.cjs` is executing correctly
+- Deploy the project again after making the necessary fixes
+
+##### "Cannot find module"
+- This typically happens when there's a mismatch between ESM and CommonJS
+- Try switching to the CommonJS version of the build script (which we've configured)
+- Check for any syntax errors in the build scripts
+
 ### Firebase Connection Issues
 
 If you're having issues connecting to Firebase:
 
-1. Double-check all your environment variables
+1. Double-check all your environment variables in Vercel dashboard
 2. Make sure your Firebase project has the Realtime Database enabled
 3. Verify that your Firebase security rules allow the necessary read/write access
+4. Try the following changes if experiencing issues:
+   - Ensure Firebase config variables are properly escaped in Vercel
+   - Check that Firebase rules allow access from your deployed domain
+   - Verify CORS settings in Firebase if applicable
 
 ### Need Additional Help?
 
