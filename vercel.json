@@ -2,7 +2,66 @@
   "version": 2,
   "buildCommand": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
   "outputDirectory": "dist/public",
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/server.js" }
+  "trailingSlash": false,
+  "cleanUrls": true,
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/server.js",
+      "continue": true
+    },
+    { 
+      "handle": "filesystem"
+    },
+    { 
+      "src": "/assets/(.*)", 
+      "dest": "/assets/$1",
+      "continue": true
+    },
+    {
+      "src": "^/admin$",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "^/admin/(.*)",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "^/products$",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "^/products/(.*)$",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "^/services$",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "^/services/(.*)$",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "^/about$",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "^/contact$",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "status": 200
+    }
   ]
 }

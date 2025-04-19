@@ -74,13 +74,30 @@ If your build is failing, check the build logs for errors:
 
 ##### "No Output Directory found"
 - Make sure the build process is creating files in the expected `dist` directory
-- Check that `vercel-build.cjs` is executing correctly
+- Check that the build script is executing correctly
 - Deploy the project again after making the necessary fixes
 
 ##### "Cannot find module"
 - This typically happens when there's a mismatch between ESM and CommonJS
 - Try switching to the CommonJS version of the build script (which we've configured)
 - Check for any syntax errors in the build scripts
+
+### Client-Side Routing Issues
+
+If you get 404 errors when accessing routes like `/admin`, `/products`, etc. directly:
+
+1. Make sure the Vercel configuration is set up correctly to handle client-side routing
+2. Check that your `vercel.json` file includes route configurations for all your application routes
+3. Verify that the following files are included in your deployment:
+   - `client/public/_redirects`
+   - `client/public/static.json`
+   - `client/public/vercel.json`
+
+We've configured the application to handle client-side routing automatically, but if you're still experiencing issues:
+
+1. Try navigating to the main page first and then using the navigation links
+2. Clear your browser cache
+3. Check the browser console for any errors
 
 ### Firebase Connection Issues
 
