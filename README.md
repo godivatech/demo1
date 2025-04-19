@@ -2,7 +2,13 @@
 
 A professional digital platform for OM Vinayaga Associates (Building Doctor franchise) that provides comprehensive construction repair services with an intuitive and modern user experience.
 
+## One-Click Deployment
+
+Deploy your own Building Doctor Website with Vercel:
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fbuilding-doctor-website&env=FIREBASE_API_KEY,FIREBASE_AUTH_DOMAIN,FIREBASE_DATABASE_URL,FIREBASE_PROJECT_ID,FIREBASE_STORAGE_BUCKET,FIREBASE_MESSAGING_SENDER_ID,FIREBASE_APP_ID,FIREBASE_MEASUREMENT_ID&project-name=building-doctor-website&repo-name=building-doctor-website)
+
+> **Note:** You'll need to provide your Firebase credentials during deployment. See the [Deployment Guide](./VERCEL_DEPLOYMENT_GUIDE.md) for detailed instructions.
 
 ## Features
 

@@ -5,9 +5,14 @@
  * It creates all the necessary files and directories
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
+
+// Get current file directory in ESM compatible way
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Check if running in Vercel environment
 const isVercel = process.env.VERCEL === '1';
