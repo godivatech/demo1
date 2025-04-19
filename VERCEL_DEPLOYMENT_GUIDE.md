@@ -1,0 +1,94 @@
+# Vercel Deployment Guide for Building Doctor Website
+
+This guide provides step-by-step instructions for deploying the Building Doctor Website to Vercel with a single click.
+
+## One-Click Deployment
+
+The easiest way to deploy is using the Deploy Button:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fbuilding-doctor-website&env=FIREBASE_API_KEY,FIREBASE_AUTH_DOMAIN,FIREBASE_DATABASE_URL,FIREBASE_PROJECT_ID,FIREBASE_STORAGE_BUCKET,FIREBASE_MESSAGING_SENDER_ID,FIREBASE_APP_ID,FIREBASE_MEASUREMENT_ID&project-name=building-doctor-website&repo-name=building-doctor-website)
+
+## Step-by-Step Instructions
+
+### 1. Click the "Deploy to Vercel" Button
+
+This will take you to Vercel's deployment page where you can configure your deployment.
+
+### 2. Connect Your GitHub/GitLab/Bitbucket Account
+
+If you haven't connected your Git provider account, you'll be prompted to do so.
+
+### 3. Configure the Repository
+
+- Choose a name for your repository
+- Set the project name (this will be used in your deployment URL)
+- Select your personal account or team
+
+### 4. Configure Environment Variables
+
+You'll need to add all the Firebase configuration variables:
+
+| Variable Name | Description | Example Value |
+|---------------|-------------|--------------|
+| FIREBASE_API_KEY | Your Firebase API key | AIzaSyC... |
+| FIREBASE_AUTH_DOMAIN | Firebase auth domain | projectname.firebaseapp.com |
+| FIREBASE_DATABASE_URL | Firebase database URL | https://projectname-default-rtdb.firebaseio.com |
+| FIREBASE_PROJECT_ID | Firebase project ID | projectname |
+| FIREBASE_STORAGE_BUCKET | Firebase storage bucket | projectname.appspot.com |
+| FIREBASE_MESSAGING_SENDER_ID | Firebase messaging sender ID | 123456789012 |
+| FIREBASE_APP_ID | Firebase app ID | 1:123456789012:web:abc123 |
+| FIREBASE_MEASUREMENT_ID | Firebase measurement ID | G-ABCDEF1234 |
+
+### 5. Click "Deploy"
+
+Vercel will clone the repository, build the application, and deploy it to a `.vercel.app` domain.
+
+### 6. Wait for the Build to Complete
+
+This process may take a few minutes. You can monitor the build progress on the Vercel dashboard.
+
+### 7. Visit Your Deployed Website
+
+Once the build is complete, you can visit your website at the URL provided by Vercel.
+
+## Custom Domain Setup (Optional)
+
+To use a custom domain:
+
+1. Go to your project in the Vercel dashboard
+2. Click on "Domains"
+3. Add your custom domain and follow the DNS setup instructions
+
+## Troubleshooting
+
+### Build Failing
+
+If your build is failing, check the build logs for errors:
+
+1. Go to your project in the Vercel dashboard
+2. Click on "Deployments"
+3. Select the failed deployment
+4. Check the build logs for error messages
+
+### Firebase Connection Issues
+
+If you're having issues connecting to Firebase:
+
+1. Double-check all your environment variables
+2. Make sure your Firebase project has the Realtime Database enabled
+3. Verify that your Firebase security rules allow the necessary read/write access
+
+### Need Additional Help?
+
+If you continue to face issues, you can:
+
+1. Create an issue in the GitHub repository
+2. Contact the developer team for support
+
+## Keeping Your Deployment Updated
+
+When you make changes to your repository, Vercel will automatically rebuild and redeploy your website. To manually trigger a redeployment:
+
+1. Go to your project in the Vercel dashboard
+2. Click on "Deployments"
+3. Click "Redeploy" on the most recent deployment

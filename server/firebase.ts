@@ -16,18 +16,10 @@ import {
 } from "@shared/schema";
 import MemStoreSession from 'memorystore';
 import session from 'express-session';
+import { getFirebaseConfig } from './firebase.config';
 
-// Initialize Firebase with your config
-const firebaseConfig = {
-  apiKey: "AIzaSyCMOdvQW248_4ul-ciFEEmuOghb4xdS3gs",
-  authDomain: "jpfinserv-892e1.firebaseapp.com",
-  databaseURL: "https://jpfinserv-892e1-default-rtdb.firebaseio.com",
-  projectId: "jpfinserv-892e1",
-  storageBucket: "jpfinserv-892e1.firebasestorage.app",
-  messagingSenderId: "166323272116",
-  appId: "1:166323272116:web:f440b4c76307ea463c5ae1",
-  measurementId: "G-GBS93JTW1R"
-};
+// Get Firebase config from environment variables or fallback
+const firebaseConfig = getFirebaseConfig();
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);

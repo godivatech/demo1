@@ -2,50 +2,84 @@
 
 A professional digital platform for OM Vinayaga Associates (Building Doctor franchise) that provides comprehensive construction repair services with an intuitive and modern user experience.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fbuilding-doctor-website&env=FIREBASE_API_KEY,FIREBASE_AUTH_DOMAIN,FIREBASE_DATABASE_URL,FIREBASE_PROJECT_ID,FIREBASE_STORAGE_BUCKET,FIREBASE_MESSAGING_SENDER_ID,FIREBASE_APP_ID,FIREBASE_MEASUREMENT_ID&project-name=building-doctor-website&repo-name=building-doctor-website)
+
 ## Features
 
-- Responsive design optimized for all devices
-- Product catalog with detailed product pages
-- Service listings with detailed information
-- Admin dashboard for managing content
-- Contact and inquiry forms integration with Firebase
-- Building issue diagnosis and solution workflows
+- Complete business website with home, services, products, about, and contact pages
+- Admin interface for content management
+- Firebase Realtime Database integration
+- Mobile-responsive design
+- Interactive service and product galleries
+- Before and after project showcases
+- Testimonials and FAQs section
+- WhatsApp integration for quick customer contact
+- Animated page transitions for modern UX
 
-## Tech Stack
+## Getting Started
 
-- Frontend: React.js, TailwindCSS, Shadcn UI
-- Backend: Express.js, Firebase Realtime Database
-- State Management: React Query
-- Routing: Wouter
-- Animation: Framer Motion
-- Form Handling: React Hook Form with Zod validation
+### Prerequisites
 
-## Project Structure
+- Node.js (v18 or higher)
+- NPM (v9 or higher)
+- Firebase account
 
-- client/ - Frontend React application
-- server/ - Backend Express application
-- shared/ - Shared code between client and server
+### Installation
 
-## Deployment on Vercel
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/building-doctor-website.git
+cd building-doctor-website
+```
 
-1. Fork this repository to your GitHub account
-2. Create a new project on Vercel 
-3. Link your GitHub repository
-4. Configure environment variables for Firebase credentials
-5. Deploy!
+2. Install dependencies:
+```bash
+npm install
+```
 
-## Admin Access
+3. Create a `.env` file in the root directory with your Firebase credentials:
+```
+FIREBASE_API_KEY=your_api_key
+FIREBASE_AUTH_DOMAIN=your_auth_domain
+FIREBASE_DATABASE_URL=your_database_url
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_STORAGE_BUCKET=your_storage_bucket
+FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+FIREBASE_APP_ID=your_app_id
+FIREBASE_MEASUREMENT_ID=your_measurement_id
+```
 
-Access the admin dashboard at /admin with the following credentials:
-- Username: admin
-- Password: buildingdoctor2023
+4. Start the development server:
+```bash
+npm run dev
+```
 
-## Firebase Setup
+## Deployment
 
-1. Create a Firebase project
-2. Set up Realtime Database
-3. Update Firebase configuration in server/firebase.ts and client/src/lib/firebase.js
+For easy deployment, you can use Vercel:
+
+1. Click the "Deploy to Vercel" button at the top of this README
+2. Follow the instructions to deploy, entering your Firebase environment variables
+3. For detailed instructions, see [DEPLOY_VERCEL.md](./DEPLOY_VERCEL.md)
+
+## Technology Stack
+
+- React.js frontend
+- Express.js backend
+- Firebase Realtime Database
+- Tailwind CSS with shadcn UI components
+- Framer Motion animations
+- React Query for data fetching
+- Zod for validation
+- TypeScript for type safety
 
 ## License
 
-MIT
+This project is licensed under the MIT License.
+
+## Acknowledgements
+
+- [shadcn/ui](https://ui.shadcn.com/) for the component library
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Framer Motion](https://www.framer.com/motion/) for animations
+- [Firebase](https://firebase.google.com/) for backend services

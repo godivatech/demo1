@@ -1,29 +1,36 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server/index.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "client/dist"
-      }
+  "buildCommand": "node vercel-build.js",
+  "outputDirectory": "client/dist",
+  "functions": {
+    "api/**/*": {
+      "memory": 1024,
+      "maxDuration": 10
     }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/server" },
+    { "source": "/(.*)", "destination": "/$1" }
   ],
-  "routes": [
+  "headers": [
     {
-      "src": "/api/(.*)",
-      "dest": "server/index.ts"
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
     },
     {
-      "src": "/(.*)",
-      "dest": "client/dist/$1"
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
     }
   ],
   "env": {
     "NODE_ENV": "production"
+  },
+  "github": {
+    "silent": true,
+    "autoAlias": true
   }
 }
