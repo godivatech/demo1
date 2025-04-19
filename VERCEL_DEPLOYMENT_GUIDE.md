@@ -93,7 +93,19 @@ If you get 404 errors when accessing routes like `/admin`, `/products`, etc. dir
    - `client/public/static.json`
    - `client/public/vercel.json`
 
-We've configured the application to handle client-side routing automatically, but if you're still experiencing issues:
+#### "Mixed Routing Properties" Error
+
+If you encounter a "Mixed Routing Properties" error:
+
+1. Make sure you're using either `routes` or `rewrites` consistently across all your vercel.json files, **not both**
+2. Check both the root `vercel.json` and any `vercel.json` files in public directories
+3. Use `routes` with `src` and `dest` properties (the older format) rather than `rewrites` with `source` and `destination`
+
+We've configured the application to use only `routes` to avoid this issue, but if you modify the configuration, be careful not to mix routing formats.
+
+#### General Troubleshooting
+
+If you're still experiencing routing issues:
 
 1. Try navigating to the main page first and then using the navigation links
 2. Clear your browser cache
