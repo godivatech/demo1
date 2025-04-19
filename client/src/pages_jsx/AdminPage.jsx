@@ -555,9 +555,16 @@ const AdminPage = () => {
   
   // Sort data by created date
   const sortByDate = (data, order = "desc") => {
+    // Make sure data is an array before attempting to sort
+    if (!data || !Array.isArray(data)) {
+      console.error("sortByDate received invalid data:", data);
+      return [];
+    }
+    
     return [...data].sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
+      // Handle null or undefined createdAt
+      const dateA = a && a.createdAt ? new Date(a.createdAt) : new Date(0);
+      const dateB = b && b.createdAt ? new Date(b.createdAt) : new Date(0);
       
       return order === "desc" 
         ? dateB - dateA // newest first
