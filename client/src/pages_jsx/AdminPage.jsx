@@ -218,6 +218,21 @@ const AdminPage = () => {
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
   
+  // Handle tab switch and clear update indicator for the active tab
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+    
+    // Clear update indicator when switching to the tab
+    if (lastUpdated && lastUpdated.type === tabName) {
+      setLastUpdated(prev => {
+        if (prev && prev.type === tabName) {
+          return null;
+        }
+        return prev;
+      });
+    }
+  };
+  
   // Fetch data based on active tab
   const fetchTabData = (endpoint) => {
     return async () => {
@@ -973,6 +988,7 @@ const AdminPage = () => {
                 <TabsTrigger
                   value="inquiries"
                   className="flex items-center gap-2"
+                  onClick={() => handleTabChange("inquiries")}
                 >
                   <ClipboardList className="h-4 w-4" />
                   Inquiries
@@ -981,10 +997,17 @@ const AdminPage = () => {
                       {inquiries.length}
                     </span>
                   )}
+                  {lastUpdated && lastUpdated.type === 'inquiries' && activeTab !== 'inquiries' && (
+                    <span className="relative flex h-2 w-2 ml-1">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="contacts"
                   className="flex items-center gap-2"
+                  onClick={() => handleTabChange("contacts")}
                 >
                   <MessageSquare className="h-4 w-4" />
                   Contacts
@@ -993,10 +1016,17 @@ const AdminPage = () => {
                       {contactSubmissions.length}
                     </span>
                   )}
+                  {lastUpdated && lastUpdated.type === 'contacts' && activeTab !== 'contacts' && (
+                    <span className="relative flex h-2 w-2 ml-1">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                  )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="intents"
                   className="flex items-center gap-2"
+                  onClick={() => handleTabChange("intents")}
                 >
                   <AlertCircle className="h-4 w-4" />
                   Exit Intent
@@ -1005,8 +1035,21 @@ const AdminPage = () => {
                       {intentSubmissions.length}
                     </span>
                   )}
+                  {lastUpdated && lastUpdated.type === 'intents' && activeTab !== 'intents' && (
+                    <span className="relative flex h-2 w-2 ml-1">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                  )}
                 </TabsTrigger>
               </TabsList>
+              
+              {/* Real-time status indicator */}
+              {lastUpdated && (
+                <div className="text-xs text-gray-500 mb-4 text-center">
+                  Last update: {lastUpdated.type} at {new Date(lastUpdated.timestamp).toLocaleTimeString()}
+                </div>
+              )}
 
               <TabsContent value="inquiries">
                 <div className="flex justify-between items-center mb-4">
