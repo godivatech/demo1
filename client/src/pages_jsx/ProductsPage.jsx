@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 // Real Building Doctor Products based on website data
-export const PRODUCTS = [
+const PRODUCTS = [
   // Crack Filling Category
   {
     id: 1,
@@ -274,18 +274,20 @@ const ProductsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
   
-  // Added loading state for demonstrating product cards suspense
+  // Loading state for product cards suspense effect
   const [isLoading, setIsLoading] = useState(true);
   const error = null;
   
-  // Simulate loading delay for demonstration purposes
+  // Simulate loading delay for initial load and when category/search changes
   useEffect(() => {
+    setIsLoading(true); // Set to loading whenever filters change
+    
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
+    }, 2000); // Increased to 2 seconds to make it more noticeable
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [activeCategory, searchTerm]); // Re-trigger loading when these change
   
   useEffect(() => {
     document.title = "Our Products | OM Vinayaga Associates";
@@ -309,8 +311,14 @@ const ProductsPage = () => {
   
   const handlePageChange = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
+      setIsLoading(true);
       setCurrentPage(pageNumber);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Clear loading state after a short delay
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
   };
   
@@ -345,7 +353,10 @@ const ProductsPage = () => {
                           ? "bg-primary text-white" 
                           : "hover:bg-gray-100 text-gray-600"
                       )}
-                      onClick={() => setActiveCategory(category.id)}
+                      onClick={() => {
+                        setIsLoading(true);
+                        setActiveCategory(category.id);
+                      }}
                     >
                       {category.name}
                       {activeCategory === category.id && (
@@ -362,7 +373,10 @@ const ProductsPage = () => {
                       type="text" 
                       placeholder="Search by name..."
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={(e) => {
+                        setIsLoading(true);
+                        setSearchTerm(e.target.value);
+                      }}
                       className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                     <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
@@ -447,6 +461,7 @@ const ProductsPage = () => {
                       <p className="text-gray-600 mb-4">Try changing your search criteria or browse all products</p>
                       <button 
                         onClick={() => {
+                          setIsLoading(true);
                           setSearchTerm("");
                           setActiveCategory("all");
                         }}
