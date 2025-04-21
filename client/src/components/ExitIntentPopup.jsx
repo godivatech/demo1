@@ -5,6 +5,7 @@ import { FaWhatsapp, FaPhone } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { COMPANY_NAME, CONTACT } from "../data/company";
+import { intentSchema } from "@/data/schema";
 
 const ExitIntentPopup = () => {
   const [isOpen, setIsOpen] = useState(false);

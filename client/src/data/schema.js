@@ -4,9 +4,28 @@ import { z } from "zod";
 export const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
-  phone: z.string().min(10, "Phone number must be valid"),
+  phone: z.string().min(10, "Phone number must be valid").regex(/^[0-9+\s()-]+$/, "Invalid phone number format"),
   service: z.string().min(1, "Please select a service"),
   message: z.string().min(10, "Message must be at least 10 characters"),
+  consent: z.boolean().refine(val => val === true, "You must agree to the terms")
+});
+
+// Inquiry form schema
+export const inquirySchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+  phone: z.string().min(10, "Phone number must be valid").regex(/^[0-9+\s()-]+$/, "Invalid phone number format"),
+  issueType: z.string().min(1, "Please select an issue type"),
+  address: z.string().optional().or(z.literal("")),
+  message: z.string().optional().or(z.literal(""))
+});
+
+// Exit intent form schema (similar to contact but with different requirements)
+export const intentSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  phone: z.string().min(10, "Phone number must be valid").regex(/^[0-9+\s()-]+$/, "Invalid phone number format"),
+  service: z.string(),
+  message: z.string(),
   consent: z.boolean().refine(val => val === true, "You must agree to the terms")
 });
 

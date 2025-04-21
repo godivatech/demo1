@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { contactSchema, inquirySchema } from "@/data/schema";
 
 const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
   // Use external isOpen prop if provided, otherwise use internal state
@@ -93,19 +94,12 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
   const handleInquirySubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
-    if (!inquiryData.name || !inquiryData.phone) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+    // Validate form using Zod schema
     try {
+      const validatedData = inquirySchema.parse(inquiryData);
+      
       setIsSubmitting(true);
-      await apiRequest("POST", "/api/inquiries", inquiryData);
+      await apiRequest("POST", "/api/inquiries", validatedData);
       
       // Reset form and show success
       setInquiryData({
@@ -129,42 +123,38 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       setIsOpen(false);
       if (onClose) onClose();
     } catch (error) {
-      toast({
-        title: "Failed to submit",
-        description: "Please try again or contact us directly.",
-        variant: "destructive",
-      });
-    } finally {
+      if (error.errors) {
+        // Zod validation error
+        const errorMessages = error.errors.map(err => `${err.message}`).join(', ');
+        toast({
+          title: "Form validation error",
+          description: errorMessages,
+          variant: "destructive",
+        });
+      } else {
+        // API or other error
+        toast({
+          title: "Failed to submit",
+          description: "Please try again or contact us directly.",
+          variant: "destructive",
+        });
+      }
       setIsSubmitting(false);
+    } finally {
+      if (isSubmitting) setIsSubmitting(false);
     }
   };
   
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
-    if (!contactData.name || !contactData.phone || !contactData.service) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (!contactData.consent) {
-      toast({
-        title: "Consent Required",
-        description: "Please agree to the processing of your personal data.",
-        variant: "destructive"
-      });
-      return;
-    }
-
+    // Validate form using Zod schema
     try {
+      const validatedData = contactSchema.parse(contactData);
+      
       setIsSubmitting(true);
       // Use the correct API endpoint: /api/contacts (not /api/contact)
-      await apiRequest("POST", "/api/contacts", contactData);
+      await apiRequest("POST", "/api/contacts", validatedData);
       
       // Reset form and show success
       setContactData({
@@ -188,13 +178,25 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       setIsOpen(false);
       if (onClose) onClose();
     } catch (error) {
-      toast({
-        title: "Failed to submit",
-        description: "Please try again or contact us directly.",
-        variant: "destructive",
-      });
-    } finally {
+      if (error.errors) {
+        // Zod validation error
+        const errorMessages = error.errors.map(err => `${err.message}`).join(', ');
+        toast({
+          title: "Form validation error",
+          description: errorMessages,
+          variant: "destructive",
+        });
+      } else {
+        // API or other error
+        toast({
+          title: "Failed to submit",
+          description: "Please try again or contact us directly.",
+          variant: "destructive",
+        });
+      }
       setIsSubmitting(false);
+    } finally {
+      if (isSubmitting) setIsSubmitting(false);
     }
   };
 
