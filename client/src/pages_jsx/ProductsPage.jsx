@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 // Real Building Doctor Products based on website data
-const PRODUCTS = [
+export const PRODUCTS = [
   // Crack Filling Category
   {
     id: 1,

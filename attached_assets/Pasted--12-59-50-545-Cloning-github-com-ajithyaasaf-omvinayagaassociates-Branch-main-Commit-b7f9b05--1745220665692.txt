@@ -1,0 +1,44 @@
+[12:59:50.545] Cloning github.com/ajithyaasaf/omvinayagaassociates (Branch: main, Commit: b7f9b05)
+[12:59:51.033] Cloning completed: 488.000ms
+[12:59:51.111] Found .vercelignore
+[12:59:51.148] Removed 79 ignored files defined in .vercelignore
+[12:59:52.097] Restored build cache from previous deployment (CEqMLxSxJwzko1rrSN7NH9stkoVU)
+[12:59:52.197] Running build in Washington, D.C., USA (East) – iad1
+[12:59:53.862] Running "vercel build"
+[12:59:54.248] Vercel CLI 41.6.0
+[12:59:55.020] Installing dependencies...
+[12:59:56.482] 
+[12:59:56.482] up to date in 1s
+[12:59:56.483] 
+[12:59:56.483] 60 packages are looking for funding
+[12:59:56.483]   run `npm fund` for details
+[12:59:56.930] [36mvite v5.4.14 [32mbuilding for production...[36m[39m
+[12:59:56.992] transforming...
+[12:59:57.382] Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+[12:59:57.382]   npx update-browserslist-db@latest
+[12:59:57.382]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[13:00:01.601] [32m✓[39m 2108 modules transformed.
+[13:00:01.603] [31mx[39m Build failed in 4.64s
+[13:00:01.603] [31merror during build:
+[13:00:01.604] [31mclient/src/pages_jsx/ProductDetailPage.jsx (9:9): "PRODUCTS" is not exported by "client/src/pages_jsx/ProductsPage.jsx", imported by "client/src/pages_jsx/ProductDetailPage.jsx".[31m
+[13:00:01.604] file: [36m/vercel/path0/client/src/pages_jsx/ProductDetailPage.jsx:9:9[31m
+[13:00:01.604] [33m
+[13:00:01.604]  7: // Import PRODUCTS array from ProductsPage for direct access
+[13:00:01.604]  8: // This ensures we can access product details without API calls
+[13:00:01.605]  9: import { PRODUCTS } from "./ProductsPage"; // All products hardcoded in ProductsPage
+[13:00:01.605]              ^
+[13:00:01.605] 10: 
+[13:00:01.605] 11: const ProductDetailPage = () => {
+[13:00:01.605] [31m
+[13:00:01.605]     at getRollupError (file:///vercel/path0/node_modules/rollup/dist/es/shared/parseAst.js:396:41)
+[13:00:01.605]     at error (file:///vercel/path0/node_modules/rollup/dist/es/shared/parseAst.js:392:42)
+[13:00:01.606]     at Module.error (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:15588:16)
+[13:00:01.606]     at Module.traceVariable (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:16037:29)
+[13:00:01.606]     at ModuleScope.findVariable (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:13820:39)
+[13:00:01.606]     at ReturnValueScope.findVariable (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:5283:38)
+[13:00:01.606]     at FunctionBodyScope.findVariable (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:5283:38)
+[13:00:01.606]     at ReturnValueScope.findVariable (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:5283:38)
+[13:00:01.607]     at FunctionBodyScope.findVariable (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:5283:38)
+[13:00:01.607]     at ReturnValueScope.findVariable (file:///vercel/path0/node_modules/rollup/dist/es/shared/node-entry.js:5283:38)[39m
+[13:00:01.626] Error: Command "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist" exited with 1
+[13:00:01.952] 
