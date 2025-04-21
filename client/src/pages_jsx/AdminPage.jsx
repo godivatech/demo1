@@ -198,13 +198,19 @@ const AdminPage = () => {
       return { id: inquiryId, response };
     },
     onSuccess: (data) => {
+      // Immediately update the cache for a faster UI response
       queryClient.setQueryData(["inquiries"], (oldData) => {
         return oldData
           ? oldData.filter((inquiry) => inquiry.id !== data.id)
           : [];
       });
 
+      // Force refetch to ensure all clients have the latest data
       queryClient.invalidateQueries({ queryKey: ["inquiries"] });
+      
+      // Also refetch other data types as they might be related
+      refetchContacts();
+      refetchIntents();
 
       toast({
         title: "Inquiry deleted",
@@ -243,13 +249,19 @@ const AdminPage = () => {
       return { id: contactId, response };
     },
     onSuccess: (data) => {
+      // Immediately update the cache for a faster UI response
       queryClient.setQueryData(["contacts"], (oldData) => {
         return oldData
           ? oldData.filter((contact) => contact.id !== data.id)
           : [];
       });
 
+      // Force refetch to ensure all clients have the latest data
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
+      
+      // Also refetch other data types as they might be related
+      refetchInquiries();
+      refetchIntents();
 
       toast({
         title: "Contact submission deleted",
@@ -289,11 +301,17 @@ const AdminPage = () => {
       return { id: intentId, response };
     },
     onSuccess: (data) => {
+      // Immediately update the cache for a faster UI response
       queryClient.setQueryData(["intents"], (oldData) => {
         return oldData ? oldData.filter((intent) => intent.id !== data.id) : [];
       });
 
+      // Force refetch to ensure all clients have the latest data
       queryClient.invalidateQueries({ queryKey: ["intents"] });
+      
+      // Also refetch other data types as they might be related
+      refetchInquiries();
+      refetchContacts();
 
       toast({
         title: "Intent form submission deleted",
