@@ -1,4 +1,4 @@
-// Firebase data endpoints for Vercel
+// API handler for /api/inquiries/[id]
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, get, remove, set } from 'firebase/database';
 
@@ -24,32 +24,6 @@ try {
 } catch (error) {
   console.error('Error initializing Firebase:', error);
 }
-
-// Get data from Firebase based on path
-const getDataFromFirebase = async (path) => {
-  try {
-    const db = getDatabase(firebaseApp);
-    const dataRef = ref(db, path);
-    const snapshot = await get(dataRef);
-    
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      
-      // Convert object to array if it's not already one
-      if (data && typeof data === 'object' && !Array.isArray(data)) {
-        return Object.values(data);
-      }
-      
-      // Ensure we return an array
-      return Array.isArray(data) ? data : [];
-    } else {
-      return [];
-    }
-  } catch (error) {
-    console.error(`Error fetching ${path} from Firebase:`, error);
-    return [];
-  }
-};
 
 // Delete data from Firebase
 const deleteFromFirebase = async (path, id) => {
@@ -126,74 +100,22 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
   
-  // Extract the path from the URL
-  const { url } = req;
-  const pathMatch = url.match(/\/api\/([a-zA-Z]+)(\/(\d+))?$/);
+  // Get ID from the URL
+  const { id } = req.query;
   
-  if (!pathMatch || !pathMatch[1]) {
-    return res.status(400).json({ error: 'Invalid API path' });
+  if (!id) {
+    return res.status(400).json({ error: 'ID is required' });
   }
   
-  const dataType = pathMatch[1];
-  const id = pathMatch[3]; // This will be undefined for collection-level endpoints
-  let firebasePath;
-  
-  // Map API endpoint to Firebase data path
-  switch (dataType) {
-    case 'inquiries':
-      firebasePath = 'inquiries';
-      break;
-    case 'contacts':
-      firebasePath = 'contacts';
-      break;
-    case 'intents':
-      firebasePath = 'intents';
-      break;
-    case 'products':
-      firebasePath = 'products';
-      break;
-    case 'services':
-      firebasePath = 'services';
-      break;
-    case 'testimonials':
-      firebasePath = 'testimonials';
-      break;
-    case 'faqs':
-      firebasePath = 'faqs';
-      break;
-    default:
-      return res.status(404).json({ error: 'Data type not found' });
-  }
+  const firebasePath = 'inquiries';
   
   try {
-    // Handle GET requests
-    if (req.method === 'GET') {
-      // Get data from Firebase
-      let data = await getDataFromFirebase(firebasePath);
-      
-      // Special handling for products to match API format
-      if (dataType === 'products') {
-        return res.status(200).json({
-          success: true,
-          products: Array.isArray(data) ? data : []
-        });
-      }
-      
-      // For all other endpoints, return array directly
-      return res.status(200).json(Array.isArray(data) ? data : []);
-    }
-    
     // Handle DELETE requests
     if (req.method === 'DELETE') {
-      // We need an ID for delete operations
-      if (!id) {
-        return res.status(400).json({ error: 'ID is required for DELETE operations' });
-      }
-      
       const result = await deleteFromFirebase(firebasePath, id);
       
       if (result.success) {
-        return res.status(200).json({ success: true, message: `${dataType.slice(0, -1)} deleted successfully` });
+        return res.status(200).json({ success: true, message: 'Inquiry deleted successfully' });
       } else {
         return res.status(404).json({ error: result.message || 'Delete operation failed' });
       }
@@ -202,7 +124,7 @@ export default async function handler(req, res) {
     // If we get here, the method is not supported
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
-    console.error(`Error in API handler for ${dataType}:`, error);
+    console.error(`Error in Inquiry API handler:`, error);
     return res.status(500).json({ 
       error: 'Internal server error',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
