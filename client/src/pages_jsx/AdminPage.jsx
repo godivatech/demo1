@@ -1088,121 +1088,85 @@ const AdminPage = () => {
                           <DialogTitle>Inquiry Details</DialogTitle>
                         </DialogHeader>
 
-                        {inquiries.find(
-                          (i) => i.id === parseInt(expandedItem),
-                        ) && (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-                            <div>
-                              <h3 className="font-semibold mb-2">
-                                Contact Information
-                              </h3>
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">Name:</span>
-                                  <span>
-                                    {
-                                      inquiries.find(
-                                        (i) => i.id === parseInt(expandedItem),
-                                      ).name
-                                    }
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">Phone:</span>
-                                  <span>
-                                    {
-                                      inquiries.find(
-                                        (i) => i.id === parseInt(expandedItem),
-                                      ).phone
-                                    }
-                                  </span>
-                                </div>
-                                {inquiries.find(
-                                  (i) => i.id === parseInt(expandedItem),
-                                ).email && (
+                        {(() => {
+                          // Find the current inquiry using string comparison for both IDs
+                          const currentInquiry = inquiries.find(
+                            (i) => i && i.id && i.id.toString() === expandedItem
+                          );
+                          
+                          if (!currentInquiry) {
+                            return <div className="py-4 text-center">No inquiry details found</div>;
+                          }
+                          
+                          return (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+                              <div>
+                                <h3 className="font-semibold mb-2">
+                                  Contact Information
+                                </h3>
+                                <div className="space-y-2">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-medium">Email:</span>
-                                    <span>
-                                      {
-                                        inquiries.find(
-                                          (i) =>
-                                            i.id === parseInt(expandedItem),
-                                        ).email
-                                      }
-                                    </span>
+                                    <span className="font-medium">Name:</span>
+                                    <span>{currentInquiry.name}</span>
                                   </div>
-                                )}
-                                {inquiries.find(
-                                  (i) => i.id === parseInt(expandedItem),
-                                ).address && (
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium">Phone:</span>
+                                    <span>{currentInquiry.phone}</span>
+                                  </div>
+                                  {currentInquiry.email && (
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-medium">Email:</span>
+                                      <span>{currentInquiry.email}</span>
+                                    </div>
+                                  )}
+                                  {currentInquiry.address && (
+                                    <div className="flex items-center gap-2">
+                                      <span className="font-medium">
+                                        Address:
+                                      </span>
+                                      <span>{currentInquiry.address}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div>
+                                <h3 className="font-semibold mb-2">
+                                  Inquiry Details
+                                </h3>
+                                <div className="space-y-2">
                                   <div className="flex items-center gap-2">
                                     <span className="font-medium">
-                                      Address:
+                                      Issue Type:
                                     </span>
-                                    <span>
-                                      {
-                                        inquiries.find(
-                                          (i) =>
-                                            i.id === parseInt(expandedItem),
-                                        ).address
-                                      }
+                                    <span className="inline-block px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                                      {currentInquiry.issueType || "General Inquiry"}
                                     </span>
                                   </div>
-                                )}
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium">
+                                      Submitted:
+                                    </span>
+                                    <span>
+                                      {currentInquiry.createdAt
+                                        ? formatDate(currentInquiry.createdAt)
+                                        : "Recent"}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
 
-                            <div>
-                              <h3 className="font-semibold mb-2">
-                                Inquiry Details
-                              </h3>
-                              <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">
-                                    Issue Type:
-                                  </span>
-                                  <span className="inline-block px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
-                                    {inquiries.find(
-                                      (i) => i.id === parseInt(expandedItem),
-                                    ).issueType || "General Inquiry"}
-                                  </span>
+                              {currentInquiry.message && (
+                                <div className="col-span-1 md:col-span-2">
+                                  <h3 className="font-semibold mb-2">Message</h3>
+                                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    {currentInquiry.message}
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">
-                                    Submitted:
-                                  </span>
-                                  <span>
-                                    {inquiries.find(
-                                      (i) => i.id === parseInt(expandedItem),
-                                    ).createdAt
-                                      ? formatDate(
-                                          inquiries.find(
-                                            (i) =>
-                                              i.id === parseInt(expandedItem),
-                                          ).createdAt,
-                                        )
-                                      : "Recent"}
-                                  </span>
-                                </div>
-                              </div>
+                              )}
                             </div>
-
-                            {inquiries.find(
-                              (i) => i.id === parseInt(expandedItem),
-                            ).message && (
-                              <div className="col-span-1 md:col-span-2">
-                                <h3 className="font-semibold mb-2">Message</h3>
-                                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                  {
-                                    inquiries.find(
-                                      (i) => i.id === parseInt(expandedItem),
-                                    ).message
-                                  }
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                          );
+                        })()}
 
                         <DialogFooter>
                           <Button
