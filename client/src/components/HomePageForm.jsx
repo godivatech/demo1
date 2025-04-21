@@ -29,6 +29,16 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
     address: "",
   });
   
+  // Field-specific error messages for inquiry form
+  const [inquiryErrors, setInquiryErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    issueType: "",
+    message: "",
+    address: ""
+  });
+  
   // Contact form data
   const [contactData, setContactData] = useState({
     name: "",
@@ -37,6 +47,16 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
     service: "",
     message: "",
     consent: false
+  });
+  
+  // Field-specific error messages for contact form
+  const [contactErrors, setContactErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    message: "",
+    consent: ""
   });
   
   const { toast } = useToast();
@@ -94,12 +114,55 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
   const handleInquirySubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form using Zod schema
+    // Clear previous errors
+    setInquiryErrors({
+      name: "",
+      email: "",
+      phone: "",
+      issueType: "",
+      message: "",
+      address: ""
+    });
+    
+    // Field-level validation manually
+    let hasErrors = false;
+    const newErrors = {...inquiryErrors};
+    
+    // Name validation
+    if (!inquiryData.name || inquiryData.name.trim().length < 3) {
+      newErrors.name = "Name must be at least 3 characters";
+      hasErrors = true;
+    }
+    
+    // Phone validation (must be 10 digits)
+    const phoneRegex = /^\d{10}$/;
+    if (!inquiryData.phone || !phoneRegex.test(inquiryData.phone.replace(/\D/g, ''))) {
+      newErrors.phone = "Phone number must be 10 digits";
+      hasErrors = true;
+    }
+    
+    // Email validation if provided
+    if (inquiryData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inquiryData.email)) {
+      newErrors.email = "Please enter a valid email address";
+      hasErrors = true;
+    }
+    
+    // Issue type validation
+    if (!inquiryData.issueType) {
+      newErrors.issueType = "Please select an issue type";
+      hasErrors = true;
+    }
+    
+    // Update errors state
+    if (hasErrors) {
+      setInquiryErrors(newErrors);
+      return;
+    }
+    
+    // If validation passes, submit the form
     try {
-      const validatedData = inquirySchema.parse(inquiryData);
-      
       setIsSubmitting(true);
-      await apiRequest("POST", "/api/inquiries", validatedData);
+      await apiRequest("POST", "/api/inquiries", inquiryData);
       
       // Reset form and show success
       setInquiryData({
@@ -123,22 +186,11 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       setIsOpen(false);
       if (onClose) onClose();
     } catch (error) {
-      if (error.errors) {
-        // Zod validation error
-        const errorMessages = error.errors.map(err => `${err.message}`).join(', ');
-        toast({
-          title: "Form validation error",
-          description: errorMessages,
-          variant: "destructive",
-        });
-      } else {
-        // API or other error
-        toast({
-          title: "Failed to submit",
-          description: "Please try again or contact us directly.",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Failed to submit",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
       setIsSubmitting(false);
     } finally {
       if (isSubmitting) setIsSubmitting(false);
@@ -148,13 +200,68 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form using Zod schema
+    // Clear previous errors
+    setContactErrors({
+      name: "",
+      email: "",
+      phone: "",
+      service: "",
+      message: "",
+      consent: ""
+    });
+    
+    // Field-level validation manually
+    let hasErrors = false;
+    const newErrors = {...contactErrors};
+    
+    // Name validation
+    if (!contactData.name || contactData.name.trim().length < 3) {
+      newErrors.name = "Name must be at least 3 characters";
+      hasErrors = true;
+    }
+    
+    // Email validation
+    if (!contactData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactData.email)) {
+      newErrors.email = "Please enter a valid email address";
+      hasErrors = true;
+    }
+    
+    // Phone validation (must be 10 digits)
+    const phoneRegex = /^\d{10}$/;
+    if (!contactData.phone || !phoneRegex.test(contactData.phone.replace(/\D/g, ''))) {
+      newErrors.phone = "Phone number must be 10 digits";
+      hasErrors = true;
+    }
+    
+    // Service validation
+    if (!contactData.service) {
+      newErrors.service = "Please select a service";
+      hasErrors = true;
+    }
+    
+    // Message validation
+    if (!contactData.message || contactData.message.trim().length < 10) {
+      newErrors.message = "Message must be at least 10 characters";
+      hasErrors = true;
+    }
+    
+    // Consent validation
+    if (!contactData.consent) {
+      newErrors.consent = "You must agree to the terms";
+      hasErrors = true;
+    }
+    
+    // Update errors state
+    if (hasErrors) {
+      setContactErrors(newErrors);
+      return;
+    }
+    
+    // If validation passes, submit the form
     try {
-      const validatedData = contactSchema.parse(contactData);
-      
       setIsSubmitting(true);
       // Use the correct API endpoint: /api/contacts (not /api/contact)
-      await apiRequest("POST", "/api/contacts", validatedData);
+      await apiRequest("POST", "/api/contacts", contactData);
       
       // Reset form and show success
       setContactData({
@@ -178,22 +285,11 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       setIsOpen(false);
       if (onClose) onClose();
     } catch (error) {
-      if (error.errors) {
-        // Zod validation error
-        const errorMessages = error.errors.map(err => `${err.message}`).join(', ');
-        toast({
-          title: "Form validation error",
-          description: errorMessages,
-          variant: "destructive",
-        });
-      } else {
-        // API or other error
-        toast({
-          title: "Failed to submit",
-          description: "Please try again or contact us directly.",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Failed to submit",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
       setIsSubmitting(false);
     } finally {
       if (isSubmitting) setIsSubmitting(false);
@@ -305,11 +401,14 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                             type="text"
                             name="name"
                             placeholder="Your Name *"
-                            className="pl-10"
+                            className={`pl-10 ${inquiryErrors.name ? "border-red-500" : ""}`}
                             value={inquiryData.name}
                             onChange={handleInquiryChange}
                             required
                           />
+                          {inquiryErrors.name && (
+                            <p className="text-red-500 text-xs mt-1">{inquiryErrors.name}</p>
+                          )}
                         </div>
                         
                         <div className="relative">
@@ -319,12 +418,15 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                           <Input
                             type="tel"
                             name="phone"
-                            placeholder="Phone Number *"
-                            className="pl-10"
+                            placeholder="Phone Number (10 digits) *"
+                            className={`pl-10 ${inquiryErrors.phone ? "border-red-500" : ""}`}
                             value={inquiryData.phone}
                             onChange={handleInquiryChange}
                             required
                           />
+                          {inquiryErrors.phone && (
+                            <p className="text-red-500 text-xs mt-1">{inquiryErrors.phone}</p>
+                          )}
                         </div>
                         
                         <div className="relative">
@@ -335,10 +437,13 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                             type="email"
                             name="email"
                             placeholder="Email (Optional)"
-                            className="pl-10"
+                            className={`pl-10 ${inquiryErrors.email ? "border-red-500" : ""}`}
                             value={inquiryData.email}
                             onChange={handleInquiryChange}
                           />
+                          {inquiryErrors.email && (
+                            <p className="text-red-500 text-xs mt-1">{inquiryErrors.email}</p>
+                          )}
                         </div>
                         
                         <div className="relative">
@@ -349,10 +454,13 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                             type="text"
                             name="address"
                             placeholder="Property Address (Optional)"
-                            className="pl-10"
+                            className={`pl-10 ${inquiryErrors.address ? "border-red-500" : ""}`}
                             value={inquiryData.address}
                             onChange={handleInquiryChange}
                           />
+                          {inquiryErrors.address && (
+                            <p className="text-red-500 text-xs mt-1">{inquiryErrors.address}</p>
+                          )}
                         </div>
                         
                         <div className="relative">
@@ -362,10 +470,13 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                           <Textarea
                             name="message"
                             placeholder="Describe your issue in detail (Optional)"
-                            className="pl-10 pt-2 min-h-[100px]"
+                            className={`pl-10 pt-2 min-h-[100px] ${inquiryErrors.message ? "border-red-500" : ""}`}
                             value={inquiryData.message}
                             onChange={handleInquiryChange}
                           />
+                          {inquiryErrors.message && (
+                            <p className="text-red-500 text-xs mt-1">{inquiryErrors.message}</p>
+                          )}
                         </div>
                       </div>
                       
@@ -406,12 +517,15 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                             type="text"
                             name="name"
                             placeholder="Your name"
-                            className="pl-10"
+                            className={`pl-10 ${contactErrors.name ? "border-red-500" : ""}`}
                             value={contactData.name}
                             onChange={handleContactChange}
                             required
                           />
                         </div>
+                        {contactErrors.name && (
+                          <p className="text-red-500 text-xs mt-1">{contactErrors.name}</p>
+                        )}
                       </div>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -428,12 +542,15 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                               type="email"
                               name="email"
                               placeholder="Your email"
-                              className="pl-10"
+                              className={`pl-10 ${contactErrors.email ? "border-red-500" : ""}`}
                               value={contactData.email}
                               onChange={handleContactChange}
                               required
                             />
                           </div>
+                          {contactErrors.email && (
+                            <p className="text-red-500 text-xs mt-1">{contactErrors.email}</p>
+                          )}
                         </div>
                         
                         <div className="relative">
@@ -448,13 +565,16 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                               id="contact-phone"
                               type="tel"
                               name="phone"
-                              placeholder="Your phone number"
-                              className="pl-10"
+                              placeholder="Your phone number (10 digits)"
+                              className={`pl-10 ${contactErrors.phone ? "border-red-500" : ""}`}
                               value={contactData.phone}
                               onChange={handleContactChange}
                               required
                             />
                           </div>
+                          {contactErrors.phone && (
+                            <p className="text-red-500 text-xs mt-1">{contactErrors.phone}</p>
+                          )}
                         </div>
                       </div>
                       
@@ -467,7 +587,7 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                           onValueChange={handleContactServiceChange}
                           required
                         >
-                          <SelectTrigger id="contact-service" className="w-full">
+                          <SelectTrigger id="contact-service" className={`w-full ${contactErrors.service ? "border-red-500" : ""}`}>
                             <SelectValue placeholder="Select a service" />
                           </SelectTrigger>
                           <SelectContent>
@@ -478,6 +598,9 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                             ))}
                           </SelectContent>
                         </Select>
+                        {contactErrors.service && (
+                          <p className="text-red-500 text-xs mt-1">{contactErrors.service}</p>
+                        )}
                       </div>
                       
                       <div className="relative">
@@ -492,12 +615,15 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                             id="contact-message"
                             name="message"
                             placeholder="Describe your building problem or requirements"
-                            className="pl-10 pt-2 min-h-[120px]"
+                            className={`pl-10 pt-2 min-h-[120px] ${contactErrors.message ? "border-red-500" : ""}`}
                             value={contactData.message}
                             onChange={handleContactChange}
                             required
                           />
                         </div>
+                        {contactErrors.message && (
+                          <p className="text-red-500 text-xs mt-1">{contactErrors.message}</p>
+                        )}
                       </div>
                       
                       <div className="flex items-start space-x-2">
@@ -505,11 +631,16 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                           id="consent" 
                           checked={contactData.consent}
                           onCheckedChange={handleContactCheckboxChange}
-                          className="mt-1"
+                          className={`mt-1 ${contactErrors.consent ? "border-red-500" : ""}`}
                         />
-                        <Label htmlFor="consent" className="text-sm text-gray-600">
-                          I agree to the processing of my personal data to receive communications about products and services.
-                        </Label>
+                        <div className="flex-1">
+                          <Label htmlFor="consent" className="text-sm text-gray-600">
+                            I agree to the processing of my personal data to receive communications about products and services.
+                          </Label>
+                          {contactErrors.consent && (
+                            <p className="text-red-500 text-xs mt-1">{contactErrors.consent}</p>
+                          )}
+                        </div>
                       </div>
                     </div>
                     
