@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CONTACT } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { contactSchema } from "@/data/schema";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -29,20 +30,15 @@ const ContactSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.consent) {
-      toast({
-        title: "Consent Required",
-        description: "Please agree to the processing of your personal data.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+    // Validate form using Zod schema
     try {
+      // Validate the form data against our schema
+      const validatedData = contactSchema.parse(formData);
+      
       setIsSubmitting(true);
       
-      // Send data to the correct API endpoint for contact submissions
-      await apiRequest("POST", "/api/contacts", formData);
+      // Send validated data to the correct API endpoint
+      await apiRequest("POST", "/api/contacts", validatedData);
       
       toast({
         title: "Message Sent!",
@@ -66,12 +62,23 @@ const ContactSection = () => {
       // Scroll to the top of the form
       document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
-      console.error("Error submitting contact form:", error);
-      toast({
-        title: "Error",
-        description: "There was a problem sending your message. Please try again.",
-        variant: "destructive"
-      });
+      if (error.errors) {
+        // Zod validation error
+        const errorMessages = error.errors.map(err => `${err.message}`).join(', ');
+        toast({
+          title: "Form validation error",
+          description: errorMessages,
+          variant: "destructive",
+        });
+      } else {
+        // API or other error
+        console.error("Error submitting contact form:", error);
+        toast({
+          title: "Error",
+          description: "There was a problem sending your message. Please try again.",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

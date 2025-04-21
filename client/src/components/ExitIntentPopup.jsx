@@ -60,28 +60,12 @@ const ExitIntentPopup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
-    if (!formData.name || !formData.phone) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    if (!formData.consent) {
-      toast({
-        title: "Consent Required",
-        description: "Please agree to the processing of your personal data.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+    // Validate form using Zod schema
     try {
+      const validatedData = intentSchema.parse(formData);
+      
       setIsSubmitting(true);
-      await apiRequest("POST", "/api/intent", formData);
+      await apiRequest("POST", "/api/intent", validatedData);
       
       // Reset form and show success
       setFormData({
@@ -103,11 +87,22 @@ const ExitIntentPopup = () => {
       // Close popup
       setIsOpen(false);
     } catch (error) {
-      toast({
-        title: "Failed to submit",
-        description: "Please try again or contact us directly.",
-        variant: "destructive",
-      });
+      if (error.errors) {
+        // Zod validation error
+        const errorMessages = error.errors.map(err => `${err.message}`).join(', ');
+        toast({
+          title: "Form validation error",
+          description: errorMessages,
+          variant: "destructive",
+        });
+      } else {
+        // API or other error
+        toast({
+          title: "Failed to submit",
+          description: "Please try again or contact us directly.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
