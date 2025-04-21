@@ -332,7 +332,11 @@ const AdminPage = () => {
           intent.service || ""
         } ${intent.message || ""}`.toLowerCase();
         return searchable.includes(searchTerm.toLowerCase());
-      })
+      }).map((intent, index) => ({
+        ...intent,
+        // Use unique index if id is duplicated or missing
+        _uniqueKey: `intent-${intent.id || ''}-${index}`
+      }))
     : [];
 
   // Filter contact submissions based on search term
@@ -343,7 +347,11 @@ const AdminPage = () => {
           contact.email || ""
         } ${contact.service || ""} ${contact.message || ""}`.toLowerCase();
         return searchable.includes(searchTerm.toLowerCase());
-      })
+      }).map((contact, index) => ({
+        ...contact,
+        // Use unique index if id is duplicated or missing
+        _uniqueKey: `contact-${contact.id || ''}-${index}`
+      }))
     : [];
 
   // Toggle expanded item with type prefix
@@ -970,8 +978,8 @@ const AdminPage = () => {
                             ),
                             sortOrder,
                           ),
-                        ).map((inquiry) => (
-                          <tr key={inquiry.id} className="hover:bg-gray-50">
+                        ).map((inquiry, index) => (
+                          <tr key={`inquiry-${inquiry.id || index}`} className="hover:bg-gray-50">
                             <td className="border border-gray-200 px-4 py-2">
                               <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -1305,8 +1313,8 @@ const AdminPage = () => {
                             ),
                             sortOrder,
                           ),
-                        ).map((intent) => (
-                          <tr key={intent.id} className="hover:bg-gray-50">
+                        ).map((intent, index) => (
+                          <tr key={intent._uniqueKey} className="hover:bg-gray-50">
                             <td className="border border-gray-200 px-4 py-2">
                               <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -1606,8 +1614,8 @@ const AdminPage = () => {
                             ),
                             sortOrder,
                           ),
-                        ).map((contact) => (
-                          <tr key={contact.id} className="hover:bg-gray-50">
+                        ).map((contact, index) => (
+                          <tr key={contact._uniqueKey} className="hover:bg-gray-50">
                             <td className="border border-gray-200 px-4 py-2">
                               <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
