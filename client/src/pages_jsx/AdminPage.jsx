@@ -72,7 +72,9 @@ const AdminPage = () => {
   const [sortOrder, setSortOrder] = useState("desc"); // Default to newest first
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const { toast } = useToast();
+  const webSocketRef = useRef(null);
 
   // Check if user is already authenticated (from localStorage)
   useEffect(() => {
@@ -81,6 +83,101 @@ const AdminPage = () => {
       setIsAuthenticated(true);
     }
   }, []);
+  
+  // Set up WebSocket connection for real-time updates
+  useEffect(() => {
+    if (isAuthenticated) {
+      // Close previous connection if exists
+      if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
+        webSocketRef.current.close();
+      }
+      
+      // Determine WebSocket URL
+      const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = `${protocol}//${window.location.host}/ws`;
+      
+      // Create new WebSocket connection
+      const socket = new WebSocket(wsUrl);
+      webSocketRef.current = socket;
+      
+      // Connection opened
+      socket.addEventListener('open', (event) => {
+        console.log('WebSocket connection established');
+      });
+      
+      // Listen for messages
+      socket.addEventListener('message', (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          console.log('WebSocket message received:', message);
+          
+          // Handle different types of updates
+          if (message.type === 'inquiries_updated') {
+            // Update inquiries data
+            queryClient.setQueryData(['inquiries'], message.data);
+            setLastUpdated({
+              type: 'inquiries',
+              timestamp: new Date().toISOString()
+            });
+            if (activeTab === 'inquiries') {
+              toast({
+                title: "Data updated",
+                description: "Inquiries have been updated in real-time.",
+                duration: 2000, // shorter duration
+              });
+            }
+          } else if (message.type === 'contacts_updated') {
+            // Update contacts data
+            queryClient.setQueryData(['contacts'], message.data);
+            setLastUpdated({
+              type: 'contacts',
+              timestamp: new Date().toISOString()
+            });
+            if (activeTab === 'contacts') {
+              toast({
+                title: "Data updated",
+                description: "Contacts have been updated in real-time.",
+                duration: 2000,
+              });
+            }
+          } else if (message.type === 'intents_updated') {
+            // Update intents data
+            queryClient.setQueryData(['intents'], message.data);
+            setLastUpdated({
+              type: 'intents',
+              timestamp: new Date().toISOString()
+            });
+            if (activeTab === 'intents') {
+              toast({
+                title: "Data updated",
+                description: "Exit intent forms have been updated in real-time.",
+                duration: 2000,
+              });
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
+        }
+      });
+      
+      // Handle connection errors
+      socket.addEventListener('error', (error) => {
+        console.error('WebSocket error:', error);
+      });
+      
+      // Handle connection closed
+      socket.addEventListener('close', (event) => {
+        console.log('WebSocket connection closed', event.code, event.reason);
+      });
+      
+      // Clean up WebSocket connection on component unmount
+      return () => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.close();
+        }
+      };
+    }
+  }, [isAuthenticated, toast, activeTab]);
 
   // Handle login
   const handleLogin = (e) => {
