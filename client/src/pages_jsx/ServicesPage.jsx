@@ -150,12 +150,7 @@ const ServicesPage = () => {
                       <h3 className="font-semibold text-lg mb-4">Applications</h3>
                       <div className="grid grid-cols-2 gap-4">
                         {service.applications.map((app, index) => (
-                          <div key={index} className="flex flex-col items-center text-center p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
-                            <img 
-                              src={app.icon} 
-                              alt={app.title}
-                              className="w-12 h-12 object-contain mb-2" 
-                            />
+                          <div key={index} className="flex items-center p-3 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
                             <p className="text-sm font-medium">{app.title}</p>
                           </div>
                         ))}
