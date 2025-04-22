@@ -1,24 +1,62 @@
-import { useState, useRef, useEffect, useCallback, memo } from "react";
+import { useState, useRef, useEffect, useCallback, memo, Suspense, lazy } from "react";
 import { BEFORE_AFTER } from "@/data/company";
 
-// Optimized image component with lazy loading
-const OptimizedImage = memo(({ src, alt, className, onLoad }) => {
+// Optimized image component with progressive loading and preload capability
+const OptimizedImage = memo(({ src, alt, className, onLoad, priority = false }) => {
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef(null);
   
   const handleLoad = () => {
     setLoaded(true);
     if (onLoad) onLoad();
   };
+
+  // Preload images if marked as priority
+  useEffect(() => {
+    if (priority && src) {
+      const img = new Image();
+      img.src = src;
+    }
+  }, [src, priority]);
+  
+  // Use IntersectionObserver for better lazy loading
+  useEffect(() => {
+    if (!imgRef.current) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Set the real source only when in viewport
+          const img = entry.target;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            observer.unobserve(img);
+          }
+        }
+      });
+    }, { rootMargin: '200px' }); // Load when within 200px of viewport
+    
+    observer.observe(imgRef.current);
+    
+    return () => {
+      if (imgRef.current) {
+        observer.unobserve(imgRef.current);
+      }
+    };
+  }, []);
   
   return (
     <>
       {!loaded && (
-        <div className={`${className} bg-gray-200 animate-pulse`} />
+        <div className={`${className} bg-gray-50`} />
       )}
       <img 
-        src={src} 
+        ref={imgRef}
+        src={priority ? src : ''}
+        data-src={!priority ? src : ''}
         alt={alt} 
-        loading="lazy"
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
         className={`${className} ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
         onLoad={handleLoad}
       />
@@ -135,35 +173,35 @@ const BeforeAfterSlider = memo(({ beforeImage, afterImage, title }) => {
         }
       }}
     >
-      {/* Preload placeholder */}
-      {!allImagesLoaded && (
-        <div className="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      {/* Suspense wrapper with fade-in transition instead of spinning loader */}
+      <Suspense fallback={
+        <div className="absolute inset-0 w-full h-full bg-gray-50/80"></div>
+      }>
+        {/* After image - full width */}
+        <div className={`absolute inset-0 w-full h-full ${allImagesLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
+          <OptimizedImage 
+            src={afterImage} 
+            alt="After" 
+            className="w-full h-full object-cover"
+            onLoad={() => handleImageLoad('after')}
+            priority={true}
+          />
         </div>
-      )}
-      
-      {/* After image - full width */}
-      <div className={`absolute inset-0 w-full h-full ${allImagesLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}>
-        <OptimizedImage 
-          src={afterImage} 
-          alt="After" 
-          className="w-full h-full object-cover"
-          onLoad={() => handleImageLoad('after')}
-        />
-      </div>
-      
-      {/* Before image - partial width based on slider position */}
-      <div 
-        className={`absolute inset-0 h-full overflow-hidden ${allImagesLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
-        style={{ width: `${sliderPosition}%` }}
-      >
-        <OptimizedImage 
-          src={beforeImage} 
-          alt="Before" 
-          className="absolute inset-0 w-full h-full object-cover"
-          onLoad={() => handleImageLoad('before')}
-        />
-      </div>
+        
+        {/* Before image - partial width based on slider position */}
+        <div 
+          className={`absolute inset-0 h-full overflow-hidden ${allImagesLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300`}
+          style={{ width: `${sliderPosition}%` }}
+        >
+          <OptimizedImage 
+            src={beforeImage} 
+            alt="Before" 
+            className="absolute inset-0 w-full h-full object-cover"
+            onLoad={() => handleImageLoad('before')}
+            priority={true}
+          />
+        </div>
+      </Suspense>
       
       {/* Slider handle */}
       <div 
@@ -188,7 +226,51 @@ const BeforeAfterSlider = memo(({ beforeImage, afterImage, title }) => {
   );
 });
 
+// Wrapper component for optimization through code splitting
+const BeforeAfterProject = memo(({ project }) => {
+  return (
+    <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+      <h3 className="font-montserrat font-semibold text-xl mb-4">{project.title}</h3>
+      <BeforeAfterSlider 
+        beforeImage={project.beforeImage} 
+        afterImage={project.afterImage} 
+        title={project.title}
+      />
+      <p className="text-gray-600 mt-4">{project.description}</p>
+    </div>
+  );
+});
+
 const BeforeAfter = () => {
+  // Prefetch images to improve perceived performance
+  useEffect(() => {
+    // Preload first two project images (most visible) immediately
+    const preloadHighPriority = () => {
+      if (BEFORE_AFTER.length === 0) return;
+      
+      // Preload first project images
+      if (BEFORE_AFTER[0]) {
+        const beforeImg = new Image();
+        const afterImg = new Image();
+        beforeImg.src = BEFORE_AFTER[0].beforeImage;
+        afterImg.src = BEFORE_AFTER[0].afterImage;
+      }
+      
+      // Preload second project images if available
+      if (BEFORE_AFTER[1]) {
+        setTimeout(() => {
+          const beforeImg = new Image();
+          const afterImg = new Image();
+          beforeImg.src = BEFORE_AFTER[1].beforeImage;
+          afterImg.src = BEFORE_AFTER[1].afterImage;
+        }, 300); // Small delay to prioritize first project
+      }
+    };
+    
+    // Start preloading immediately
+    preloadHighPriority();
+  }, []);
+  
   return (
     <section className="py-16 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -200,19 +282,18 @@ const BeforeAfter = () => {
           <p className="text-gray-600 max-w-2xl mx-auto">Real projects showcasing the dramatic improvements our solutions can achieve for your property.</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
-          {BEFORE_AFTER.map(project => (
-            <div key={project.id} className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <h3 className="font-montserrat font-semibold text-xl mb-4">{project.title}</h3>
-              <BeforeAfterSlider 
-                beforeImage={project.beforeImage} 
-                afterImage={project.afterImage} 
-                title={project.title}
-              />
-              <p className="text-gray-600 mt-4">{project.description}</p>
-            </div>
-          ))}
-        </div>
+        <Suspense fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 min-h-[400px]">
+            <div className="bg-white/60 p-6 rounded-xl shadow animate-pulse h-[350px]"></div>
+            <div className="bg-white/60 p-6 rounded-xl shadow animate-pulse h-[350px]"></div>
+          </div>
+        }>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 content-visibility-auto">
+            {BEFORE_AFTER.map(project => (
+              <BeforeAfterProject key={project.id} project={project} />
+            ))}
+          </div>
+        </Suspense>
         
         <div className="text-center mt-12">
           <a 
