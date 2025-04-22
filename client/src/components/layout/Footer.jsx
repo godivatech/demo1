@@ -171,10 +171,15 @@ const Footer = () => {
       <div className="bg-gray-950 py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-sm text-gray-400">
-              &copy; {currentYear} {COMPANY_NAME}. All Rights Reserved.
-            </p>
-            <div className="mt-2 md:mt-0">
+            <div className="flex flex-col md:flex-row items-center">
+              <p className="text-sm text-gray-400 md:mr-4">
+                &copy; {currentYear} {COMPANY_NAME}. All Rights Reserved.
+              </p>
+              <p className="text-xs text-gray-500 mt-1 md:mt-0">
+                Designed and developed by <a href="https://www.godivatech.com" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-400 transition-colors">Godiva Tech</a>
+              </p>
+            </div>
+            <div className="mt-3 md:mt-0">
               <a href="#" className="text-xs text-gray-400 hover:text-orange-500 mx-2 transition-colors">Privacy Policy</a>
               <a href="#" className="text-xs text-gray-400 hover:text-orange-500 mx-2 transition-colors">Terms of Service</a>
             </div>
