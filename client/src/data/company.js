@@ -194,19 +194,7 @@ export const BEFORE_AFTER = [
     title: "Wall Crack Repair",
     description:
       "Effective repair of structural wall cracks using our advanced crack-filling solutions.",
-    beforeImage:
-      "https://buildingdoctor.org/assets/images/before-after/wall-before.jpg",
-    afterImage:
-      "https://buildingdoctor.org/assets/images/before-after/wall-after.jpg",
-  },
-  {
-    id: 3,
-    title: "Bathroom Waterproofing",
-    description:
-      "Complete bathroom leakage solutions with our specialized waterproofing treatments.",
-    beforeImage:
-      "https://buildingdoctor.org/assets/images/before-after/bathroom-before.jpg",
-    afterImage:
-      "https://buildingdoctor.org/assets/images/before-after/bathroom-after.jpg",
+    beforeImage: "/src/assets/before_repair.jpg",
+    afterImage: "/src/assets/after_repair.jpg",
   },
 ];
