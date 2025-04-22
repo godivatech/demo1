@@ -136,11 +136,6 @@ const Services = () => {
                   <div className="mb-4 grid grid-cols-2 gap-3">
                     {service.applications.slice(0, 4).map((app, idx) => (
                       <div key={idx} className="flex items-center p-1.5 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <img
-                          src={app.icon}
-                          alt={app.title}
-                          className="w-6 h-6 mr-2"
-                        />
                         <span className="text-xs text-gray-700 truncate font-medium">
                           {app.title}
                         </span>
