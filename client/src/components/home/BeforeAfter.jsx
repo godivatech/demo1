@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { BEFORE_AFTER } from "@/lib/constants";
+import { BEFORE_AFTER } from "@/data/company";
 
 const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -68,7 +68,11 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
     >
       {/* After image - full width */}
       <div className="absolute inset-0 w-full h-full">
-        <div className="w-full h-full bg-gray-400"></div>
+        <img 
+          src={afterImage} 
+          alt="After" 
+          className="w-full h-full object-cover"
+        />
       </div>
       
       {/* Before image - partial width based on slider position */}
@@ -76,7 +80,11 @@ const BeforeAfterSlider = ({ beforeImage, afterImage }) => {
         className="absolute inset-0 h-full overflow-hidden" 
         style={{ width: `${sliderPosition}%` }}
       >
-        <div className="absolute inset-0 w-full h-full bg-gray-600"></div>
+        <img 
+          src={beforeImage} 
+          alt="Before" 
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       </div>
       
       {/* Slider handle */}

@@ -186,10 +186,8 @@ export const BEFORE_AFTER = [
     title: "Terrace Waterproofing",
     description:
       "Complete solution for persistent roof leaks with our specialized waterproofing techniques.",
-    beforeImage:
-      "https://buildingdoctor.org/assets/images/before-after/terrace-before.jpg",
-    afterImage:
-      "https://buildingdoctor.org/assets/images/before-after/terrace-after.jpg",
+    beforeImage: "/src/assets/terrace_before.jpg",
+    afterImage: "/src/assets/terrace_after.jpg",
   },
   {
     id: 2,
