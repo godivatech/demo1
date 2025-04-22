@@ -1,19 +1,24 @@
-import { Link } from 'wouter';
-import { 
-  Phone, 
-  Mail, 
-  MapPin, 
+import { Link } from "wouter";
+import {
+  Phone,
+  Mail,
+  MapPin,
   Clock,
-  Facebook, 
-  Twitter, 
-  Instagram, 
-  MessageCircle 
+  Facebook,
+  Twitter,
+  Instagram,
+  MessageCircle,
 } from "lucide-react";
-import { COMPANY_NAME, COMPANY_TITLE, CONTACT, SOCIAL_MEDIA } from '../../data/company';
+import {
+  COMPANY_NAME,
+  COMPANY_TITLE,
+  CONTACT,
+  SOCIAL_MEDIA,
+} from "../../data/company";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main footer */}
@@ -21,44 +26,47 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h2 className="text-xl font-bold mb-4 text-orange-500">{COMPANY_NAME}</h2>
-            <p className="text-sm mb-2">{COMPANY_TITLE}</p>
+            <h2 className="text-xl font-bold mb-4 text-orange-500">
+              {COMPANY_NAME}
+            </h2>
+            {/* <p className="text-sm mb-2">{COMPANY_TITLE}</p> */}
             <p className="text-sm text-gray-400 mb-4">
-              Your trusted partner for all building repair and maintenance needs in Madurai and surrounding areas.
+              Your trusted partner for all building repair and maintenance needs
+              in Madurai and surrounding areas.
             </p>
-            
+
             {/* Social Icons */}
             <div className="flex space-x-4 mt-4">
-              <a 
-                href={SOCIAL_MEDIA.facebook} 
-                target="_blank" 
+              <a
+                href={SOCIAL_MEDIA.facebook}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook size={20} strokeWidth={2} />
               </a>
-              <a 
-                href={SOCIAL_MEDIA.twitter} 
-                target="_blank" 
+              <a
+                href={SOCIAL_MEDIA.twitter}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="Twitter"
               >
                 <Twitter size={20} strokeWidth={2} />
               </a>
-              <a 
-                href={SOCIAL_MEDIA.instagram} 
-                target="_blank" 
+              <a
+                href={SOCIAL_MEDIA.instagram}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram size={20} strokeWidth={2} />
               </a>
-              <a 
+              <a
                 href={CONTACT.whatsapp}
-                target="_blank" 
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="WhatsApp"
@@ -67,17 +75,26 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          
+
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-bold mb-4 text-orange-500">Contact Us</h3>
+            <h3 className="text-lg font-bold mb-4 text-orange-500">
+              Contact Us
+            </h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <Phone className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
+                <Phone
+                  className="mt-1 mr-3 text-orange-500 flex-shrink-0"
+                  size={18}
+                  strokeWidth={2.5}
+                />
                 <div>
                   {CONTACT.phone.map((phone, index) => (
                     <p key={index} className="text-sm">
-                      <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-orange-500 transition-colors">
+                      <a
+                        href={`tel:${phone.replace(/\s+/g, "")}`}
+                        className="hover:text-orange-500 transition-colors"
+                      >
                         {phone}
                       </a>
                     </p>
@@ -85,80 +102,127 @@ const Footer = () => {
                 </div>
               </li>
               <li className="flex items-start">
-                <Mail className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
-                <a href={`mailto:${CONTACT.email}`} className="text-sm hover:text-orange-500 transition-colors">
+                <Mail
+                  className="mt-1 mr-3 text-orange-500 flex-shrink-0"
+                  size={18}
+                  strokeWidth={2.5}
+                />
+                <a
+                  href={`mailto:${CONTACT.email}`}
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   {CONTACT.email}
                 </a>
               </li>
               <li className="flex items-start">
-                <MapPin className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
+                <MapPin
+                  className="mt-1 mr-3 text-orange-500 flex-shrink-0"
+                  size={18}
+                  strokeWidth={2.5}
+                />
                 <p className="text-sm">{CONTACT.address}</p>
               </li>
               <li className="flex items-start">
-                <Clock className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
+                <Clock
+                  className="mt-1 mr-3 text-orange-500 flex-shrink-0"
+                  size={18}
+                  strokeWidth={2.5}
+                />
                 <p className="text-sm">{CONTACT.workingHours}</p>
               </li>
             </ul>
           </div>
-          
+
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold mb-4 text-orange-500">Quick Links</h3>
+            <h3 className="text-lg font-bold mb-4 text-orange-500">
+              Quick Links
+            </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/services" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/services"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Services
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/products"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Products
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/about"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/contact"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Contact
                 </Link>
               </li>
             </ul>
           </div>
-          
+
           {/* Services */}
           <div>
             <h3 className="text-lg font-bold mb-4 text-orange-500">Services</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/services#waterproofing" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/services#waterproofing"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Waterproofing Solutions
                 </Link>
               </li>
               <li>
-                <Link to="/services#structural-repairs" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/services#structural-repairs"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Structural Repairs
                 </Link>
               </li>
               <li>
-                <Link to="/services#sealants" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/services#sealants"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Sealants & Adhesives
                 </Link>
               </li>
               <li>
-                <Link to="/services#coatings" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/services#coatings"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Waterproof Coatings
                 </Link>
               </li>
               <li>
-                <Link to="/services#consultation" className="text-sm hover:text-orange-500 transition-colors">
+                <Link
+                  to="/services#consultation"
+                  className="text-sm hover:text-orange-500 transition-colors"
+                >
                   Technical Consultation
                 </Link>
               </li>
@@ -166,7 +230,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Copyright */}
       <div className="bg-gray-950 py-4">
         <div className="container mx-auto px-4">
@@ -176,12 +240,30 @@ const Footer = () => {
                 &copy; {currentYear} {COMPANY_NAME}. All Rights Reserved.
               </p>
               <p className="text-xs text-gray-500 mt-1 md:mt-0">
-                Designed and developed by <a href="https://www.godivatech.com" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-400 transition-colors">Godiva Tech</a>
+                Designed and developed by{" "}
+                <a
+                  href="https://www.godivatech.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-orange-500 hover:text-orange-400 transition-colors"
+                >
+                  Godiva Tech
+                </a>
               </p>
             </div>
             <div className="mt-3 md:mt-0">
-              <a href="#" className="text-xs text-gray-400 hover:text-orange-500 mx-2 transition-colors">Privacy Policy</a>
-              <a href="#" className="text-xs text-gray-400 hover:text-orange-500 mx-2 transition-colors">Terms of Service</a>
+              <a
+                href="#"
+                className="text-xs text-gray-400 hover:text-orange-500 mx-2 transition-colors"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                className="text-xs text-gray-400 hover:text-orange-500 mx-2 transition-colors"
+              >
+                Terms of Service
+              </a>
             </div>
           </div>
         </div>

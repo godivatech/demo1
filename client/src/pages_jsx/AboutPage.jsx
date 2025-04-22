@@ -209,7 +209,9 @@ const AboutPage = () => {
                         <i className="fab fa-twitter"></i>
                       </a>
                       <a
-                        href={`https://www.linkedin.com/in/${CONTACT.director.toLowerCase().replace(/\s+/g, "-")}`}
+                        href={`https://www.linkedin.com/in/${CONTACT.director
+                          .toLowerCase()
+                          .replace(/\s+/g, "-")}`}
                         className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition"
                       >
                         <i className="fab fa-linkedin-in"></i>
@@ -335,7 +337,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-primary/10">
+      {/*  <section className="py-16 bg-primary/10">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="font-montserrat font-bold text-3xl mb-6">
@@ -356,7 +358,7 @@ const AboutPage = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

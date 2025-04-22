@@ -1,10 +1,19 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'wouter';
-import { Menu, X, Building, Hammer, ShoppingBag, Users, Phone, Lock } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { COMPANY_NAME, COMPANY_TITLE } from '../../data/company';
-import { cn } from '../../utils/utils';
-import { fadeIn, fadeInDown, fadeInRight } from '../../utils/animations';
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
+import {
+  Menu,
+  X,
+  Building,
+  Hammer,
+  ShoppingBag,
+  Users,
+  Phone,
+  Lock,
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { COMPANY_NAME, COMPANY_TITLE } from "../../data/company";
+import { cn } from "../../utils/utils";
+import { fadeIn, fadeInDown, fadeInRight } from "../../utils/animations";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,8 +25,8 @@ const Header = () => {
       setScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleMenu = () => {
@@ -25,41 +34,88 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: 'Home', path: '/', icon: <Building size={16} className="text-white group-hover:text-black transition-colors" /> },
-    { name: 'Services', path: '/services', icon: <Hammer size={16} className="text-white group-hover:text-black transition-colors" /> },
-    { name: 'Products', path: '/products', icon: <ShoppingBag size={16} className="text-white group-hover:text-black transition-colors" /> },
-    { name: 'About', path: '/about', icon: <Users size={16} className="text-white group-hover:text-black transition-colors" /> },
-    { name: 'Contact', path: '/contact', icon: <Phone size={16} className="text-white group-hover:text-black transition-colors" /> },
+    {
+      name: "Home",
+      path: "/",
+      icon: (
+        <Building
+          size={16}
+          className="text-white group-hover:text-black transition-colors"
+        />
+      ),
+    },
+    {
+      name: "Services",
+      path: "/services",
+      icon: (
+        <Hammer
+          size={16}
+          className="text-white group-hover:text-black transition-colors"
+        />
+      ),
+    },
+    {
+      name: "Products",
+      path: "/products",
+      icon: (
+        <ShoppingBag
+          size={16}
+          className="text-white group-hover:text-black transition-colors"
+        />
+      ),
+    },
+    {
+      name: "About",
+      path: "/about",
+      icon: (
+        <Users
+          size={16}
+          className="text-white group-hover:text-black transition-colors"
+        />
+      ),
+    },
+    {
+      name: "Contact",
+      path: "/contact",
+      icon: (
+        <Phone
+          size={16}
+          className="text-white group-hover:text-black transition-colors"
+        />
+      ),
+    },
   ];
 
   // Admin link removed as per client request
   // const adminLink = { name: 'Admin', path: '/admin', icon: <Lock size={16} /> };
 
   return (
-    <motion.header 
+    <motion.header
       initial="hidden"
       animate="visible"
       variants={fadeInDown(0, 0.5)}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        scrolled ? 'bg-white shadow-md py-2' : 'bg-white/95 shadow-sm py-3'
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        scrolled ? "bg-white shadow-md py-2" : "bg-white/95 shadow-sm py-3"
       )}
     >
       <div className="container mx-auto px-4">
         <nav className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/">
-            <motion.div 
-              className="flex flex-col cursor-pointer" 
+            <motion.div
+              className="flex flex-col cursor-pointer"
               variants={fadeIn(0.1, 0.5)}
             >
-              <span className="text-xl font-bold text-orange-600">{COMPANY_NAME}</span>
-              <span className="text-xs text-gray-600">{COMPANY_TITLE}</span>
+              <span className="text-xl font-bold text-orange-600">
+                {COMPANY_NAME}
+              </span>
+              {/* <span className="text-xs text-gray-600">{COMPANY_TITLE}</span> */}
             </motion.div>
           </Link>
 
           {/* Desktop Navigation */}
-          <motion.div 
+          <motion.div
             className="hidden md:flex items-center space-x-6"
             variants={fadeIn(0.2, 0.5)}
           >
@@ -67,10 +123,10 @@ const Header = () => {
               <Link key={link.path} to={link.path}>
                 <span
                   className={cn(
-                    'flex items-center gap-1.5 text-sm font-medium transition-all cursor-pointer hover:text-orange-600 px-3 py-2 rounded-md group',
+                    "flex items-center gap-1.5 text-sm font-medium transition-all cursor-pointer hover:text-orange-600 px-3 py-2 rounded-md group",
                     location === link.path
-                      ? 'text-orange-600 bg-orange-50'
-                      : 'text-gray-700 hover:bg-orange-50/50'
+                      ? "text-orange-600 bg-orange-50"
+                      : "text-gray-700 hover:bg-orange-50/50"
                   )}
                 >
                   {link.icon}
@@ -78,7 +134,7 @@ const Header = () => {
                 </span>
               </Link>
             ))}
-            
+
             {/* Admin link removed as per client request */}
           </motion.div>
 
@@ -90,16 +146,23 @@ const Header = () => {
             aria-expanded={isOpen}
             aria-label="Toggle menu"
           >
-            {isOpen ? 
-              <X size={24} className="text-black group-hover:text-orange-600 transition-colors" /> : 
-              <Menu size={24} className="text-black group-hover:text-orange-600 transition-colors" />
-            }
+            {isOpen ? (
+              <X
+                size={24}
+                className="text-black group-hover:text-orange-600 transition-colors"
+              />
+            ) : (
+              <Menu
+                size={24}
+                className="text-black group-hover:text-orange-600 transition-colors"
+              />
+            )}
           </motion.button>
         </nav>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
@@ -116,10 +179,10 @@ const Header = () => {
                   <Link to={link.path}>
                     <span
                       className={cn(
-                        'text-sm flex items-center gap-2 py-2.5 px-4 rounded-md font-medium transition-colors cursor-pointer hover:bg-orange-50 hover:text-orange-600 group',
+                        "text-sm flex items-center gap-2 py-2.5 px-4 rounded-md font-medium transition-colors cursor-pointer hover:bg-orange-50 hover:text-orange-600 group",
                         location === link.path
-                          ? 'bg-orange-50 text-orange-600'
-                          : 'text-gray-700'
+                          ? "bg-orange-50 text-orange-600"
+                          : "text-gray-700"
                       )}
                       onClick={() => setIsOpen(false)}
                     >
@@ -129,7 +192,7 @@ const Header = () => {
                   </Link>
                 </motion.div>
               ))}
-              
+
               {/* Admin Link for Mobile - Removed as per client request */}
             </div>
           </motion.div>
