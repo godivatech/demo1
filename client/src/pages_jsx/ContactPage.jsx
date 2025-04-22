@@ -2,6 +2,16 @@ import { useEffect, useState } from "react";
 import { CONTACT } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  Facebook, 
+  Twitter, 
+  Instagram, 
+  MessageCircle 
+} from "lucide-react";
 
 const ContactPage = () => {
   useEffect(() => {
@@ -122,7 +132,7 @@ const ContactPage = () => {
               <div className="space-y-6">
                 <div className="flex items-start">
                   <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-map-marker-alt text-white"></i>
+                    <MapPin className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Address</h4>
@@ -132,7 +142,7 @@ const ContactPage = () => {
                 
                 <div className="flex items-start">
                   <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-phone-alt text-white"></i>
+                    <Phone className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Phone</h4>
@@ -148,7 +158,7 @@ const ContactPage = () => {
                 
                 <div className="flex items-start">
                   <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-envelope text-white"></i>
+                    <Mail className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Email</h4>
@@ -162,7 +172,7 @@ const ContactPage = () => {
                 
                 <div className="flex items-start">
                   <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-clock text-white"></i>
+                    <Clock className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Working Hours</h4>
@@ -182,7 +192,7 @@ const ContactPage = () => {
                     rel="noopener noreferrer"
                     aria-label="Facebook"
                   >
-                    <i className="fab fa-facebook-f"></i>
+                    <Facebook size={18} strokeWidth={2.5} />
                   </a>
                   <a 
                     href={`https://twitter.com/${CONTACT.social.twitter}`} 
@@ -191,7 +201,7 @@ const ContactPage = () => {
                     rel="noopener noreferrer"
                     aria-label="Twitter"
                   >
-                    <i className="fab fa-twitter"></i>
+                    <Twitter size={18} strokeWidth={2.5} />
                   </a>
                   <a 
                     href={`https://www.instagram.com/${CONTACT.social.instagram}`} 
@@ -200,7 +210,7 @@ const ContactPage = () => {
                     rel="noopener noreferrer"
                     aria-label="Instagram"
                   >
-                    <i className="fab fa-instagram"></i>
+                    <Instagram size={18} strokeWidth={2.5} />
                   </a>
                 </div>
               </div>
@@ -350,7 +360,7 @@ const ContactPage = () => {
                   href={`tel:${CONTACT.phone[0].replace(/\s+/g, '')}`}
                   className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium transition flex items-center justify-center"
                 >
-                  <i className="fas fa-phone-alt mr-2"></i> Call Now
+                  <Phone className="mr-2" size={18} strokeWidth={2.5} /> Call Now
                 </a>
                 <a 
                   href={CONTACT.social.whatsapp}
@@ -358,7 +368,7 @@ const ContactPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <i className="fab fa-whatsapp mr-2"></i> WhatsApp Chat
+                  <MessageCircle className="mr-2" size={18} strokeWidth={2.5} /> WhatsApp Chat
                 </a>
               </div>
             </div>
