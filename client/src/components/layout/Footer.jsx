@@ -1,14 +1,14 @@
 import { Link } from 'wouter';
 import { 
-  FaPhone, 
-  FaEnvelope, 
-  FaMapMarkerAlt, 
-  FaClock,
-  FaFacebook, 
-  FaTwitter, 
-  FaInstagram, 
-  FaWhatsapp 
-} from 'react-icons/fa';
+  Phone, 
+  Mail, 
+  MapPin, 
+  Clock,
+  Facebook, 
+  Twitter, 
+  Instagram, 
+  MessageCircle 
+} from "lucide-react";
 import { COMPANY_NAME, COMPANY_TITLE, CONTACT, SOCIAL_MEDIA } from '../../data/company';
 
 const Footer = () => {
@@ -36,7 +36,7 @@ const Footer = () => {
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="Facebook"
               >
-                <FaFacebook size={20} />
+                <Facebook size={20} strokeWidth={2} />
               </a>
               <a 
                 href={SOCIAL_MEDIA.twitter} 
@@ -45,7 +45,7 @@ const Footer = () => {
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="Twitter"
               >
-                <FaTwitter size={20} />
+                <Twitter size={20} strokeWidth={2} />
               </a>
               <a 
                 href={SOCIAL_MEDIA.instagram} 
@@ -54,7 +54,7 @@ const Footer = () => {
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="Instagram"
               >
-                <FaInstagram size={20} />
+                <Instagram size={20} strokeWidth={2} />
               </a>
               <a 
                 href={CONTACT.whatsapp}
@@ -63,7 +63,7 @@ const Footer = () => {
                 className="text-white hover:text-orange-500 transition-colors"
                 aria-label="WhatsApp"
               >
-                <FaWhatsapp size={20} />
+                <MessageCircle size={20} strokeWidth={2} />
               </a>
             </div>
           </div>
@@ -73,7 +73,7 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-orange-500">Contact Us</h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <FaPhone className="mt-1 mr-3 text-orange-500 flex-shrink-0" />
+                <Phone className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
                 <div>
                   {CONTACT.phone.map((phone, index) => (
                     <p key={index} className="text-sm">
@@ -85,17 +85,17 @@ const Footer = () => {
                 </div>
               </li>
               <li className="flex items-start">
-                <FaEnvelope className="mt-1 mr-3 text-orange-500 flex-shrink-0" />
+                <Mail className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
                 <a href={`mailto:${CONTACT.email}`} className="text-sm hover:text-orange-500 transition-colors">
                   {CONTACT.email}
                 </a>
               </li>
               <li className="flex items-start">
-                <FaMapMarkerAlt className="mt-1 mr-3 text-orange-500 flex-shrink-0" />
+                <MapPin className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
                 <p className="text-sm">{CONTACT.address}</p>
               </li>
               <li className="flex items-start">
-                <FaClock className="mt-1 mr-3 text-orange-500 flex-shrink-0" />
+                <Clock className="mt-1 mr-3 text-orange-500 flex-shrink-0" size={18} strokeWidth={2.5} />
                 <p className="text-sm">{CONTACT.workingHours}</p>
               </li>
             </ul>
