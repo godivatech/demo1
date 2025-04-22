@@ -180,21 +180,27 @@ export const BENEFITS = [
   },
 ];
 
+// Import images directly from assets directory to ensure compatibility with production builds
+import terraceBeforeImg from "../assets/terrace_before.jpg";
+import terraceAfterImg from "../assets/terrace_after.jpg";
+import wallBeforeImg from "../assets/before_repair.jpg";
+import wallAfterImg from "../assets/after_repair.jpg";
+
 export const BEFORE_AFTER = [
   {
     id: 1,
     title: "Terrace Waterproofing",
     description:
       "Complete solution for persistent roof leaks with our specialized waterproofing techniques.",
-    beforeImage: "/src/assets/terrace_before.jpg",
-    afterImage: "/src/assets/terrace_after.jpg",
+    beforeImage: terraceBeforeImg,
+    afterImage: terraceAfterImg,
   },
   {
     id: 2,
     title: "Wall Crack Repair",
     description:
       "Effective repair of structural wall cracks using our advanced crack-filling solutions.",
-    beforeImage: "/src/assets/before_repair.jpg",
-    afterImage: "/src/assets/after_repair.jpg",
+    beforeImage: wallBeforeImg,
+    afterImage: wallAfterImg,
   },
 ];
