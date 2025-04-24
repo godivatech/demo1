@@ -15,7 +15,7 @@ import {
   CONTACT,
   SOCIAL_MEDIA,
 } from "../../data/company";
-import logo from "@/assets/Logo.jpeg";
+import logo from "@/assets/Logo.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();

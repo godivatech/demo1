@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 import { COMPANY_TITLE } from "../../data/company";
 import { cn } from "../../utils/utils";
 import { fadeIn, fadeInDown, fadeInRight } from "../../utils/animations";
-import logo from "@/assets/Logo.jpeg";
+import logo from "@/assets/Logo.png";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
