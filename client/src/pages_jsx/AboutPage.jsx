@@ -72,7 +72,7 @@ const AboutPage = () => {
                 <img
                   src={directorImage}
                   alt={CONTACT.director}
-                  className="w-full h-[400px] rounded-lg object-cover object-center"
+                  className="w-full h-[400px] rounded-lg object-contain bg-gray-100"
                 />
               </div>
               <div className="absolute top-8 -right-8 w-72 h-72 bg-primary rounded-full opacity-10 -z-10"></div>
