@@ -27,7 +27,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <img src={logo} alt="Company Logo" className="h-10 w-auto mb-4" />
+            <img src={logo} alt="Company Logo" className="h-16 w-auto mb-4" />
             <p className="text-sm text-gray-400 mb-4">
               Your trusted partner for all building repair and maintenance needs
               in Madurai and surrounding areas.

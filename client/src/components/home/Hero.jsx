@@ -1,15 +1,15 @@
 import { useState, useEffect, memo, useMemo } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Hammer, 
-  Droplets, 
-  Shield, 
-  ArrowRight, 
-  Star, 
+import {
+  Hammer,
+  Droplets,
+  Shield,
+  ArrowRight,
+  Star,
   Zap,
   Play,
-  CheckCircle2
+  CheckCircle2,
 } from "lucide-react";
 
 // Preload images for faster rendering
@@ -22,17 +22,23 @@ const BUILDING_PROBLEMS = [
   {
     problem: "Leaking Roofs",
     solution: "Advanced Waterproofing",
-    icon: <Droplets className="h-6 w-6 text-white group-hover:text-black transition-colors" />,
+    icon: (
+      <Droplets className="h-6 w-6 text-white group-hover:text-black transition-colors" />
+    ),
   },
   {
     problem: "Wall Cracks",
     solution: "Structural Reinforcement",
-    icon: <Hammer className="h-6 w-6 text-white group-hover:text-black transition-colors" />,
+    icon: (
+      <Hammer className="h-6 w-6 text-white group-hover:text-black transition-colors" />
+    ),
   },
   {
     problem: "Seepage Issues",
     solution: "Chemical Treatment",
-    icon: <Shield className="h-6 w-6 text-white group-hover:text-black transition-colors" />,
+    icon: (
+      <Shield className="h-6 w-6 text-white group-hover:text-black transition-colors" />
+    ),
   },
 ];
 
@@ -77,12 +83,15 @@ const FeatureItem = memo(({ feature }) => (
 
 // Memoized client avatar
 const ClientAvatar = memo(({ img, index }) => (
-  <div key={index} className="w-10 h-10 rounded-full border-2 border-white overflow-hidden">
-    <img 
-      src={img} 
-      alt={`Client ${index}`} 
-      className="w-full h-full object-cover" 
-      loading="lazy" 
+  <div
+    key={index}
+    className="w-10 h-10 rounded-full border-2 border-white overflow-hidden"
+  >
+    <img
+      src={img}
+      alt={`Client ${index}`}
+      className="w-full h-full object-cover"
+      loading="lazy"
       decoding="async"
     />
   </div>
@@ -103,10 +112,13 @@ const Hero = () => {
   const [showDiagnosis, setShowDiagnosis] = useState(false);
 
   // Use memoized position styles to prevent style recalculations
-  const problemPositionStyle = useMemo(() => ({
-    top: currentProblem === 0 ? "25%" : currentProblem === 1 ? "40%" : "60%",
-    left: currentProblem === 0 ? "70%" : currentProblem === 1 ? "30%" : "55%",
-  }), [currentProblem]);
+  const problemPositionStyle = useMemo(
+    () => ({
+      top: currentProblem === 0 ? "25%" : currentProblem === 1 ? "40%" : "60%",
+      left: currentProblem === 0 ? "70%" : currentProblem === 1 ? "30%" : "55%",
+    }),
+    [currentProblem]
+  );
 
   // Animation variants - defined once and reused
   const fadeInUpVariants = {
@@ -119,7 +131,7 @@ const Hero = () => {
     const interval = setInterval(() => {
       setCurrentProblem((prev) => (prev + 1) % BUILDING_PROBLEMS.length);
       setShowDiagnosis(false);
-      
+
       // Use requestAnimationFrame for smoother transitions
       requestAnimationFrame(() => {
         setTimeout(() => setShowDiagnosis(true), 800);
@@ -138,44 +150,44 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="pt-20 overflow-hidden bg-gradient-to-br from-primary/95 via-primary/85 to-primary/70 min-h-[90vh] flex items-center relative"
+      className="pt-28 md:pt-32 overflow-hidden bg-gradient-to-br from-primary/95 via-primary/85 to-primary/70 min-h-[90vh] flex items-center relative"
     >
       {/* Background decorative elements - will-change hint for GPU acceleration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://buildingdoctor.org/assets/images/texture-pattern.png')] opacity-5 mix-blend-overlay"></div>
-        
+
         {/* Use transform: translateZ(0) for hardware acceleration */}
-        <motion.div 
+        <motion.div
           className="absolute top-10 right-10 w-96 h-96 rounded-full bg-primary/20 blur-3xl will-change-transform"
-          animate={{ 
+          animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.2, 0.3],
             rotate: [0, 10, 0],
           }}
-          transition={{ 
+          transition={{
             duration: 15,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
-          style={{ transform: 'translateZ(0)' }}
+          style={{ transform: "translateZ(0)" }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-10 left-10 w-80 h-80 rounded-full bg-primary/20 blur-3xl will-change-transform"
-          animate={{ 
+          animate={{
             scale: [1, 1.1, 1],
             opacity: [0.2, 0.3, 0.2],
             rotate: [0, -10, 0],
           }}
-          transition={{ 
+          transition={{
             duration: 10,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
-          style={{ transform: 'translateZ(0)' }}
+          style={{ transform: "translateZ(0)" }}
         />
       </div>
 
-      <div className="container mx-auto px-4 pt-4 pb-16 md:pb-24 relative z-20">
+      <div className="container mx-auto px-4 pt-8 pb-16 md:pb-24 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left side content */}
           <div className="lg:col-span-6 text-white">
@@ -187,7 +199,9 @@ const Hero = () => {
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2 mb-6 border border-white/10"
             >
               <Star className="w-4 h-4 text-yellow-300" />
-              <span className="text-sm font-medium text-yellow-50">Madurai's Most Trusted Building Experts</span>
+              <span className="text-sm font-medium text-yellow-50">
+                Madurai's Most Trusted Building Experts
+              </span>
             </motion.div>
 
             <motion.h1
@@ -197,19 +211,25 @@ const Hero = () => {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="font-montserrat font-bold text-4xl md:text-5xl lg:text-6xl text-white leading-tight mb-8"
             >
-              Transform Your 
+              Transform Your
               <br className="hidden md:block" />
-              Building With Expert 
+              Building With Expert
               <span className="relative text-yellow-300 ml-2">
                 Care
-                <svg 
-                  className="absolute -bottom-2 left-0 w-full" 
-                  viewBox="0 0 385 12" 
-                  fill="none" 
-                  xmlns="http://www.w3.org/2000/svg" 
+                <svg
+                  className="absolute -bottom-2 left-0 w-full"
+                  viewBox="0 0 385 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
                   aria-hidden="true"
                 >
-                  <path d="M3 9C116.62 4.46 243.652 2.99999 382 9" stroke="#FCD34D" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M3 9C116.62 4.46 243.652 2.99999 382 9"
+                    stroke="#FCD34D"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </span>
             </motion.h1>
@@ -226,7 +246,7 @@ const Hero = () => {
               long-lasting solutions with 10+ years of experience.
             </motion.p>
 
-            <motion.div 
+            <motion.div
               variants={fadeInUpVariants}
               initial="hidden"
               animate="visible"
@@ -238,7 +258,7 @@ const Hero = () => {
               ))}
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={fadeInUpVariants}
               initial="hidden"
               animate="visible"
@@ -261,9 +281,9 @@ const Hero = () => {
                 </span>
               </Link>
             </motion.div>
-            
+
             {/* Trust indicators */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}
@@ -277,12 +297,16 @@ const Hero = () => {
                 </div>
                 <div className="ml-3">
                   <p className="text-xs text-white/70">Trusted by</p>
-                  <p className="text-sm font-semibold text-white">2,000+ Happy Clients</p>
+                  <p className="text-sm font-semibold text-white">
+                    2,000+ Happy Clients
+                  </p>
                 </div>
               </div>
               <div className="flex items-center bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-sm">
                 <StarRating />
-                <span className="ml-1 text-sm font-medium text-white">4.9/5</span>
+                <span className="ml-1 text-sm font-medium text-white">
+                  4.9/5
+                </span>
               </div>
             </motion.div>
           </div>
@@ -301,12 +325,12 @@ const Hero = () => {
                   src={img1}
                   alt="Building Doctor Professional"
                   className="w-full object-cover h-[500px]"
-                  loading="eager" 
+                  loading="eager"
                   fetchpriority="high"
                   decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-                
+
                 {/* Pulsing dots for problem indicators */}
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -322,7 +346,9 @@ const Hero = () => {
                       <div className="bg-red-500 w-6 h-6 rounded-full flex items-center justify-center animate-pulse"></div>
                       <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-50"></div>
                       <div className="absolute -right-40 top-0 bg-black/70 text-white text-xs rounded-lg px-3 py-2 min-w-[150px]">
-                        <div className="font-bold text-red-400">{BUILDING_PROBLEMS[currentProblem].problem}</div>
+                        <div className="font-bold text-red-400">
+                          {BUILDING_PROBLEMS[currentProblem].problem}
+                        </div>
                         <div className="text-green-400 text-xs mt-1">
                           <ArrowRight className="inline w-3 h-3 mr-1" />
                           {BUILDING_PROBLEMS[currentProblem].solution}
@@ -331,7 +357,7 @@ const Hero = () => {
                     </div>
                   </motion.div>
                 </AnimatePresence>
-                
+
                 {/* Image overlay content */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <div className="flex justify-between items-center">
@@ -348,7 +374,7 @@ const Hero = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Floating smaller images with loading optimization */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -356,30 +382,30 @@ const Hero = () => {
                 transition={{ duration: 0.5, delay: 0.6 }}
                 className="absolute -bottom-10 -left-10 z-10 w-36 h-36 rounded-xl overflow-hidden border-4 border-white/10 shadow-lg"
               >
-                <img 
-                  src={thermalImage} 
-                  alt="Thermal Solution" 
-                  className="w-full h-full object-cover" 
-                  loading="lazy" 
+                <img
+                  src={thermalImage}
+                  alt="Thermal Solution"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
                   decoding="async"
                 />
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.7 }}
                 className="absolute -top-10 -right-10 z-10 w-40 h-40 rounded-xl overflow-hidden border-4 border-white/10 shadow-lg"
               >
-                <img 
-                  src={sealantsImage} 
-                  alt="Sealant Solution" 
-                  className="w-full h-full object-cover" 
-                  loading="lazy" 
+                <img
+                  src={sealantsImage}
+                  alt="Sealant Solution"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
                   decoding="async"
                 />
               </motion.div>
-              
+
               {/* Experience badge */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
