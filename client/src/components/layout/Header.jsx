@@ -11,9 +11,10 @@ import {
   Lock,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { COMPANY_NAME, COMPANY_TITLE } from "../../data/company";
+import { COMPANY_TITLE } from "../../data/company";
 import { cn } from "../../utils/utils";
 import { fadeIn, fadeInDown, fadeInRight } from "../../utils/animations";
+import logo from "@/assets/Logo.jpeg";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,8 +46,8 @@ const Header = () => {
       ),
     },
     {
-      name: "Services",
-      path: "/services",
+      name: "About",
+      path: "/about",
       icon: (
         <Hammer
           size={16}
@@ -65,8 +66,8 @@ const Header = () => {
       ),
     },
     {
-      name: "About",
-      path: "/about",
+      name: "Services",
+      path: "/services",
       icon: (
         <Users
           size={16}
@@ -86,9 +87,6 @@ const Header = () => {
     },
   ];
 
-  // Admin link removed as per client request
-  // const adminLink = { name: 'Admin', path: '/admin', icon: <Lock size={16} /> };
-
   return (
     <motion.header
       initial="hidden"
@@ -107,10 +105,7 @@ const Header = () => {
               className="flex flex-col cursor-pointer"
               variants={fadeIn(0.1, 0.5)}
             >
-              <span className="text-xl font-bold text-orange-600">
-                {COMPANY_NAME}
-              </span>
-              {/* <span className="text-xs text-gray-600">{COMPANY_TITLE}</span> */}
+              <img src={logo} alt="Company Logo" className="h-10 w-auto" />
             </motion.div>
           </Link>
 
@@ -134,8 +129,6 @@ const Header = () => {
                 </span>
               </Link>
             ))}
-
-            {/* Admin link removed as per client request */}
           </motion.div>
 
           {/* Mobile menu button */}
@@ -192,8 +185,6 @@ const Header = () => {
                   </Link>
                 </motion.div>
               ))}
-
-              {/* Admin Link for Mobile - Removed as per client request */}
             </div>
           </motion.div>
         )}

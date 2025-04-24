@@ -15,6 +15,7 @@ import {
   CONTACT,
   SOCIAL_MEDIA,
 } from "../../data/company";
+import logo from "@/assets/Logo.jpeg";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -26,10 +27,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h2 className="text-xl font-bold mb-4 text-orange-500">
-              {COMPANY_NAME}
-            </h2>
-            {/* <p className="text-sm mb-2">{COMPANY_TITLE}</p> */}
+            <img src={logo} alt="Company Logo" className="h-10 w-auto mb-4" />
             <p className="text-sm text-gray-400 mb-4">
               Your trusted partner for all building repair and maintenance needs
               in Madurai and surrounding areas.
@@ -237,7 +235,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex flex-col md:flex-row items-center">
               <p className="text-sm text-gray-400 md:mr-4">
-                &copy; {currentYear} {COMPANY_NAME}. All Rights Reserved.
+                © {currentYear} {COMPANY_NAME}. All Rights Reserved.
               </p>
               <p className="text-xs text-gray-500 mt-1 md:mt-0">
                 Designed and developed by{" "}
