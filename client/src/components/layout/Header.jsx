@@ -41,7 +41,7 @@ const Header = () => {
       icon: (
         <Building
           size={16}
-          className="text-white group-hover:text-black transition-colors"
+          className="text-primary group-hover:text-secondary transition-colors"
         />
       ),
     },
@@ -51,7 +51,7 @@ const Header = () => {
       icon: (
         <Hammer
           size={16}
-          className="text-white group-hover:text-black transition-colors"
+          className="text-primary group-hover:text-secondary transition-colors"
         />
       ),
     },
@@ -61,7 +61,7 @@ const Header = () => {
       icon: (
         <ShoppingBag
           size={16}
-          className="text-white group-hover:text-black transition-colors"
+          className="text-primary group-hover:text-secondary transition-colors"
         />
       ),
     },
@@ -71,7 +71,7 @@ const Header = () => {
       icon: (
         <Users
           size={16}
-          className="text-white group-hover:text-black transition-colors"
+          className="text-primary group-hover:text-secondary transition-colors"
         />
       ),
     },
@@ -81,7 +81,7 @@ const Header = () => {
       icon: (
         <Phone
           size={16}
-          className="text-white group-hover:text-black transition-colors"
+          className="text-primary group-hover:text-secondary transition-colors"
         />
       ),
     },
@@ -94,7 +94,9 @@ const Header = () => {
       variants={fadeInDown(0, 0.5)}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "bg-white shadow-md py-3" : "bg-white/95 shadow-sm py-4"
+        scrolled
+          ? "bg-background shadow-md py-3"
+          : "bg-background/95 shadow-sm py-4"
       )}
     >
       <div className="container mx-auto px-4">
@@ -122,10 +124,10 @@ const Header = () => {
               <Link key={link.path} to={link.path}>
                 <span
                   className={cn(
-                    "flex items-center gap-1.5 text-sm font-medium transition-all cursor-pointer hover:text-orange-600 px-3 py-2 rounded-md group",
+                    "flex items-center gap-1.5 text-sm font-medium transition-all cursor-pointer hover:text-primary px-3 py-2 rounded-md group",
                     location === link.path
-                      ? "text-orange-600 bg-orange-50"
-                      : "text-gray-700 hover:bg-orange-50/50"
+                      ? "text-primary bg-muted"
+                      : "text-foreground hover:bg-muted/50"
                   )}
                 >
                   {link.icon}
@@ -139,19 +141,19 @@ const Header = () => {
           <motion.button
             variants={fadeIn(0.3, 0.5)}
             onClick={toggleMenu}
-            className="md:hidden text-gray-800 hover:text-orange-600 focus:outline-none group"
+            className="md:hidden text-foreground hover:text-primary focus:outline-none group"
             aria-expanded={isOpen}
             aria-label="Toggle menu"
           >
             {isOpen ? (
               <X
                 size={24}
-                className="text-black group-hover:text-orange-600 transition-colors"
+                className="text-foreground group-hover:text-primary transition-colors"
               />
             ) : (
               <Menu
                 size={24}
-                className="text-black group-hover:text-orange-600 transition-colors"
+                className="text-foreground group-hover:text-primary transition-colors"
               />
             )}
           </motion.button>
@@ -163,9 +165,9 @@ const Header = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden pt-4 pb-2 absolute left-0 right-0 bg-white px-4"
+            className="md:hidden pt-4 pb-2 absolute left-0 right-0 bg-background px-4"
           >
-            <div className="flex flex-col space-y-1 bg-white rounded-lg p-3 shadow-lg">
+            <div className="flex flex-col space-y-1 bg-background rounded-lg p-3 shadow-lg">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.path}
@@ -176,10 +178,10 @@ const Header = () => {
                   <Link to={link.path}>
                     <span
                       className={cn(
-                        "text-sm flex items-center gap-2 py-2.5 px-4 rounded-md font-medium transition-colors cursor-pointer hover:bg-orange-50 hover:text-orange-600 group",
+                        "text-sm flex items-center gap-2 py-2.5 px-4 rounded-md font-medium transition-colors cursor-pointer hover:bg-muted hover:text-primary group",
                         location === link.path
-                          ? "bg-orange-50 text-orange-600"
-                          : "text-gray-700"
+                          ? "bg-muted text-primary"
+                          : "text-foreground"
                       )}
                       onClick={() => setIsOpen(false)}
                     >

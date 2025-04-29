@@ -1,0 +1,181 @@
+# Building Doctor Pro - Complete Project Structure
+
+## Root Directory
+├── client/                           # Frontend React application
+│   ├── public/                       # Static public assets
+│   │   ├── favicon.ico               # Website favicon
+│   │   ├── robots.txt                # SEO robots file
+│   │   └── static.json               # Static file configuration
+│   │
+│   ├── src/                          # Source code
+│   │   ├── assets/                   # Images, fonts, and other assets
+│   │   │   └── Logo.png              # Company logo
+│   │   │
+│   │   ├── components/               # React components
+│   │   │   ├── admin/                # Admin dashboard components
+│   │   │   │   ├── ContactList.jsx   # Admin contact form submissions
+│   │   │   │   ├── FaqManager.jsx    # Admin FAQ management
+│   │   │   │   ├── InquiryList.jsx   # Admin inquiry display
+│   │   │   │   ├── ProductForm.jsx   # Product add/edit form
+│   │   │   │   ├── ProductManager.jsx # Admin product management
+│   │   │   │   ├── ServiceForm.jsx   # Service add/edit form
+│   │   │   │   ├── ServiceManager.jsx # Admin service management
+│   │   │   │   └── TestimonialManager.jsx # Admin testimonial management
+│   │   │   │
+│   │   │   ├── chat/                 # Chat components
+│   │   │   │   └── ChatBot.jsx       # Chat bot implementation
+│   │   │   │
+│   │   │   ├── home/                 # Home page section components
+│   │   │   │   ├── About.jsx         # About section
+│   │   │   │   ├── BeforeAfter.jsx   # Before/After projects section
+│   │   │   │   ├── Benefits.jsx      # Benefits section
+│   │   │   │   ├── ContactSection.jsx # Contact section
+│   │   │   │   ├── Cta.jsx           # Call to action section
+│   │   │   │   ├── Faq.jsx           # FAQ section
+│   │   │   │   ├── Hero.jsx          # Hero banner section
+│   │   │   │   ├── Products.jsx      # Products section
+│   │   │   │   ├── Services.jsx      # Services section
+│   │   │   │   └── Testimonials.jsx  # Testimonials section
+│   │   │   │
+│   │   │   ├── layout/               # Layout components
+│   │   │   │   ├── Footer.jsx        # Website footer
+│   │   │   │   ├── Header.jsx        # Website header
+│   │   │   │   ├── MobileNav.jsx     # Mobile navigation
+│   │   │   │   ├── Navbar.jsx        # Navigation bar
+│   │   │   │   ├── PageWrapper.jsx   # Page wrapper with animations
+│   │   │   │   └── Sidebar.jsx       # Admin sidebar
+│   │   │   │
+│   │   │   ├── products/             # Product components
+│   │   │   │   ├── ProductCard.jsx   # Product card component
+│   │   │   │   ├── ProductFilter.jsx # Product filtering component
+│   │   │   │   ├── ProductGallery.jsx # Product image gallery
+│   │   │   │   ├── ProductGrid.jsx   # Grid of product cards
+│   │   │   │   └── RelatedProducts.jsx # Related products section
+│   │   │   │
+│   │   │   ├── services/             # Service components
+│   │   │   │   ├── ServiceCard.jsx   # Service card component
+│   │   │   │   ├── ServiceFeatures.jsx # Service features list
+│   │   │   │   └── ServicesList.jsx  # List of services
+│   │   │   │
+│   │   │   ├── ui/                   # UI components
+│   │   │   │   ├── accordion.jsx     # Accordion component
+│   │   │   │   ├── button.jsx        # Button component
+│   │   │   │   ├── card.jsx          # Card component
+│   │   │   │   ├── dialog.jsx        # Dialog/modal component
+│   │   │   │   ├── form.jsx          # Form wrapper component
+│   │   │   │   ├── input.jsx         # Input component
+│   │   │   │   ├── select.jsx        # Select component
+│   │   │   │   ├── tabs.jsx          # Tabs component
+│   │   │   │   ├── textarea.jsx      # Textarea component
+│   │   │   │   └── toast.jsx         # Toast notification component
+│   │   │   │
+│   │   │   ├── ContactForm.jsx       # Contact page form
+│   │   │   ├── ExitIntentPopup.jsx   # Exit intent popup
+│   │   │   ├── HomePageForm.jsx      # Home page popup form
+│   │   │   ├── InquiryForm.jsx       # Service inquiry form
+│   │   │   └── WhatsappButton.jsx    # Floating WhatsApp button
+│   │   │
+│   │   ├── context/                  # React context providers
+│   │   │   ├── AdminContext.jsx      # Admin authentication context
+│   │   │   ├── FilterContext.jsx     # Product filtering context
+│   │   │   ├── LoadingContext.jsx    # Loading state context
+│   │   │   └── ToastContext.jsx      # Toast notification context
+│   │   │
+│   │   ├── data/                     # Data files
+│   │   │   ├── company.js            # Company information data
+│   │   │   ├── products.js           # Product data
+│   │   │   ├── schema.js             # Data validation schemas
+│   │   │   └── services.js           # Service data
+│   │   │
+│   │   ├── data_clean/               # Clean data files
+│   │   │   ├── company.js            # Clean company data
+│   │   │   ├── products.js           # Clean product data
+│   │   │   ├── schema.js             # Clean schema data
+│   │   │   └── services.js           # Clean service data
+│   │   │
+│   │   ├── lib/                      # Library files
+│   │   │   ├── api.js                # API request helpers
+│   │   │   ├── constants.ts          # Application constants
+│   │   │   ├── firebase.js           # Firebase client configuration
+│   │   │   ├── queryClient.js        # React Query client setup
+│   │   │   ├── utils.js              # General utilities
+│   │   │   └── validation.js         # Form validation utilities
+│   │   │
+│   │   ├── pages/                    # Page components (JSX)
+│   │   │   └── not-found.jsx         # 404 page
+│   │   │
+│   │   ├── pages_jsx/                # Page components (JSX)
+│   │   │   ├── AboutPage.jsx         # About us page
+│   │   │   ├── AdminPage.jsx         # Admin dashboard page
+│   │   │   ├── ContactPage.jsx       # Contact us page
+│   │   │   ├── HomePage.jsx          # Home page
+│   │   │   ├── NotFoundPage.jsx      # 404 page
+│   │   │   ├── PrivacyPage.jsx       # Privacy policy page
+│   │   │   ├── ProductDetailPage.jsx # Single product detail page
+│   │   │   ├── ProductsPage.jsx      # Products listing page
+│   │   │   ├── ServiceDetailPage.jsx # Single service detail page
+│   │   │   ├── ServicesPage.jsx      # Services listing page
+│   │   │   └── TermsPage.jsx         # Terms of service page
+│   │   │
+│   │   ├── types/                    # TypeScript type definitions
+│   │   │   └── index.ts              # Type definitions
+│   │   │
+│   │   ├── utils/                    # Utility functions
+│   │   │   └── animations.js         # Animation utilities
+│   │   │
+│   │   ├── App.jsx                   # Main application component with routing
+│   │   ├── index.css                 # Global CSS styles
+│   │   └── main.jsx                  # Application entry point
+│   │
+│   └── index.html                    # HTML entry point
+│
+├── server/                           # Backend server
+│   ├── data.ts                       # Mock data generation
+│   ├── firebase.ts                   # Firebase server configuration
+│   ├── index.ts                      # Server entry point
+│   ├── routes.ts                     # API routes
+│   ├── routes_firebase.ts            # Firebase-specific routes
+│   ├── storage.ts                    # Storage interface
+│   └── vite.ts                       # Vite server configuration
+│
+├── shared/                           # Shared code between client and server
+│   └── schema.ts                     # Shared database schemas
+│
+├── attached_assets/                  # Additional assets
+│
+├── dist/                             # Build output directory
+│   └── public/                       # Public build files
+│
+├── windows_compat/                   # Windows compatibility files
+│   ├── create-batch-file.js          # Batch file creationasd asdas saw as ww e vhampions trophy
+│   ├── start-windows-minimal.js      # Minimal Windows starter
+│   ├── start-windows-simple.js       # Simple Windows starter
+│   ├── start-windows.js              # Standard Windows starter
+│   ├── vite.config.simple.cjs        # Simple CommonJS Vite config
+│   ├── vite.config.windows.cjs       # Windows CommonJS Vite config
+│   └── vite.config.windows.js        # Windows-specific Vite config
+│  
+├── .gitignore                        # Git ignore file
+├── .replit                           # Replit configuration
+├── .vercelignore                     # Vercel ignore file
+├── build-for-vercel.sh               # Vercel build script
+├── cleanup_duplicates.sh             # File cleanup script
+├── drizzle.config.ts                 # Drizzle ORM configuration
+├── package-lock.json                 # NPM lock file
+├── package.json                      # NPM package configuration
+├── postcss.config.js                 # PostCSS configuration
+├── README.md                         # Project documentation
+├── start-dev.bat                     # Windows dev startup script
+├── start-dev.sh                      # Linux dev startup script
+├── start-windows-legacy.bat          # Legacy Windows startup
+├── tailwind.config.ts                # Tailwind CSS configuration
+├── theme.json                        # UI theme configuration
+├── tsconfig.json                     # TypeScript configuration
+├── update_vite_config.sh             # Vite config update script
+├── vercel-build.cjs                  # Vercel build script (CommonJS)
+├── vercel-build.js                   # Vercel build script (ESM)
+├── vercel.json                       # Vercel deployment configuration
+└── vite.config.ts                    # Vite Configuration
+
+
+

@@ -447,7 +447,7 @@ const BeforeAfter = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="inline-block px-4 py-1 bg-primary bg-opacity-10 rounded-full mb-3">
-            <p className="text-xs font-semibold text-white uppercase tracking-wider">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">
               Our Results
             </p>
           </div>

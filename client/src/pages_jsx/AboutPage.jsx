@@ -86,7 +86,7 @@ const AboutPage = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <div className="inline-block px-4 py-1 bg-primary bg-opacity-10 rounded-full mb-3">
-              <p className="text-xs font-semibold text-white uppercase tracking-wider">
+              <p className="text-xs font-semibold text-primary uppercase tracking-wider">
                 Our Approach
               </p>
             </div>
@@ -149,7 +149,7 @@ const AboutPage = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <div className="inline-block px-4 py-1 bg-primary bg-opacity-10 rounded-full mb-3">
-              <p className="text-xs font-semibold text-white uppercase tracking-wider">
+              <p className="text-xs font-semibold text-secondary uppercase tracking-wider">
                 Our Team
               </p>
             </div>

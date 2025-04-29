@@ -33,17 +33,20 @@ Deploy your own Building Doctor Website with Vercel:
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/building-doctor-website.git
 cd building-doctor-website
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file in the root directory with your Firebase credentials:
+
 ```
 FIREBASE_API_KEY=your_api_key
 FIREBASE_AUTH_DOMAIN=your_auth_domain
@@ -56,6 +59,7 @@ FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
 
 4. Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -106,3 +110,15 @@ This project is licensed under the MIT License.
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Framer Motion](https://www.framer.com/motion/) for animations
 - [Firebase](https://firebase.google.com/) for backend services
+
+/_ {
+"variant": "professional",
+"primary": "hsl(197, 97%, 63%)",
+"appearance": "light",
+"radius": 0.5
+}
+_/
+primary: {
+DEFAULT: "hsl(197, 97%, 63%)", // updated
+foreground: "hsl(204, 10%, 98%)", // keep or tweak as needed
+},

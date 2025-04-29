@@ -3,9 +3,8 @@ import { X, Send, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SERVICES, COMPANY_NAME } from "@/lib/constants";
 
-// Comprehensive responses for the chatbot
+// Comprehensive responses for the chatbot (unchanged)
 const RESPONSES = {
-  // Basic interactions
   greeting: `Hello! Welcome to ${COMPANY_NAME}. How can I help you today?`,
   greeting_followup:
     "I can help with information about our services, schedule a diagnosis for your building issues, or answer questions about our company.",
@@ -14,8 +13,6 @@ const RESPONSES = {
   thanks: "You're welcome! Is there anything else I can help you with?",
   goodbye:
     "Thank you for chatting with us. Feel free to contact us anytime for your building repair needs!",
-
-  // Company information
   about:
     "OM Vinayaga Associates is the official Building Doctor franchise in Madurai, with over 10 years of experience in building repairs and waterproofing. We've helped more than 2,000 clients restore and protect their properties.",
   location:
@@ -24,8 +21,6 @@ const RESPONSES = {
     "Our team has over 10 years of specialized experience in building repair and diagnostics. We've successfully completed more than 2,000 projects ranging from residential buildings to commercial complexes.",
   expertise:
     "Our technical experts are certified professionals with extensive training in advanced building repair techniques and latest waterproofing technologies.",
-
-  // Contact and appointment
   contact:
     "You can reach us by phone at +91 9876543210 or email at info@buildingdoctor.in. Our office is open Monday to Saturday, 9 AM to 6 PM.",
   appointment:
@@ -38,14 +33,10 @@ const RESPONSES = {
     "For emergency services like severe leaks or structural concerns, please call our emergency line at +91 9876543211. We offer 24-hour emergency response for critical situations.",
   visit_timing:
     "Our site visits typically take 30-60 minutes depending on the size of the property and complexity of issues. Our technician will thoroughly inspect the problem areas and explain the findings.",
-
-  // Services information
   services:
     "We offer a variety of building repair and waterproofing services. Which specific service are you interested in?",
   services_list:
     "Our main services include:\n• Waterproofing (roof, bathroom, basement)\n• Crack Repair & Structural Strengthening\n• Seepage & Dampness Control\n• Chemical Treatments & Injections\n• Expansion Joint Solutions\n• Building Health Assessments\n• Rehabilitation & Retrofitting",
-
-  // Pricing information
   pricing:
     "Our pricing varies based on the specific requirements of your building. We offer free site inspections to provide accurate quotations. Would you like to schedule an inspection?",
   price_range:
@@ -54,8 +45,6 @@ const RESPONSES = {
     "We accept payments via bank transfer, UPI, credit/debit cards, and cash. For larger projects, we offer flexible payment schedules tied to project milestones.",
   discounts:
     "We currently offer a 10% discount on your first service, and additional 5% discount for senior citizens. We also have seasonal promotions throughout the year.",
-
-  // Process information
   process:
     "Our 6-step process includes: 1) Initial consultation, 2) Detailed site inspection, 3) Root cause diagnosis, 4) Customized solution proposal, 5) Professional execution, and 6) Quality verification and follow-up.",
   inspection:
@@ -66,8 +55,6 @@ const RESPONSES = {
     "Before our team arrives, we recommend clearing access to problem areas and removing any valuable or fragile items from the work zone. Our team will use protective coverings for furniture and floors.",
   post_repair:
     "After completing repairs, we provide a maintenance guide specific to your property. We also schedule a free follow-up inspection after 3 months to ensure all solutions are performing optimally.",
-
-  // Materials and quality
   materials:
     "We use only premium quality, internationally certified materials for all our repair and waterproofing solutions, ensuring long-lasting results. Our products are eco-friendly and safe for residential use.",
   warranty:
@@ -76,8 +63,6 @@ const RESPONSES = {
     "We implement a strict 3-tier quality control process with pre-application testing, during-application supervision, and post-application verification to ensure top-notch results.",
   brands:
     "We work with industry-leading brands like Dr. Fixit, Fosroc, BASF, Sika, and MYK Laticrete to ensure the highest quality repairs with performance guarantees.",
-
-  // Specific service details
   waterproofing:
     "Our comprehensive waterproofing services include roof waterproofing, bathroom waterproofing, basement waterproofing, and external wall treatments. We use advanced membrane, cementitious, and injection technologies tailored to each surface type and exposure level.",
   roof_waterproofing:
@@ -88,14 +73,12 @@ const RESPONSES = {
     "For basements, we utilize a combination of exterior barrier systems and interior treatments to protect against ground water infiltration, hydrostatic pressure, and rising dampness.",
   external_waterproofing:
     "Our external wall treatments provide protection against driving rain, prevent water absorption, and maintain breathability to prevent trapped moisture problems.",
-
   cracks:
     "We provide comprehensive crack repair solutions using advanced epoxy injections, carbon fiber reinforcement, and specialized fillers based on crack type (structural vs. non-structural) and movement patterns.",
   hairline_cracks:
     "For hairline and shrinkage cracks, we use flexible acrylic fillers that accommodate minor movements while providing waterproof sealing.",
   structural_cracks:
     "Structural cracks require specialized treatment with epoxy or polyurethane injections to restore structural integrity and prevent further propagation.",
-
   seepage:
     "Our seepage control treatments identify and address the root cause of water penetration, preventing dampness and mold growth in walls and ceilings. We use a combination of injection systems, surface treatments, and capillary blocking agents.",
   dampness:
@@ -104,18 +87,14 @@ const RESPONSES = {
     "For rising damp, we implement horizontal chemical barriers (DPC) through pressure injection or gravity-fed systems to block capillary moisture movement.",
   efflorescence:
     "White salt deposits (efflorescence) indicate ongoing moisture migration. Our treatments remove existing deposits and prevent recurrence by addressing the underlying moisture source.",
-
   expansion_joints:
     "We specialize in expansion joint treatments using advanced elastic sealants and engineered fillers that maintain structural integrity while allowing for building movement across varying weather conditions.",
   joint_repair:
     "Our joint repair systems address both expansion and construction joints with appropriate backing materials, bond breakers, and high-performance sealants selected for the specific movement requirements.",
-
   structural:
     "Our structural strengthening solutions include carbon fiber reinforcement, section enlargement, plate bonding, and specialized grouting to restore or enhance load-bearing capacity.",
   retrofitting:
     "Building retrofitting services improve the structural performance of existing buildings to meet current standards and extend building life.",
-
-  // Problem-specific responses
   leaking_roof:
     "Roof leaks can stem from multiple causes including damaged waterproofing, improper slopes, blocked drains, or flashing failures. Our diagnosis identifies the exact cause before recommending targeted solutions.",
   water_stains:
@@ -128,17 +107,15 @@ const RESPONSES = {
     "Concrete spalling (where chunks break off) indicates advanced deterioration often caused by rebar corrosion. Our treatment involves removing damaged concrete, treating or replacing corroded reinforcement, and applying protective coatings.",
   foundation_issues:
     "Foundation problems require expert diagnosis. Signs include cracks in foundation walls, uneven floors, or doors that won't close properly. We provide comprehensive assessment and appropriate stabilization solutions.",
-
-  // Maintenance advice
   maintenance_tips:
     "Regular maintenance extends the life of waterproofing. Keep drains clear, repair minor cracks promptly, ensure proper ventilation, and schedule annual inspections to catch issues early.",
   monsoon_prep:
     "Before monsoon season, we recommend checking roof drainage, sealing any visible cracks, ensuring window and door seals are intact, and inspecting previous repair work.",
   seasonal_care:
-    "Different seasons stress buildings differently. Summer heat can cause expansion, while winter cooling leads to contraction. Monsoon brings water challenges. Our seasonal maintenance programs address each period's unique demands.",
+    "Different seasons stress buildings differently. season brings water challenges. Our seasonal maintenance programs address each period's unique demands.",
 };
 
-// Main quick reply options
+// Quick reply options (unchanged)
 const QUICK_REPLIES = [
   { id: "services", text: "Services Offered" },
   { id: "appointment", text: "Schedule a Diagnosis" },
@@ -147,14 +124,12 @@ const QUICK_REPLIES = [
   { id: "about", text: "About Us" },
 ];
 
-// Appointment scheduling quick replies
 const APPOINTMENT_QUICK_REPLIES = [
   { id: "morning", text: "Morning (9AM-12PM)" },
   { id: "afternoon", text: "Afternoon (12PM-3PM)" },
   { id: "evening", text: "Evening (3PM-6PM)" },
 ];
 
-// Company information quick replies
 const GENERAL_QUICK_REPLIES = [
   { id: "experience", text: "Our Experience" },
   { id: "expertise", text: "Technical Expertise" },
@@ -163,7 +138,6 @@ const GENERAL_QUICK_REPLIES = [
   { id: "location", text: "Service Areas" },
 ];
 
-// Problem-specific quick replies
 const PROBLEM_QUICK_REPLIES = [
   { id: "leaking_roof", text: "Roof Leakage" },
   { id: "bathroom_waterproofing", text: "Bathroom Leaks" },
@@ -172,7 +146,6 @@ const PROBLEM_QUICK_REPLIES = [
   { id: "structural", text: "Structural Issues" },
 ];
 
-// Maintenance quick replies
 const MAINTENANCE_QUICK_REPLIES = [
   { id: "maintenance_tips", text: "General Maintenance" },
   { id: "monsoon_prep", text: "Monsoon Preparation" },
@@ -180,14 +153,12 @@ const MAINTENANCE_QUICK_REPLIES = [
   { id: "quality_control", text: "Quality Standards" },
 ];
 
-// Price and payment quick replies
 const PRICE_QUICK_REPLIES = [
   { id: "price_range", text: "Price Ranges" },
   { id: "payment", text: "Payment Methods" },
   { id: "discounts", text: "Current Offers" },
 ];
 
-// Service quick replies
 const SERVICE_QUICK_REPLIES = SERVICES.map((service) => ({
   id: service.slug,
   text: service.title,
@@ -197,10 +168,10 @@ const ChatMessage = ({ message, isUser }) => {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
       <div
-        className={`px-4 py-2 rounded-lg max-w-[80%] ${
+        className={`px-4 py-2 rounded-md max-w-[80%] ${
           isUser
-            ? "bg-orange-600 text-white rounded-tr-none"
-            : "bg-gray-100 text-gray-800 rounded-tl-none"
+            ? "bg-primary text-primary-foreground rounded-tr-none"
+            : "bg-muted text-foreground rounded-tl-none"
         }`}
       >
         {message}
@@ -216,7 +187,7 @@ const QuickReplies = ({ options, onSelect }) => {
         <button
           key={option.id}
           onClick={() => onSelect(option)}
-          className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-800 transition-colors"
+          className="px-3 py-1.5 bg-muted hover:bg-muted/70 rounded-md text-sm text-foreground transition-colors"
         >
           {option.text}
         </button>
@@ -308,7 +279,7 @@ const ChatBot = () => {
         // Greeting patterns
         if (
           input.match(
-            /^(hello|hi|hey|howdy|greetings|good (morning|afternoon|evening)|namaste)/i,
+            /^(hello|hi|hey|howdy|greetings|good (morning|afternoon|evening)|namaste)/i
           )
         ) {
           botResponse =
@@ -319,7 +290,7 @@ const ChatBot = () => {
         // Service related queries - general
         else if (
           input.match(
-            /(service|offer|provide|do you do|what (can|do) you|solutions|treatments|repairs|fix)/i,
+            /(service|offer|provide|do you do|what (can|do) you|solutions|treatments|repairs|fix)/i
           )
         ) {
           botResponse = RESPONSES.services_list;
@@ -328,14 +299,14 @@ const ChatBot = () => {
         // About the company - expertise and experience
         else if (
           input.match(
-            /(about|company|who are you|tell me about|history|experience|expertise|qualification|trained|certified)/i,
+            /(about|company|who are you|tell me about|history|experience|expertise|qualification|trained|certified)/i
           )
         ) {
           if (input.match(/(experience|history|years|projects|completed)/i)) {
             botResponse = RESPONSES.experience;
           } else if (
             input.match(
-              /(expertise|qualification|trained|certified|professional|technical)/i,
+              /(expertise|qualification|trained|certified|professional|technical)/i
             )
           ) {
             botResponse = RESPONSES.expertise;
@@ -347,7 +318,7 @@ const ChatBot = () => {
         // Contact information
         else if (
           input.match(
-            /(contact|phone|call|email|reach|office|visit us|talk to|speak with|representative)/i,
+            /(contact|phone|call|email|reach|office|visit us|talk to|speak with|representative)/i
           )
         ) {
           botResponse = RESPONSES.contact;
@@ -355,12 +326,12 @@ const ChatBot = () => {
         // Appointment scheduling
         else if (
           input.match(
-            /(appointment|schedule|book|visit|consult|diagnosis|inspection|check|come|site visit|evaluate|assess|examine)/i,
+            /(appointment|schedule|book|visit|consult|diagnosis|inspection|check|come|site visit|evaluate|assess|examine)/i
           )
         ) {
           if (
             input.match(
-              /(emergency|urgent|immediately|asap|critical|severe|serious)/i,
+              /(emergency|urgent|immediately|asap|critical|severe|serious)/i
             )
           ) {
             botResponse = RESPONSES.emergency;
@@ -376,20 +347,20 @@ const ChatBot = () => {
         // Pricing queries
         else if (
           input.match(
-            /(price|cost|fee|charge|how much|expensive|affordable|quote|estimate|budget|payment|discount|offer)/i,
+            /(price|cost|fee|charge|how much|expensive|affordable|quote|estimate|budget|payment|discount|offer)/i
           )
         ) {
           if (input.match(/(range|typical|average|estimate|ballpark)/i)) {
             botResponse = RESPONSES.price_range;
           } else if (
             input.match(
-              /(payment|pay|method|cash|card|upi|transfer|installment)/i,
+              /(payment|pay|method|cash|card|upi|transfer|installment)/i
             )
           ) {
             botResponse = RESPONSES.payment;
           } else if (
             input.match(
-              /(discount|offer|promotion|deal|special|save|reduction)/i,
+              /(discount|offer|promotion|deal|special|save|reduction)/i
             )
           ) {
             botResponse = RESPONSES.discounts;
@@ -400,7 +371,7 @@ const ChatBot = () => {
         // Location/service area
         else if (
           input.match(
-            /(where|location|area|city|region|madurai|cover|service area|distance|travel|nearby)/i,
+            /(where|location|area|city|region|madurai|cover|service area|distance|travel|nearby)/i
           )
         ) {
           botResponse = RESPONSES.location;
@@ -408,7 +379,7 @@ const ChatBot = () => {
         // Process/how it works
         else if (
           input.match(
-            /(process|how does it work|steps|procedure|what happens|method|approach|system|protocol)/i,
+            /(process|how does it work|steps|procedure|what happens|method|approach|system|protocol)/i
           )
         ) {
           botResponse = RESPONSES.process;
@@ -416,7 +387,7 @@ const ChatBot = () => {
         // Warranty/guarantee
         else if (
           input.match(
-            /(warranty|guarantee|promise|assurance|how long|last|duration)/i,
+            /(warranty|guarantee|promise|assurance|how long|last|duration)/i
           )
         ) {
           botResponse = RESPONSES.warranty;
@@ -430,7 +401,7 @@ const ChatBot = () => {
         // Materials/brands used
         else if (
           input.match(
-            /(material|chemical|product|quality|substance|brand|company|manufacturer)/i,
+            /(material|chemical|product|quality|substance|brand|company|manufacturer)/i
           )
         ) {
           if (input.match(/(brand|company|manufacturer|supplier|name)/i)) {
@@ -444,7 +415,7 @@ const ChatBot = () => {
         // Waterproofing specific issues
         else if (
           input.match(
-            /(waterproof|leak|water|rain|terrace|roof|bathroom|toilet|shower|basement|cellar)/i,
+            /(waterproof|leak|water|rain|terrace|roof|bathroom|toilet|shower|basement|cellar)/i
           )
         ) {
           if (input.match(/(roof|terrace|top|ceiling|upstairs)/i)) {
@@ -459,7 +430,7 @@ const ChatBot = () => {
             botResponse = RESPONSES.basement_waterproofing;
           } else if (
             input.match(
-              /(exterior|external|outside|outer|facade|wall outside)/i,
+              /(exterior|external|outside|outer|facade|wall outside)/i
             )
           ) {
             botResponse = RESPONSES.external_waterproofing;
@@ -470,14 +441,14 @@ const ChatBot = () => {
         // Crack repair specific
         else if (
           input.match(
-            /(crack|break|fissure|split|fracture|structural|wall damage)/i,
+            /(crack|break|fissure|split|fracture|structural|wall damage)/i
           )
         ) {
           if (input.match(/(hairline|fine|thin|small|minor|surface)/i)) {
             botResponse = RESPONSES.hairline_cracks;
           } else if (
             input.match(
-              /(structural|major|serious|large|wide|deep|foundation|load bearing)/i,
+              /(structural|major|serious|large|wide|deep|foundation|load bearing)/i
             )
           ) {
             botResponse = RESPONSES.structural_cracks;
@@ -488,7 +459,7 @@ const ChatBot = () => {
         // Seepage and dampness issues
         else if (
           input.match(
-            /(seep|moist|damp|wet wall|water stain|humidity|condensation|soggy|dripping)/i,
+            /(seep|moist|damp|wet wall|water stain|humidity|condensation|soggy|dripping)/i
           )
         ) {
           if (input.match(/(rising|ground|floor|coming up|bottom)/i)) {
@@ -504,7 +475,7 @@ const ChatBot = () => {
         // Expansion joints
         else if (
           input.match(
-            /(expansion|joint|building movement|elasticity|sealant|gap|space between|flexible)/i,
+            /(expansion|joint|building movement|elasticity|sealant|gap|space between|flexible)/i
           )
         ) {
           if (input.match(/(repair|fix|replace|renew|restore|maintain)/i)) {
@@ -516,14 +487,14 @@ const ChatBot = () => {
         // Structural issues
         else if (
           input.match(
-            /(structural|foundation|load bearing|column|beam|slab|support|pillar|strength)/i,
+            /(structural|foundation|load bearing|column|beam|slab|support|pillar|strength)/i
           )
         ) {
           if (input.match(/(foundation|base|ground|settle|sink|uneven)/i)) {
             botResponse = RESPONSES.foundation_issues;
           } else if (
             input.match(
-              /(retrofit|strengthen|reinforce|upgrade|improve|enhance)/i,
+              /(retrofit|strengthen|reinforce|upgrade|improve|enhance)/i
             )
           ) {
             botResponse = RESPONSES.retrofitting;
@@ -546,13 +517,13 @@ const ChatBot = () => {
           botResponse = RESPONSES.peeling_paint;
         } else if (
           input.match(
-            /(mold|mildew|fungi|black spot|green|growth|smell|odor|musty)/i,
+            /(mold|mildew|fungi|black spot|green|growth|smell|odor|musty)/i
           )
         ) {
           botResponse = RESPONSES.mold_mildew;
         } else if (
           input.match(
-            /(spall|chunk|piece|break off|falling|concrete damage|rebar|exposed steel)/i,
+            /(spall|chunk|piece|break off|falling|concrete damage|rebar|exposed steel)/i
           )
         ) {
           botResponse = RESPONSES.concrete_spalling;
@@ -566,7 +537,7 @@ const ChatBot = () => {
         // MAINTENANCE AND PREVENTION
         else if (
           input.match(
-            /(maintain|prevent|avoid|protect|care|extend life|routine|regular)/i,
+            /(maintain|prevent|avoid|protect|care|extend life|routine|regular)/i
           )
         ) {
           if (input.match(/(monsoon|rain|season|prepare|ready)/i)) {
@@ -809,7 +780,7 @@ const ChatBot = () => {
       {/* Chat toggle button */}
       <button
         onClick={toggleChat}
-        className="fixed bottom-20 right-6 xs:bottom-6 xs:right-20 sm:right-20 md:right-20 lg:right-20 bg-orange-600 text-white p-4 w-14 h-14 rounded-full shadow-lg hover:bg-orange-700 transition-all z-50 flex items-center justify-center"
+        className="fixed bottom-20 right-6 xs:bottom-6 xs:right-20 sm:right-20 md:right-20 lg:right-20 bg-primary text-primary-foreground p-4 w-14 h-14 rounded-full shadow-lg hover:bg-secondary transition-all z-50 flex items-center justify-center"
         aria-label="Toggle chat"
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
@@ -823,17 +794,17 @@ const ChatBot = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-[80px] right-6 xs:bottom-28 xs:right-20 sm:bottom-28 sm:right-20 md:right-20 lg:right-20 w-80 sm:w-96 h-[500px] bg-white rounded-lg shadow-xl overflow-hidden z-50 flex flex-col"
+            className="fixed bottom-[80px] right-6 xs:bottom-28 xs:right-20 sm:bottom-28 sm:right-20 md:right-20 lg:right-20 w-80 sm:w-96 h-[500px] bg-background rounded-lg shadow-xl overflow-hidden z-50 flex flex-col"
           >
             {/* Chat header */}
-            <div className="bg-orange-600 text-white px-4 py-3 flex justify-between items-center">
+            <div className="bg-primary text-primary-foreground px-4 py-3 flex justify-between items-center">
               <div>
                 <h3 className="font-semibold">Building Doctor Assistant</h3>
-                <p className="text-xs text-orange-100">
+                <p className="text-xs text-primary-foreground/80">
                   We typically reply within minutes
                 </p>
               </div>
-              <button onClick={toggleChat} className="text-white">
+              <button onClick={toggleChat} className="text-primary-foreground">
                 <X size={20} />
               </button>
             </div>
@@ -866,17 +837,17 @@ const ChatBot = () => {
 
               {/* Bot typing indicator */}
               {isTyping && (
-                <div className="flex items-center space-x-1 px-4 py-2 bg-gray-100 text-gray-500 rounded-lg rounded-tl-none w-16 mb-3">
+                <div className="flex items-center space-x-1 px-4 py-2 bg-muted text-muted-foreground rounded-md rounded-tl-none w-16 mb-3">
                   <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
                     style={{ animationDelay: "0ms" }}
                   ></div>
                   <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
                     style={{ animationDelay: "150ms" }}
                   ></div>
                   <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
                     style={{ animationDelay: "300ms" }}
                   ></div>
                 </div>
@@ -886,7 +857,7 @@ const ChatBot = () => {
             </div>
 
             {/* Chat input */}
-            <div className="border-t border-gray-200 p-3">
+            <div className="border-t border-border p-3">
               <div className="flex items-center">
                 <input
                   type="text"
@@ -894,16 +865,16 @@ const ChatBot = () => {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyPress}
                   placeholder="Type your message..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-1 focus:ring-orange-500"
+                  className="flex-1 px-4 py-2 border border-border rounded-l-md focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 <button
                   onClick={handleSend}
-                  className="bg-orange-600 text-white px-4 py-2 rounded-r-lg hover:bg-orange-700 transition-colors"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-r-md hover:bg-secondary transition-colors"
                 >
                   <Send size={18} />
                 </button>
               </div>
-              <div className="mt-2 text-xs text-gray-500 text-center">
+              <div className="mt-2 text-xs text-muted-foreground text-center">
                 This is an automated assistant. For complex issues, please
                 contact us directly.
               </div>
