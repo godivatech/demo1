@@ -30,13 +30,11 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { contactSchema, inquirySchema } from "@/data/schema";
 
 const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
-  // Use external isOpen prop if provided, otherwise use internal state
   const [isOpen, setIsOpen] = useState(externalIsOpen || false);
   const [currentStep, setCurrentStep] = useState(0);
   const [activeTab, setActiveTab] = useState("inquiry");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Inquiry form data
   const [inquiryData, setInquiryData] = useState({
     name: "",
     email: "",
@@ -46,7 +44,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
     address: "",
   });
 
-  // Field-specific error messages for inquiry form
   const [inquiryErrors, setInquiryErrors] = useState({
     name: "",
     email: "",
@@ -56,7 +53,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
     address: "",
   });
 
-  // Contact form data
   const [contactData, setContactData] = useState({
     name: "",
     email: "",
@@ -66,7 +62,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
     consent: false,
   });
 
-  // Field-specific error messages for contact form
   const [contactErrors, setContactErrors] = useState({
     name: "",
     email: "",
@@ -78,12 +73,10 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
 
   const { toast } = useToast();
 
-  // Sync with external isOpen prop when it changes
   useEffect(() => {
     setIsOpen(externalIsOpen);
   }, [externalIsOpen]);
 
-  // Issue types for building problems
   const issueTypes = [
     "Leaking Roof",
     "Wall Cracks",
@@ -94,7 +87,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
     "Other Issues",
   ];
 
-  // Service types for contact form
   const serviceTypes = [
     "Waterproofing",
     "Structural Repairs",
@@ -131,7 +123,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
   const handleInquirySubmit = async (e) => {
     e.preventDefault();
 
-    // Clear previous errors
     setInquiryErrors({
       name: "",
       email: "",
@@ -141,17 +132,14 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       address: "",
     });
 
-    // Field-level validation manually
     let hasErrors = false;
     const newErrors = { ...inquiryErrors };
 
-    // Name validation
     if (!inquiryData.name || inquiryData.name.trim().length < 3) {
       newErrors.name = "Name must be at least 3 characters";
       hasErrors = true;
     }
 
-    // Phone validation (must be 10 digits)
     const phoneRegex = /^\d{10}$/;
     if (
       !inquiryData.phone ||
@@ -161,7 +149,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       hasErrors = true;
     }
 
-    // Email validation if provided
     if (
       inquiryData.email &&
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inquiryData.email)
@@ -170,24 +157,20 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       hasErrors = true;
     }
 
-    // Issue type validation
     if (!inquiryData.issueType) {
       newErrors.issueType = "Please select an issue type";
       hasErrors = true;
     }
 
-    // Update errors state
     if (hasErrors) {
       setInquiryErrors(newErrors);
       return;
     }
 
-    // If validation passes, submit the form
     try {
       setIsSubmitting(true);
       await apiRequest("POST", "/api/inquiries", inquiryData);
 
-      // Reset form and show success
       setInquiryData({
         name: "",
         email: "",
@@ -202,10 +185,8 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
         description: "Our team will contact you shortly.",
       });
 
-      // Invalidate any inquiries cache to refresh admin panel
       queryClient.invalidateQueries(["inquiries"]);
 
-      // Close form
       setIsOpen(false);
       if (onClose) onClose();
     } catch (error) {
@@ -223,7 +204,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear previous errors
     setContactErrors({
       name: "",
       email: "",
@@ -233,17 +213,14 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       consent: "",
     });
 
-    // Field-level validation manually
     let hasErrors = false;
     const newErrors = { ...contactErrors };
 
-    // Name validation
     if (!contactData.name || contactData.name.trim().length < 3) {
       newErrors.name = "Name must be at least 3 characters";
       hasErrors = true;
     }
 
-    // Email validation
     if (
       !contactData.email ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactData.email)
@@ -252,7 +229,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       hasErrors = true;
     }
 
-    // Phone validation (must be 10 digits)
     const phoneRegex = /^\d{10}$/;
     if (
       !contactData.phone ||
@@ -262,36 +238,30 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
       hasErrors = true;
     }
 
-    // Service validation
     if (!contactData.service) {
       newErrors.service = "Please select a service";
       hasErrors = true;
     }
 
-    // Message validation
     if (!contactData.message || contactData.message.trim().length < 10) {
       newErrors.message = "Message must be at least 10 characters";
       hasErrors = true;
     }
 
-    // Consent validation
     if (!contactData.consent) {
       newErrors.consent = "You must agree to the terms";
       hasErrors = true;
     }
 
-    // Update errors state
     if (hasErrors) {
       setContactErrors(newErrors);
       return;
     }
 
-    // If validation passes, submit the form
     try {
       setIsSubmitting(true);
       await apiRequest("POST", "/api/contacts", contactData);
 
-      // Reset form and show success
       setContactData({
         name: "",
         email: "",
@@ -306,10 +276,8 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
         description: "We'll get back to you as soon as possible.",
       });
 
-      // Invalidate any contacts cache to refresh admin panel
       queryClient.invalidateQueries(["contacts"]);
 
-      // Close form
       setIsOpen(false);
       if (onClose) onClose();
     } catch (error) {
@@ -344,7 +312,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
             className="bg-background rounded-xl shadow-xl w-full max-w-[95%] sm:max-w-md max-h-[90vh] sm:max-h-[85vh] overflow-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Form Header */}
             <div className="bg-gradient-to-r from-primary to-secondary p-3 sm:p-4 flex justify-between items-center sticky top-0 z-10">
               <h2 className="text-primary-foreground font-bold text-base sm:text-lg">
                 {activeTab === "inquiry"
@@ -409,7 +376,6 @@ const HomePageForm = ({ isOpen: externalIsOpen, onClose }) => {
                         ))}
                       </div>
 
-                      {/* Skip to contact form button */}
                       <button
                         className="w-full text-sm text-muted-foreground hover:text-primary mt-2"
                         onClick={() => setActiveTab("contact")}

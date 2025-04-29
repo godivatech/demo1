@@ -30,8 +30,8 @@ export default {
           foreground: "hsl(204, 10%, 10%)",
         },
         primary: {
-          DEFAULT: "hsl(208, 91%, 65%)", // Reverted to the updated color
-          foreground: "hsl(208, 10%, 10%)", // Adjusted for better contrast
+          DEFAULT: "#19b5ff", // Updated to your exact color
+          foreground: "hsl(198, 10%, 10%)", // Adjusted for contrast
         },
         secondary: {
           DEFAULT: "hsl(204, 50%, 60%)",
@@ -62,8 +62,8 @@ export default {
         sidebar: {
           DEFAULT: "hsl(204, 15%, 93%)",
           foreground: "hsl(204, 10%, 10%)",
-          primary: "hsl(208, 91%, 65%)", // Updated to match new primary
-          "primary-foreground": "hsl(208, 10%, 10%)", // Adjusted for contrast
+          primary: "#19b5ff", // Updated to match new primary
+          "primary-foreground": "hsl(198, 10%, 10%)", // Adjusted for contrast
           accent: "hsl(174, 70%, 40%)",
           "accent-foreground": "hsl(174, 10%, 98%)",
           border: "hsl(204, 20%, 80%)",

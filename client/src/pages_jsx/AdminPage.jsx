@@ -83,94 +83,86 @@ const AdminPage = () => {
       setIsAuthenticated(true);
     }
   }, []);
-  
+
   // Set up WebSocket connection for real-time updates
   useEffect(() => {
     if (isAuthenticated) {
-      // Close previous connection if exists
-      if (webSocketRef.current && webSocketRef.current.readyState === WebSocket.OPEN) {
+      if (
+        webSocketRef.current &&
+        webSocketRef.current.readyState === WebSocket.OPEN
+      ) {
         webSocketRef.current.close();
       }
-      
-      // Determine WebSocket URL
+
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const wsUrl = `${protocol}//${window.location.host}/ws`;
-      
-      // Create new WebSocket connection
+
       const socket = new WebSocket(wsUrl);
       webSocketRef.current = socket;
-      
-      // Connection opened
-      socket.addEventListener('open', (event) => {
-        console.log('WebSocket connection established');
+
+      socket.addEventListener("open", (event) => {
+        console.log("WebSocket connection established");
       });
-      
-      // Listen for messages
-      socket.addEventListener('message', (event) => {
+
+      socket.addEventListener("message", (event) => {
         try {
           const message = JSON.parse(event.data);
-          console.log('WebSocket message received:', message);
-          
-          // Handle different types of updates
-          if (message.type === 'inquiries_updated') {
-            // Update inquiries data
-            queryClient.setQueryData(['inquiries'], message.data);
+          console.log("WebSocket message received:", message);
+
+          if (message.type === "inquiries_updated") {
+            queryClient.setQueryData(["inquiries"], message.data);
             setLastUpdated({
-              type: 'inquiries',
-              timestamp: new Date().toISOString()
+              type: "inquiries",
+              timestamp: new Date().toISOString(),
             });
-            if (activeTab === 'inquiries') {
+            if (activeTab === "inquiries") {
               toast({
                 title: "Data updated",
                 description: "Inquiries have been updated in real-time.",
-                duration: 2000, // shorter duration
+                duration: 2000,
               });
             }
-          } else if (message.type === 'contacts_updated') {
-            // Update contacts data
-            queryClient.setQueryData(['contacts'], message.data);
+          } else if (message.type === "contacts_updated") {
+            queryClient.setQueryData(["contacts"], message.data);
             setLastUpdated({
-              type: 'contacts',
-              timestamp: new Date().toISOString()
+              type: "contacts",
+              timestamp: new Date().toISOString(),
             });
-            if (activeTab === 'contacts') {
+            if (activeTab === "contacts") {
               toast({
                 title: "Data updated",
                 description: "Contacts have been updated in real-time.",
                 duration: 2000,
               });
             }
-          } else if (message.type === 'intents_updated') {
-            // Update intents data
-            queryClient.setQueryData(['intents'], message.data);
+          } else if (message.type === "intents_updated") {
+            queryClient.setQueryData(["intents"], message.data);
             setLastUpdated({
-              type: 'intents',
-              timestamp: new Date().toISOString()
+              type: "intents",
+              timestamp: new Date().toISOString(),
             });
-            if (activeTab === 'intents') {
+            if (activeTab === "intents") {
               toast({
                 title: "Data updated",
-                description: "Exit intent forms have been updated in real-time.",
+                description:
+                  "Exit intent forms have been updated in real-time.",
                 duration: 2000,
               });
             }
           }
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          console.error("Error parsing WebSocket message:", error);
         }
       });
-      
-      // Handle connection errors
-      socket.addEventListener('error', (error) => {
-        console.error('WebSocket error:', error);
+
+      socket.addEventListener("error", (error) => {
+        console.error("WebSocket error:", error);
       });
-      
-      // Handle connection closed
-      socket.addEventListener('close', (event) => {
-        console.log('WebSocket connection closed', event.code, event.reason);
+
+      socket.addEventListener("close", (event) => {
+        console.log("WebSocket connection closed", event.code, event.reason);
       });
-      
-      // Clean up WebSocket connection on component unmount
+
       return () => {
         if (socket && socket.readyState === WebSocket.OPEN) {
           socket.close();
@@ -179,7 +171,6 @@ const AdminPage = () => {
     }
   }, [isAuthenticated, toast, activeTab]);
 
-  // Handle login
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -202,7 +193,6 @@ const AdminPage = () => {
     }
   };
 
-  // Handle logout
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("admin_authenticated");
@@ -212,19 +202,16 @@ const AdminPage = () => {
     });
   };
 
-  // Handle input change for login form
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
-  
-  // Handle tab switch and clear update indicator for the active tab
+
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
-    
-    // Clear update indicator when switching to the tab
+
     if (lastUpdated && lastUpdated.type === tabName) {
-      setLastUpdated(prev => {
+      setLastUpdated((prev) => {
         if (prev && prev.type === tabName) {
           return null;
         }
@@ -232,8 +219,7 @@ const AdminPage = () => {
       });
     }
   };
-  
-  // Fetch data based on active tab
+
   const fetchTabData = (endpoint) => {
     return async () => {
       try {
@@ -246,7 +232,6 @@ const AdminPage = () => {
     };
   };
 
-  // Fetch all inquiries
   const {
     data: inquiries = [],
     isLoading,
@@ -255,11 +240,11 @@ const AdminPage = () => {
   } = useQuery({
     queryKey: ["inquiries"],
     queryFn: fetchTabData("inquiries"),
-    enabled: isAuthenticated && (activeTab === "inquiries" || activeTab === "all"),
-    staleTime: 60000, // 1 minute - more frequent updates for actively viewed data
+    enabled:
+      isAuthenticated && (activeTab === "inquiries" || activeTab === "all"),
+    staleTime: 60000,
   });
 
-  // Fetch all exit intent form submissions
   const {
     data: intentSubmissions = [],
     isLoading: isIntentsLoading,
@@ -268,11 +253,11 @@ const AdminPage = () => {
   } = useQuery({
     queryKey: ["intents"],
     queryFn: fetchTabData("intents"),
-    enabled: isAuthenticated && (activeTab === "intents" || activeTab === "all"),
+    enabled:
+      isAuthenticated && (activeTab === "intents" || activeTab === "all"),
     staleTime: 60000,
   });
 
-  // Fetch all contact form submissions
   const {
     data: contactSubmissions = [],
     isLoading: isLoadingContacts,
@@ -281,11 +266,11 @@ const AdminPage = () => {
   } = useQuery({
     queryKey: ["contacts"],
     queryFn: fetchTabData("contacts"),
-    enabled: isAuthenticated && (activeTab === "contacts" || activeTab === "all"),
+    enabled:
+      isAuthenticated && (activeTab === "contacts" || activeTab === "all"),
     staleTime: 60000,
   });
 
-  // Delete inquiry mutation
   const deleteInquiryMutation = useMutation({
     mutationFn: async (id) => {
       if (id === null || id === undefined) {
@@ -305,22 +290,18 @@ const AdminPage = () => {
 
       const response = await apiRequest(
         "DELETE",
-        `/api/inquiries/${inquiryId}`,
+        `/api/inquiries/${inquiryId}`
       );
       return { id: inquiryId, response };
     },
     onSuccess: (data) => {
-      // Immediately update the cache for a faster UI response
       queryClient.setQueryData(["inquiries"], (oldData) => {
         return oldData
           ? oldData.filter((inquiry) => inquiry.id !== data.id)
           : [];
       });
 
-      // Force refetch to ensure all clients have the latest data
       queryClient.invalidateQueries({ queryKey: ["inquiries"] });
-      
-      // Also refetch other data types as they might be related
       refetchContacts();
       refetchIntents();
 
@@ -339,7 +320,6 @@ const AdminPage = () => {
     },
   });
 
-  // Delete contact submission mutation
   const deleteContactMutation = useMutation({
     mutationFn: async (id) => {
       if (id === null || id === undefined) {
@@ -361,17 +341,13 @@ const AdminPage = () => {
       return { id: contactId, response };
     },
     onSuccess: (data) => {
-      // Immediately update the cache for a faster UI response
       queryClient.setQueryData(["contacts"], (oldData) => {
         return oldData
           ? oldData.filter((contact) => contact.id !== data.id)
           : [];
       });
 
-      // Force refetch to ensure all clients have the latest data
       queryClient.invalidateQueries({ queryKey: ["contacts"] });
-      
-      // Also refetch other data types as they might be related
       refetchInquiries();
       refetchIntents();
 
@@ -391,7 +367,6 @@ const AdminPage = () => {
     },
   });
 
-  // Delete intent form submission mutation
   const deleteIntentMutation = useMutation({
     mutationFn: async (id) => {
       if (id === null || id === undefined) {
@@ -413,15 +388,11 @@ const AdminPage = () => {
       return { id: intentId, response };
     },
     onSuccess: (data) => {
-      // Immediately update the cache for a faster UI response
       queryClient.setQueryData(["intents"], (oldData) => {
         return oldData ? oldData.filter((intent) => intent.id !== data.id) : [];
       });
 
-      // Force refetch to ensure all clients have the latest data
       queryClient.invalidateQueries({ queryKey: ["intents"] });
-      
-      // Also refetch other data types as they might be related
       refetchInquiries();
       refetchContacts();
 
@@ -441,7 +412,6 @@ const AdminPage = () => {
     },
   });
 
-  // Filter inquiries based on search term
   const filteredInquiries = Array.isArray(inquiries)
     ? inquiries.filter((inquiry) => {
         if (!inquiry) return false;
@@ -454,43 +424,41 @@ const AdminPage = () => {
       })
     : [];
 
-  // Filter intent form submissions based on search term
   const filteredIntents = Array.isArray(intentSubmissions)
-    ? intentSubmissions.filter((intent) => {
-        if (!intent) return false;
-        const searchable = `${intent.name || ""} ${intent.phone || ""} ${
-          intent.service || ""
-        } ${intent.message || ""}`.toLowerCase();
-        return searchable.includes(searchTerm.toLowerCase());
-      }).map((intent, index) => ({
-        ...intent,
-        // Use unique index if id is duplicated or missing
-        _uniqueKey: `intent-${intent.id || ''}-${index}`
-      }))
+    ? intentSubmissions
+        .filter((intent) => {
+          if (!intent) return false;
+          const searchable = `${intent.name || ""} ${intent.phone || ""} ${
+            intent.service || ""
+          } ${intent.message || ""}`.toLowerCase();
+          return searchable.includes(searchTerm.toLowerCase());
+        })
+        .map((intent, index) => ({
+          ...intent,
+          _uniqueKey: `intent-${intent.id || ""}-${index}`,
+        }))
     : [];
 
-  // Filter contact submissions based on search term
   const filteredContacts = Array.isArray(contactSubmissions)
-    ? contactSubmissions.filter((contact) => {
-        if (!contact) return false;
-        const searchable = `${contact.name || ""} ${contact.phone || ""} ${
-          contact.email || ""
-        } ${contact.service || ""} ${contact.message || ""}`.toLowerCase();
-        return searchable.includes(searchTerm.toLowerCase());
-      }).map((contact, index) => ({
-        ...contact,
-        // Use unique index if id is duplicated or missing
-        _uniqueKey: `contact-${contact.id || ''}-${index}`
-      }))
+    ? contactSubmissions
+        .filter((contact) => {
+          if (!contact) return false;
+          const searchable = `${contact.name || ""} ${contact.phone || ""} ${
+            contact.email || ""
+          } ${contact.service || ""} ${contact.message || ""}`.toLowerCase();
+          return searchable.includes(searchTerm.toLowerCase());
+        })
+        .map((contact, index) => ({
+          ...contact,
+          _uniqueKey: `contact-${contact.id || ""}-${index}`,
+        }))
     : [];
 
-  // Toggle expanded item with type prefix
   const toggleExpand = (id, type = "general") => {
     const formattedId = id.toString().includes("-") ? id : `${type}-${id}`;
     setExpandedItem(expandedItem === formattedId ? null : formattedId);
   };
 
-  // Format date
   const formatDate = (dateString) => {
     try {
       if (!dateString) return "N/A";
@@ -503,7 +471,6 @@ const AdminPage = () => {
     }
   };
 
-  // Format date for input fields
   const formatDateForInput = (date) => {
     try {
       if (!date) return "";
@@ -519,7 +486,6 @@ const AdminPage = () => {
     }
   };
 
-  // Get paginated data
   const getPaginatedData = (data) => {
     if (!data || !Array.isArray(data)) {
       console.error("getPaginatedData received invalid data:", data);
@@ -537,12 +503,10 @@ const AdminPage = () => {
     }
   };
 
-  // Reset to first page when filtering changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, startDate, endDate]);
 
-  // Filter data by date range
   const filterByDateRange = (data, startDate, endDate) => {
     if (!data || !Array.isArray(data)) {
       console.error("filterByDateRange received invalid data:", data);
@@ -576,7 +540,6 @@ const AdminPage = () => {
     });
   };
 
-  // Sort data by created date
   const sortByDate = (data, order = "desc") => {
     if (!data || !Array.isArray(data)) {
       console.error("sortByDate received invalid data:", data);
@@ -587,65 +550,52 @@ const AdminPage = () => {
       const dateA = a && a.createdAt ? new Date(a.createdAt) : new Date(0);
       const dateB = b && b.createdAt ? new Date(b.createdAt) : new Date(0);
 
-      return order === "desc"
-        ? dateB - dateA // newest first
-        : dateA - dateB; // oldest first
+      return order === "desc" ? dateB - dateA : dateA - dateB;
     });
   };
 
-  // Enhanced pagination component
   const Pagination = ({ totalItems }) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
-    
-    // Generate array of page numbers for pagination
+
     const getPageNumbers = () => {
       const pageNumbers = [];
-      const maxDisplayedPages = 5; // Show max 5 page numbers at once
-      
+      const maxDisplayedPages = 5;
+
       if (totalPages <= maxDisplayedPages) {
-        // If there are 5 or fewer pages, show all
         for (let i = 1; i <= totalPages; i++) {
           pageNumbers.push(i);
         }
       } else {
-        // Always include first page
         pageNumbers.push(1);
-        
-        // Calculate range around current page
+
         let startPage = Math.max(2, currentPage - 1);
         let endPage = Math.min(totalPages - 1, currentPage + 1);
-        
-        // Adjust if we're at the beginning
+
         if (currentPage <= 3) {
           endPage = Math.min(4, totalPages - 1);
         }
-        
-        // Adjust if we're at the end
+
         if (currentPage >= totalPages - 2) {
           startPage = Math.max(2, totalPages - 3);
         }
-        
-        // Add ellipsis if needed
+
         if (startPage > 2) {
-          pageNumbers.push('...');
+          pageNumbers.push("...");
         }
-        
-        // Add middle pages
+
         for (let i = startPage; i <= endPage; i++) {
           pageNumbers.push(i);
         }
-        
-        // Add ellipsis if needed
+
         if (endPage < totalPages - 1) {
-          pageNumbers.push('...');
+          pageNumbers.push("...");
         }
-        
-        // Always include last page
+
         if (totalPages > 1) {
           pageNumbers.push(totalPages);
         }
       }
-      
+
       return pageNumbers;
     };
 
@@ -656,9 +606,9 @@ const AdminPage = () => {
     const handleNextPage = () => {
       setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     };
-    
+
     const goToPage = (page) => {
-      if (typeof page === 'number') {
+      if (typeof page === "number") {
         setCurrentPage(page);
       }
     };
@@ -667,14 +617,14 @@ const AdminPage = () => {
 
     return (
       <div className="flex flex-col sm:flex-row justify-between items-center mt-6 space-y-4 sm:space-y-0">
-        <div className="text-sm text-gray-500">
-          Showing {Math.min(totalItems, (currentPage - 1) * itemsPerPage + 1)} 
-          {' - '} 
-          {Math.min(currentPage * itemsPerPage, totalItems)} 
-          {' of '} 
+        <div className="text-sm text-muted-foreground">
+          Showing {Math.min(totalItems, (currentPage - 1) * itemsPerPage + 1)}
+          {" - "}
+          {Math.min(currentPage * itemsPerPage, totalItems)}
+          {" of "}
           {totalItems} items
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
@@ -686,25 +636,29 @@ const AdminPage = () => {
           >
             <ChevronDown className="h-4 w-4 rotate-90" />
           </Button>
-          
+
           <div className="flex items-center">
-            {getPageNumbers().map((page, index) => (
-              typeof page === 'number' ? (
+            {getPageNumbers().map((page, index) =>
+              typeof page === "number" ? (
                 <Button
                   key={index}
                   variant={currentPage === page ? "default" : "outline"}
                   size="sm"
                   onClick={() => goToPage(page)}
-                  className={`h-8 w-8 p-0 mx-1 ${currentPage === page ? "bg-orange-600 hover:bg-orange-700" : ""}`}
+                  className={`h-8 w-8 p-0 mx-1 ${
+                    currentPage === page ? "bg-primary hover:bg-secondary" : ""
+                  }`}
                 >
                   {page}
                 </Button>
               ) : (
-                <span key={index} className="mx-1">...</span>
+                <span key={index} className="mx-1">
+                  ...
+                </span>
               )
-            ))}
+            )}
           </div>
-          
+
           <Button
             variant="outline"
             size="sm"
@@ -715,12 +669,12 @@ const AdminPage = () => {
           >
             <ChevronDown className="h-4 w-4 -rotate-90" />
           </Button>
-          
+
           <Select
             value={itemsPerPage.toString()}
             onValueChange={(value) => {
               setItemsPerPage(Number(value));
-              setCurrentPage(1); // Reset to first page when changing items per page
+              setCurrentPage(1);
             }}
           >
             <SelectTrigger className="w-[110px] h-8">
@@ -741,7 +695,7 @@ const AdminPage = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-slate-50 pt-28 pb-12">
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted pt-28 pb-12">
         <div className="container max-w-md mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -750,15 +704,15 @@ const AdminPage = () => {
             className="bg-white p-8 rounded-xl shadow-lg border border-gray-100"
           >
             <div className="flex justify-center mb-6">
-              <div className="h-16 w-16 bg-orange-100 rounded-full flex items-center justify-center">
-                <Shield className="h-8 w-8 text-orange-600" />
+              <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center">
+                <Shield className="h-8 w-8 text-primary" />
               </div>
             </div>
 
-            <h1 className="text-2xl font-bold text-center text-gray-800 mb-2">
+            <h1 className="text-2xl font-bold text-center text-foreground mb-2">
               Admin Login
             </h1>
-            <p className="text-center text-gray-600 mb-8">
+            <p className="text-center text-muted-foreground mb-8">
               {COMPANY_NAME} Admin Dashboard
             </p>
 
@@ -766,7 +720,7 @@ const AdminPage = () => {
               <div className="space-y-4">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <Users className="h-5 w-5 text-gray-400" />
+                    <Users className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <Input
                     type="text"
@@ -781,7 +735,7 @@ const AdminPage = () => {
 
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
+                    <Lock className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <Input
                     type="password"
@@ -797,7 +751,7 @@ const AdminPage = () => {
 
               <Button
                 type="submit"
-                className="w-full mt-6 bg-orange-600 hover:bg-orange-700"
+                className="w-full mt-6 bg-primary hover:bg-secondary text-primary-foreground"
               >
                 Login
               </Button>
@@ -807,7 +761,7 @@ const AdminPage = () => {
               <Link href="/">
                 <Button
                   variant="link"
-                  className="text-gray-600 hover:text-orange-600"
+                  className="text-muted-foreground hover:text-primary"
                 >
                   Return to Homepage
                 </Button>
@@ -820,14 +774,14 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 pb-12">
+    <div className="min-h-screen bg-background pt-28 pb-12">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-foreground">
               Admin Dashboard
             </h1>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Manage inquiries and contact submissions
             </p>
           </div>
@@ -835,7 +789,7 @@ const AdminPage = () => {
           <Button
             variant="outline"
             onClick={handleLogout}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-foreground border-foreground hover:bg-muted hover:text-primary"
           >
             <LogOut className="h-4 w-4" />
             Logout
@@ -847,7 +801,7 @@ const AdminPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
               <div className="relative flex-1">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <Input
                   type="text"
@@ -865,7 +819,11 @@ const AdminPage = () => {
                   <DialogTrigger asChild>
                     <Button
                       variant={startDate || endDate ? "default" : "outline"}
-                      className={`flex items-center gap-2 ${startDate || endDate ? "bg-orange-600 hover:bg-orange-700" : ""}`}
+                      className={`flex items-center gap-2 ${
+                        startDate || endDate
+                          ? "bg-primary hover:bg-secondary text-primary-foreground"
+                          : "text-foreground"
+                      }`}
                     >
                       <Filter className="h-4 w-4" />
                       {startDate || endDate ? "Filters Active" : "Filters"}
@@ -877,7 +835,10 @@ const AdminPage = () => {
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="space-y-1">
-                        <label htmlFor="advanced-search" className="text-sm font-medium">
+                        <label
+                          htmlFor="advanced-search"
+                          className="text-sm font-medium text-foreground"
+                        >
                           Search
                         </label>
                         <Input
@@ -891,12 +852,19 @@ const AdminPage = () => {
                           Searches across all fields (name, phone, email, etc.)
                         </p>
                       </div>
-                      
+
                       <div className="pt-2 border-t">
-                        <h4 className="text-sm font-medium mb-2">Date Range</h4>
+                        <h4 className="text-sm font-medium mb-2 text-foreground">
+                          Date Range
+                        </h4>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label htmlFor="start-date" className="text-xs">Start Date</label>
+                            <label
+                              htmlFor="start-date"
+                              className="text-xs text-muted-foreground"
+                            >
+                              Start Date
+                            </label>
                             <Input
                               id="start-date"
                               type="date"
@@ -905,7 +873,12 @@ const AdminPage = () => {
                             />
                           </div>
                           <div className="space-y-1">
-                            <label htmlFor="end-date" className="text-xs">End Date</label>
+                            <label
+                              htmlFor="end-date"
+                              className="text-xs text-muted-foreground"
+                            >
+                              End Date
+                            </label>
                             <Input
                               id="end-date"
                               type="date"
@@ -915,23 +888,37 @@ const AdminPage = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="pt-2 border-t">
-                        <h4 className="text-sm font-medium mb-2">Sort Order</h4>
+                        <h4 className="text-sm font-medium mb-2 text-foreground">
+                          Sort Order
+                        </h4>
                         <div className="grid grid-cols-2 gap-2">
-                          <Button 
-                            variant={sortOrder === "desc" ? "default" : "outline"}
+                          <Button
+                            variant={
+                              sortOrder === "desc" ? "default" : "outline"
+                            }
                             size="sm"
                             onClick={() => setSortOrder("desc")}
-                            className={sortOrder === "desc" ? "bg-orange-600 hover:bg-orange-700" : ""}
+                            className={
+                              sortOrder === "desc"
+                                ? "bg-primary hover:bg-secondary text-primary-foreground"
+                                : "text-foreground"
+                            }
                           >
                             Newest First
                           </Button>
-                          <Button 
-                            variant={sortOrder === "asc" ? "default" : "outline"}
+                          <Button
+                            variant={
+                              sortOrder === "asc" ? "default" : "outline"
+                            }
                             size="sm"
                             onClick={() => setSortOrder("asc")}
-                            className={sortOrder === "asc" ? "bg-orange-600 hover:bg-orange-700" : ""}
+                            className={
+                              sortOrder === "asc"
+                                ? "bg-primary hover:bg-secondary text-primary-foreground"
+                                : "text-foreground"
+                            }
                           >
                             Oldest First
                           </Button>
@@ -947,10 +934,14 @@ const AdminPage = () => {
                           setSearchTerm("");
                           setSortOrder("desc");
                         }}
+                        className="text-foreground"
                       >
                         Reset All
                       </Button>
-                      <Button onClick={() => setIsFilterDialogOpen(false)}>
+                      <Button
+                        onClick={() => setIsFilterDialogOpen(false)}
+                        className="bg-primary hover:bg-secondary text-primary-foreground"
+                      >
                         Apply Filters
                       </Button>
                     </DialogFooter>
@@ -962,7 +953,7 @@ const AdminPage = () => {
                   onClick={() =>
                     setSortOrder(sortOrder === "desc" ? "asc" : "desc")
                   }
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-foreground border-foreground hover:bg-muted hover:text-primary"
                 >
                   <ArrowUpDown className="h-4 w-4" />
                   {sortOrder === "desc" ? "Newest First" : "Oldest First"}
@@ -970,15 +961,13 @@ const AdminPage = () => {
               </div>
             </div>
 
-            <Tabs 
-              defaultValue="inquiries" 
+            <Tabs
+              defaultValue="inquiries"
               value={activeTab}
               onValueChange={(value) => {
                 setActiveTab(value);
                 setCurrentPage(1);
-                // Reset expandedItem when switching tabs
                 setExpandedItem(null);
-                // Refetch data for the selected tab
                 if (value === "inquiries") refetchInquiries();
                 if (value === "contacts") refetchContacts();
                 if (value === "intents") refetchIntents();
@@ -987,73 +976,81 @@ const AdminPage = () => {
               <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger
                   value="inquiries"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                   onClick={() => handleTabChange("inquiries")}
                 >
                   <ClipboardList className="h-4 w-4" />
                   Inquiries
                   {Array.isArray(inquiries) && inquiries.length > 0 && (
-                    <span className="ml-1 text-xs px-2 py-0.5 bg-orange-100 text-orange-800 rounded-full">
+                    <span className="ml-1 text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-full">
                       {inquiries.length}
                     </span>
                   )}
-                  {lastUpdated && lastUpdated.type === 'inquiries' && activeTab !== 'inquiries' && (
-                    <span className="relative flex h-2 w-2 ml-1">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                  )}
+                  {lastUpdated &&
+                    lastUpdated.type === "inquiries" &&
+                    activeTab !== "inquiries" && (
+                      <span className="relative flex h-2 w-2 ml-1">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                      </span>
+                    )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="contacts"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                   onClick={() => handleTabChange("contacts")}
                 >
                   <MessageSquare className="h-4 w-4" />
                   Contacts
-                  {Array.isArray(contactSubmissions) && contactSubmissions.length > 0 && (
-                    <span className="ml-1 text-xs px-2 py-0.5 bg-orange-100 text-orange-800 rounded-full">
-                      {contactSubmissions.length}
-                    </span>
-                  )}
-                  {lastUpdated && lastUpdated.type === 'contacts' && activeTab !== 'contacts' && (
-                    <span className="relative flex h-2 w-2 ml-1">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                  )}
+                  {Array.isArray(contactSubmissions) &&
+                    contactSubmissions.length > 0 && (
+                      <span className="ml-1 text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-full">
+                        {contactSubmissions.length}
+                      </span>
+                    )}
+                  {lastUpdated &&
+                    lastUpdated.type === "contacts" &&
+                    activeTab !== "contacts" && (
+                      <span className="relative flex h-2 w-2 ml-1">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                      </span>
+                    )}
                 </TabsTrigger>
                 <TabsTrigger
                   value="intents"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                   onClick={() => handleTabChange("intents")}
                 >
                   <AlertCircle className="h-4 w-4" />
                   Exit Intent
-                  {Array.isArray(intentSubmissions) && intentSubmissions.length > 0 && (
-                    <span className="ml-1 text-xs px-2 py-0.5 bg-orange-100 text-orange-800 rounded-full">
-                      {intentSubmissions.length}
-                    </span>
-                  )}
-                  {lastUpdated && lastUpdated.type === 'intents' && activeTab !== 'intents' && (
-                    <span className="relative flex h-2 w-2 ml-1">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                  )}
+                  {Array.isArray(intentSubmissions) &&
+                    intentSubmissions.length > 0 && (
+                      <span className="ml-1 text-xs px-2 py-0.5 bg-muted text-muted-foreground rounded-full">
+                        {intentSubmissions.length}
+                      </span>
+                    )}
+                  {lastUpdated &&
+                    lastUpdated.type === "intents" &&
+                    activeTab !== "intents" && (
+                      <span className="relative flex h-2 w-2 ml-1">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                      </span>
+                    )}
                 </TabsTrigger>
               </TabsList>
-              
-              {/* Real-time status indicator */}
+
               {lastUpdated && (
-                <div className="text-xs text-gray-500 mb-4 text-center">
-                  Last update: {lastUpdated.type} at {new Date(lastUpdated.timestamp).toLocaleTimeString()}
+                <div className="text-xs text-muted-foreground mb-4 text-center">
+                  Last update: {lastUpdated.type} at{" "}
+                  {new Date(lastUpdated.timestamp).toLocaleTimeString()}
                 </div>
               )}
 
               <TabsContent value="inquiries">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-800">
+                  <h2 className="text-xl font-semibold text-foreground">
                     Inquiries
                   </h2>
 
@@ -1062,7 +1059,7 @@ const AdminPage = () => {
                       data={filterByDateRange(
                         filteredInquiries,
                         startDate,
-                        endDate,
+                        endDate
                       ).map((inquiry) => ({
                         ID: inquiry.id,
                         Name: inquiry.name,
@@ -1078,7 +1075,7 @@ const AdminPage = () => {
                       filename={`inquiries-${startDate || "all"}-to-${
                         endDate || "all"
                       }.csv`}
-                      className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                      className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-secondary"
                     >
                       <Download className="h-4 w-4" />
                       Export CSV
@@ -1088,15 +1085,17 @@ const AdminPage = () => {
 
                 {isLoading ? (
                   <div className="text-center py-12">
-                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-orange-400 border-r-transparent"></div>
-                    <p className="mt-2 text-gray-600">Loading inquiries...</p>
+                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+                    <p className="mt-2 text-muted-foreground">
+                      Loading inquiries...
+                    </p>
                   </div>
                 ) : isError ? (
-                  <div className="text-center py-12 text-red-600">
+                  <div className="text-center py-12 text-destructive">
                     Error loading inquiries. Please try again.
                   </div>
                 ) : filteredInquiries.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-muted-foreground">
                     {searchTerm
                       ? "No inquiries match your search."
                       : "No inquiries yet."}
@@ -1105,23 +1104,23 @@ const AdminPage = () => {
                   <div className="overflow-auto">
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                        <tr className="bg-muted">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Name
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Phone
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Issue Type
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Email
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Date
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-center">
+                          <th className="border border-gray-200 px-4 py-2 text-center text-foreground">
                             Actions
                           </th>
                         </tr>
@@ -1132,16 +1131,19 @@ const AdminPage = () => {
                             filterByDateRange(
                               filteredInquiries,
                               startDate,
-                              endDate,
+                              endDate
                             ),
-                            sortOrder,
-                          ),
+                            sortOrder
+                          )
                         ).map((inquiry, index) => (
-                          <tr key={`inquiry-${inquiry.id || index}`} className="hover:bg-gray-50">
+                          <tr
+                            key={`inquiry-${inquiry.id || index}`}
+                            className="hover:bg-muted/50"
+                          >
                             <td className="border border-gray-200 px-4 py-2">
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                  <span className="font-semibold text-orange-600 text-xs">
+                                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                                  <span className="font-semibold text-muted-foreground text-xs">
                                     {inquiry.name.charAt(0).toUpperCase()}
                                   </span>
                                 </div>
@@ -1152,14 +1154,14 @@ const AdminPage = () => {
                               {inquiry.phone}
                             </td>
                             <td className="border border-gray-200 px-4 py-2">
-                              <span className="inline-block px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                              <span className="inline-block px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
                                 {inquiry.issueType || "General Inquiry"}
                               </span>
                             </td>
                             <td className="border border-gray-200 px-4 py-2">
                               {inquiry.email || "-"}
                             </td>
-                            <td className="border border-gray-200 px-4 py-2 text-sm">
+                            <td className="border border-gray-200 px-4 py-2 text-sm text-foreground">
                               {inquiry.createdAt
                                 ? formatDate(inquiry.createdAt)
                                 : "Recent"}
@@ -1170,6 +1172,7 @@ const AdminPage = () => {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => toggleExpand(inquiry.id)}
+                                  className="text-foreground border-foreground hover:bg-muted hover:text-primary"
                                 >
                                   <Eye className="h-4 w-4" />
                                 </Button>
@@ -1178,7 +1181,7 @@ const AdminPage = () => {
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      className="text-red-600 border-red-200 hover:bg-red-50"
+                                      className="text-destructive border-destructive/50 hover:bg-destructive/10"
                                     >
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -1202,10 +1205,10 @@ const AdminPage = () => {
                                       <AlertDialogAction
                                         onClick={() =>
                                           deleteInquiryMutation.mutate(
-                                            inquiry.id,
+                                            inquiry.id
                                           )
                                         }
-                                        className="bg-red-600 text-white hover:bg-red-700"
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                       >
                                         Delete
                                       </AlertDialogAction>
@@ -1225,9 +1228,9 @@ const AdminPage = () => {
                           filterByDateRange(
                             filteredInquiries,
                             startDate,
-                            endDate,
+                            endDate
                           ),
-                          sortOrder,
+                          sortOrder
                         ).length
                       }
                     />
@@ -1247,39 +1250,48 @@ const AdminPage = () => {
                         </DialogHeader>
 
                         {(() => {
-                          // Find the current inquiry using string comparison for both IDs
                           const currentInquiry = inquiries.find(
                             (i) => i && i.id && i.id.toString() === expandedItem
                           );
-                          
+
                           if (!currentInquiry) {
-                            return <div className="py-4 text-center">No inquiry details found</div>;
+                            return (
+                              <div className="py-4 text-center text-muted-foreground">
+                                No inquiry details found
+                              </div>
+                            );
                           }
-                          
+
                           return (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                               <div>
-                                <h3 className="font-semibold mb-2">
+                                <h3 className="font-semibold mb-2 text-foreground">
                                   Contact Information
                                 </h3>
                                 <div className="space-y-2">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-medium">Name:</span>
+                                    <span className="font-medium text-foreground">
+                                      Name:
+                                    </span>
                                     <span>{currentInquiry.name}</span>
                                   </div>
                                   <div className="flex items-center gap-2">
-                                    <span className="font-medium">Phone:</span>
+                                    <span className="font-medium text-foreground">
+                                      Phone:
+                                    </span>
                                     <span>{currentInquiry.phone}</span>
                                   </div>
                                   {currentInquiry.email && (
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">Email:</span>
+                                      <span className="font-medium text-foreground">
+                                        Email:
+                                      </span>
                                       <span>{currentInquiry.email}</span>
                                     </div>
                                   )}
                                   {currentInquiry.address && (
                                     <div className="flex items-center gap-2">
-                                      <span className="font-medium">
+                                      <span className="font-medium text-foreground">
                                         Address:
                                       </span>
                                       <span>{currentInquiry.address}</span>
@@ -1289,20 +1301,21 @@ const AdminPage = () => {
                               </div>
 
                               <div>
-                                <h3 className="font-semibold mb-2">
+                                <h3 className="font-semibold mb-2 text-foreground">
                                   Inquiry Details
                                 </h3>
                                 <div className="space-y-2">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-medium">
+                                    <span className="font-medium text-foreground">
                                       Issue Type:
                                     </span>
-                                    <span className="inline-block px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
-                                      {currentInquiry.issueType || "General Inquiry"}
+                                    <span className="inline-block px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
+                                      {currentInquiry.issueType ||
+                                        "General Inquiry"}
                                     </span>
                                   </div>
                                   <div className="flex items-center gap-2">
-                                    <span className="font-medium">
+                                    <span className="font-medium text-foreground">
                                       Submitted:
                                     </span>
                                     <span>
@@ -1316,8 +1329,10 @@ const AdminPage = () => {
 
                               {currentInquiry.message && (
                                 <div className="col-span-1 md:col-span-2">
-                                  <h3 className="font-semibold mb-2">Message</h3>
-                                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                  <h3 className="font-semibold mb-2 text-foreground">
+                                    Message
+                                  </h3>
+                                  <div className="bg-muted/50 p-4 rounded-lg border border-gray-200">
                                     {currentInquiry.message}
                                   </div>
                                 </div>
@@ -1334,6 +1349,7 @@ const AdminPage = () => {
                               setExpandedItem(null);
                               deleteInquiryMutation.mutate(id);
                             }}
+                            className="text-destructive-foreground"
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
                             Delete
@@ -1341,6 +1357,7 @@ const AdminPage = () => {
                           <Button
                             variant="outline"
                             onClick={() => setExpandedItem(null)}
+                            className="text-foreground"
                           >
                             Close
                           </Button>
@@ -1352,7 +1369,7 @@ const AdminPage = () => {
 
               <TabsContent value="intents">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-800">
+                  <h2 className="text-xl font-semibold text-foreground">
                     Exit Intent Form Submissions
                   </h2>
 
@@ -1363,7 +1380,7 @@ const AdminPage = () => {
                         data={filterByDateRange(
                           filteredIntents,
                           startDate,
-                          endDate,
+                          endDate
                         ).map((intent) => ({
                           ID: intent.id,
                           Name: intent.name,
@@ -1377,7 +1394,7 @@ const AdminPage = () => {
                         filename={`exit-intents-${startDate || "all"}-to-${
                           endDate || "all"
                         }.csv`}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-secondary"
                       >
                         <Download className="h-4 w-4" />
                         Export CSV
@@ -1387,18 +1404,18 @@ const AdminPage = () => {
 
                 {isIntentsLoading ? (
                   <div className="text-center py-12">
-                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-orange-400 border-r-transparent"></div>
-                    <p className="mt-2 text-gray-600">
+                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+                    <p className="mt-2 text-muted-foreground">
                       Loading exit intent form submissions...
                     </p>
                   </div>
                 ) : isIntentsError ? (
-                  <div className="text-center py-12 text-red-600">
+                  <div className="text-center py-12 text-destructive">
                     Error loading exit intent form submissions. Please try
                     again.
                   </div>
                 ) : filteredIntents.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-muted-foreground">
                     {searchTerm
                       ? "No exit intent form submissions match your search."
                       : "No exit intent form submissions yet."}
@@ -1407,20 +1424,20 @@ const AdminPage = () => {
                   <div className="overflow-auto">
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                        <tr className="bg-muted">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Name
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Phone
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Service
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Date
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-center">
+                          <th className="border border-gray-200 px-4 py-2 text-center text-foreground">
                             Actions
                           </th>
                         </tr>
@@ -1431,16 +1448,19 @@ const AdminPage = () => {
                             filterByDateRange(
                               filteredIntents,
                               startDate,
-                              endDate,
+                              endDate
                             ),
-                            sortOrder,
-                          ),
+                            sortOrder
+                          )
                         ).map((intent, index) => (
-                          <tr key={intent._uniqueKey} className="hover:bg-gray-50">
+                          <tr
+                            key={intent._uniqueKey}
+                            className="hover:bg-muted/50"
+                          >
                             <td className="border border-gray-200 px-4 py-2">
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                  <span className="font-semibold text-red-600 text-xs">
+                                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                                  <span className="font-semibold text-muted-foreground text-xs">
                                     {intent.name.charAt(0).toUpperCase()}
                                   </span>
                                 </div>
@@ -1451,11 +1471,11 @@ const AdminPage = () => {
                               {intent.phone}
                             </td>
                             <td className="border border-gray-200 px-4 py-2">
-                              <span className="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                              <span className="inline-block px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
                                 {intent.service || "Urgent Consultation"}
                               </span>
                             </td>
-                            <td className="border border-gray-200 px-4 py-2 text-sm">
+                            <td className="border border-gray-200 px-4 py-2 text-sm text-foreground">
                               {intent.createdAt
                                 ? formatDate(intent.createdAt)
                                 : "Recent"}
@@ -1468,6 +1488,7 @@ const AdminPage = () => {
                                   onClick={() =>
                                     toggleExpand(intent.id, "intent")
                                   }
+                                  className="text-foreground border-foreground hover:bg-muted hover:text-primary"
                                 >
                                   <Eye className="h-4 w-4" />
                                 </Button>
@@ -1476,7 +1497,7 @@ const AdminPage = () => {
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      className="text-red-600 border-red-200 hover:bg-red-50"
+                                      className="text-destructive border-destructive/50 hover:bg-destructive/10"
                                     >
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -1501,7 +1522,7 @@ const AdminPage = () => {
                                         onClick={() =>
                                           deleteIntentMutation.mutate(intent.id)
                                         }
-                                        className="bg-red-600 text-white hover:bg-red-700"
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                       >
                                         Delete
                                       </AlertDialogAction>
@@ -1521,9 +1542,9 @@ const AdminPage = () => {
                           filterByDateRange(
                             filteredIntents,
                             startDate,
-                            endDate,
+                            endDate
                           ),
-                          sortOrder,
+                          sortOrder
                         ).length
                       }
                     />
@@ -1544,30 +1565,34 @@ const AdminPage = () => {
                       </DialogHeader>
 
                       {intentSubmissions.find(
-                        (i) => `intent-${i.id}` === expandedItem,
+                        (i) => `intent-${i.id}` === expandedItem
                       ) && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                           <div>
-                            <h3 className="font-semibold mb-2">
+                            <h3 className="font-semibold mb-2 text-foreground">
                               Contact Information
                             </h3>
                             <div className="space-y-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Name:</span>
+                                <span className="font-medium text-foreground">
+                                  Name:
+                                </span>
                                 <span>
                                   {
                                     intentSubmissions.find(
-                                      (i) => `intent-${i.id}` === expandedItem,
+                                      (i) => `intent-${i.id}` === expandedItem
                                     ).name
                                   }
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Phone:</span>
+                                <span className="font-medium text-foreground">
+                                  Phone:
+                                </span>
                                 <span>
                                   {
                                     intentSubmissions.find(
-                                      (i) => `intent-${i.id}` === expandedItem,
+                                      (i) => `intent-${i.id}` === expandedItem
                                     ).phone
                                   }
                                 </span>
@@ -1576,27 +1601,33 @@ const AdminPage = () => {
                           </div>
 
                           <div>
-                            <h3 className="font-semibold mb-2">Form Details</h3>
+                            <h3 className="font-semibold mb-2 text-foreground">
+                              Form Details
+                            </h3>
                             <div className="space-y-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Service:</span>
-                                <span className="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                                <span className="font-medium text-foreground">
+                                  Service:
+                                </span>
+                                <span className="inline-block px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
                                   {intentSubmissions.find(
-                                    (i) => `intent-${i.id}` === expandedItem,
+                                    (i) => `intent-${i.id}` === expandedItem
                                   ).service || "Urgent Consultation"}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Submitted:</span>
+                                <span className="font-medium text-foreground">
+                                  Submitted:
+                                </span>
                                 <span>
                                   {intentSubmissions.find(
-                                    (i) => `intent-${i.id}` === expandedItem,
+                                    (i) => `intent-${i.id}` === expandedItem
                                   ).createdAt
                                     ? formatDate(
                                         intentSubmissions.find(
                                           (i) =>
-                                            `intent-${i.id}` === expandedItem,
-                                        ).createdAt,
+                                            `intent-${i.id}` === expandedItem
+                                        ).createdAt
                                       )
                                     : "Recent"}
                                 </span>
@@ -1605,14 +1636,16 @@ const AdminPage = () => {
                           </div>
 
                           {intentSubmissions.find(
-                            (i) => `intent-${i.id}` === expandedItem,
+                            (i) => `intent-${i.id}` === expandedItem
                           ).message && (
                             <div className="col-span-1 md:col-span-2">
-                              <h3 className="font-semibold mb-2">Message</h3>
-                              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                              <h3 className="font-semibold mb-2 text-foreground">
+                                Message
+                              </h3>
+                              <div className="bg-muted/50 p-4 rounded-lg border border-gray-200">
                                 {
                                   intentSubmissions.find(
-                                    (i) => `intent-${i.id}` === expandedItem,
+                                    (i) => `intent-${i.id}` === expandedItem
                                   ).message
                                 }
                               </div>
@@ -1626,11 +1659,12 @@ const AdminPage = () => {
                           variant="destructive"
                           onClick={() => {
                             const id = parseInt(
-                              expandedItem.replace("intent-", ""),
+                              expandedItem.replace("intent-", "")
                             );
                             setExpandedItem(null);
                             deleteIntentMutation.mutate(id);
                           }}
+                          className="text-destructive-foreground"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Delete
@@ -1638,6 +1672,7 @@ const AdminPage = () => {
                         <Button
                           variant="outline"
                           onClick={() => setExpandedItem(null)}
+                          className="text-foreground"
                         >
                           Close
                         </Button>
@@ -1649,7 +1684,7 @@ const AdminPage = () => {
 
               <TabsContent value="contacts">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-gray-800">
+                  <h2 className="text-xl font-semibold text-foreground">
                     Contact Submissions
                   </h2>
 
@@ -1660,7 +1695,7 @@ const AdminPage = () => {
                         data={filterByDateRange(
                           filteredContacts,
                           startDate,
-                          endDate,
+                          endDate
                         ).map((contact) => ({
                           ID: contact.id,
                           Name: contact.name,
@@ -1676,7 +1711,7 @@ const AdminPage = () => {
                         filename={`contacts-${startDate || "all"}-to-${
                           endDate || "all"
                         }.csv`}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-secondary"
                       >
                         <Download className="h-4 w-4" />
                         Export CSV
@@ -1686,17 +1721,17 @@ const AdminPage = () => {
 
                 {isLoadingContacts ? (
                   <div className="text-center py-12">
-                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-orange-400 border-r-transparent"></div>
-                    <p className="mt-2 text-gray-600">
+                    <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+                    <p className="mt-2 text-muted-foreground">
                       Loading contact submissions...
                     </p>
                   </div>
                 ) : isContactError ? (
-                  <div className="text-center py-12 text-red-600">
+                  <div className="text-center py-12 text-destructive">
                     Error loading contact submissions. Please try again.
                   </div>
                 ) : filteredContacts.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-muted-foreground">
                     {searchTerm
                       ? "No contacts match your search."
                       : "No contact form submissions yet."}
@@ -1705,23 +1740,23 @@ const AdminPage = () => {
                   <div className="overflow-auto">
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="bg-gray-100">
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                        <tr className="bg-muted">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Name
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Email
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Phone
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Service
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-left">
+                          <th className="border border-gray-200 px-4 py-2 text-left text-foreground">
                             Date
                           </th>
-                          <th className="border border-gray-200 px-4 py-2 text-center">
+                          <th className="border border-gray-200 px-4 py-2 text-center text-foreground">
                             Actions
                           </th>
                         </tr>
@@ -1732,16 +1767,19 @@ const AdminPage = () => {
                             filterByDateRange(
                               filteredContacts,
                               startDate,
-                              endDate,
+                              endDate
                             ),
-                            sortOrder,
-                          ),
+                            sortOrder
+                          )
                         ).map((contact, index) => (
-                          <tr key={contact._uniqueKey} className="hover:bg-gray-50">
+                          <tr
+                            key={contact._uniqueKey}
+                            className="hover:bg-muted/50"
+                          >
                             <td className="border border-gray-200 px-4 py-2">
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                  <span className="font-semibold text-blue-600 text-xs">
+                                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
+                                  <span className="font-semibold text-muted-foreground text-xs">
                                     {contact.name.charAt(0).toUpperCase()}
                                   </span>
                                 </div>
@@ -1755,11 +1793,11 @@ const AdminPage = () => {
                               {contact.phone}
                             </td>
                             <td className="border border-gray-200 px-4 py-2">
-                              <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                              <span className="inline-block px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
                                 {contact.service || "Contact Request"}
                               </span>
                             </td>
-                            <td className="border border-gray-200 px-4 py-2 text-sm">
+                            <td className="border border-gray-200 px-4 py-2 text-sm text-foreground">
                               {contact.createdAt
                                 ? formatDate(contact.createdAt)
                                 : "Recent"}
@@ -1772,6 +1810,7 @@ const AdminPage = () => {
                                   onClick={() =>
                                     toggleExpand(`contact-${contact.id}`)
                                   }
+                                  className="text-foreground border-foreground hover:bg-muted hover:text-primary"
                                 >
                                   <Eye className="h-4 w-4" />
                                 </Button>
@@ -1780,7 +1819,7 @@ const AdminPage = () => {
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      className="text-red-600 border-red-200 hover:bg-red-50"
+                                      className="text-destructive border-destructive/50 hover:bg-destructive/10"
                                     >
                                       <Trash2 className="h-4 w-4" />
                                     </Button>
@@ -1804,10 +1843,10 @@ const AdminPage = () => {
                                       <AlertDialogAction
                                         onClick={() =>
                                           deleteContactMutation.mutate(
-                                            contact.id,
+                                            contact.id
                                           )
                                         }
-                                        className="bg-red-600 text-white hover:bg-red-700"
+                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                       >
                                         Delete
                                       </AlertDialogAction>
@@ -1827,9 +1866,9 @@ const AdminPage = () => {
                           filterByDateRange(
                             filteredContacts,
                             startDate,
-                            endDate,
+                            endDate
                           ),
-                          sortOrder,
+                          sortOrder
                         ).length
                       }
                     />
@@ -1850,40 +1889,46 @@ const AdminPage = () => {
                       </DialogHeader>
 
                       {contactSubmissions.find(
-                        (c) => `contact-${c.id}` === expandedItem,
+                        (c) => `contact-${c.id}` === expandedItem
                       ) && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
                           <div>
-                            <h3 className="font-semibold mb-2">
+                            <h3 className="font-semibold mb-2 text-foreground">
                               Contact Information
                             </h3>
                             <div className="space-y-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Name:</span>
+                                <span className="font-medium text-foreground">
+                                  Name:
+                                </span>
                                 <span>
                                   {
                                     contactSubmissions.find(
-                                      (c) => `contact-${c.id}` === expandedItem,
+                                      (c) => `contact-${c.id}` === expandedItem
                                     ).name
                                   }
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Phone:</span>
+                                <span className="font-medium text-foreground">
+                                  Phone:
+                                </span>
                                 <span>
                                   {
                                     contactSubmissions.find(
-                                      (c) => `contact-${c.id}` === expandedItem,
+                                      (c) => `contact-${c.id}` === expandedItem
                                     ).phone
                                   }
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Email:</span>
+                                <span className="font-medium text-foreground">
+                                  Email:
+                                </span>
                                 <span>
                                   {
                                     contactSubmissions.find(
-                                      (c) => `contact-${c.id}` === expandedItem,
+                                      (c) => `contact-${c.id}` === expandedItem
                                     ).email
                                   }
                                 </span>
@@ -1892,38 +1937,44 @@ const AdminPage = () => {
                           </div>
 
                           <div>
-                            <h3 className="font-semibold mb-2">
+                            <h3 className="font-semibold mb-2 text-foreground">
                               Submission Details
                             </h3>
                             <div className="space-y-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Service:</span>
-                                <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                <span className="font-medium text-foreground">
+                                  Service:
+                                </span>
+                                <span className="inline-block px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
                                   {contactSubmissions.find(
-                                    (c) => `contact-${c.id}` === expandedItem,
+                                    (c) => `contact-${c.id}` === expandedItem
                                   ).service || "Contact Request"}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Submitted:</span>
+                                <span className="font-medium text-foreground">
+                                  Submitted:
+                                </span>
                                 <span>
                                   {contactSubmissions.find(
-                                    (c) => `contact-${c.id}` === expandedItem,
+                                    (c) => `contact-${c.id}` === expandedItem
                                   ).createdAt
                                     ? formatDate(
                                         contactSubmissions.find(
                                           (c) =>
-                                            `contact-${c.id}` === expandedItem,
-                                        ).createdAt,
+                                            `contact-${c.id}` === expandedItem
+                                        ).createdAt
                                       )
                                     : "Recent"}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium">Consent:</span>
+                                <span className="font-medium text-foreground">
+                                  Consent:
+                                </span>
                                 <span>
                                   {contactSubmissions.find(
-                                    (c) => `contact-${c.id}` === expandedItem,
+                                    (c) => `contact-${c.id}` === expandedItem
                                   ).consent
                                     ? "Yes"
                                     : "No"}
@@ -1933,14 +1984,16 @@ const AdminPage = () => {
                           </div>
 
                           {contactSubmissions.find(
-                            (c) => `contact-${c.id}` === expandedItem,
+                            (c) => `contact-${c.id}` === expandedItem
                           ).message && (
                             <div className="col-span-1 md:col-span-2">
-                              <h3 className="font-semibold mb-2">Message</h3>
-                              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                              <h3 className="font-semibold mb-2 text-foreground">
+                                Message
+                              </h3>
+                              <div className="bg-muted/50 p-4 rounded-lg border border-gray-200">
                                 {
                                   contactSubmissions.find(
-                                    (c) => `contact-${c.id}` === expandedItem,
+                                    (c) => `contact-${c.id}` === expandedItem
                                   ).message
                                 }
                               </div>
@@ -1954,11 +2007,12 @@ const AdminPage = () => {
                           variant="destructive"
                           onClick={() => {
                             const id = parseInt(
-                              expandedItem.replace("contact-", ""),
+                              expandedItem.replace("contact-", "")
                             );
                             setExpandedItem(null);
                             deleteContactMutation.mutate(id);
                           }}
+                          className="text-destructive-foreground"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Delete
@@ -1966,6 +2020,7 @@ const AdminPage = () => {
                         <Button
                           variant="outline"
                           onClick={() => setExpandedItem(null)}
+                          className="text-foreground"
                         >
                           Close
                         </Button>
