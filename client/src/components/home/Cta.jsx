@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { Phone } from "lucide-react";
 import { CONTACT } from "@/lib/constants";
 
 const Cta = () => {
@@ -19,7 +20,7 @@ const Cta = () => {
               href={`tel:${CONTACT.phone[0].replace(/\s+/g, '')}`}
               className="bg-transparent hover:bg-white hover:bg-opacity-10 text-white border border-white px-8 py-4 rounded-md font-medium transition flex items-center justify-center"
             >
-              <i className="fas fa-phone-volume mr-2"></i> Call Now: {CONTACT.phone[0]}
+              <Phone className="mr-2" size={18} strokeWidth={2.5} /> Call Now: {CONTACT.phone[0]}
             </a>
           </div>
           <div className="mt-8">
