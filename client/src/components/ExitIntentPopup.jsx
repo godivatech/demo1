@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
-import { FaWhatsapp, FaPhone, FaCrown } from "react-icons/fa";
+import { FaWhatsapp, FaPhone, FaCrown, FaPhoneVolume } from "react-icons/fa";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { COMPANY_NAME, CONTACT } from "../data/company";
@@ -213,7 +213,7 @@ const ExitIntentPopup = () => {
                     href={`tel:${CONTACT.phone[0]}`}
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-md font-medium transition flex items-center justify-center text-sm"
                   >
-                    <FaPhone className="mr-2" /> Call Now
+                    <FaPhoneVolume className="mr-2" /> Call Now
                   </a>
                   <a
                     href={CONTACT.whatsapp}

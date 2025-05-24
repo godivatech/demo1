@@ -19,7 +19,7 @@ const Cta = () => {
               href={`tel:${CONTACT.phone[0].replace(/\s+/g, '')}`}
               className="bg-transparent hover:bg-white hover:bg-opacity-10 text-white border border-white px-8 py-4 rounded-md font-medium transition flex items-center justify-center"
             >
-              <i className="fas fa-phone-alt mr-2"></i> Call Now: {CONTACT.phone[0]}
+              <i className="fas fa-phone-volume mr-2"></i> Call Now: {CONTACT.phone[0]}
             </a>
           </div>
           <div className="mt-8">
