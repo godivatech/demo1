@@ -1,6 +1,7 @@
 import Hero from "@/components/home/Hero";
 import Benefits from "@/components/home/Benefits";
 import Services from "@/components/home/Services";
+import VideoSection from "@/components/home/VideoSection";
 import BeforeAfter from "@/components/home/BeforeAfter";
 import Products from "@/components/home/Products";
 import Testimonials from "@/components/home/Testimonials";
@@ -25,6 +26,7 @@ const HomePage = () => {
       <Hero />
       <Benefits />
       <Services />
+      <VideoSection />
       <BeforeAfter />
       <Products />
       <Testimonials />

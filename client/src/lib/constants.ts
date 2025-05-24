@@ -8,7 +8,7 @@ export const COMPANY_DESCRIPTION =
 export const CONTACT = {
   director: "Er.Ramesh Jeyaraman B.E",
   title: "Director",
-  phone: ["+91 93429 68038", "+91 78737 32323"],
+  phone: ["+91 81900 90059", "+91 78737 32323"],
   email: "madurai@buildingdoctor.org",
   address:
     "OM Vinayaga Associates, No. 6, North Gate, Opposite Devaki Scan Center, S.S. Colony, Madurai - 625 016, Tamil Nadu",
