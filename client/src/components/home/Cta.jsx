@@ -12,10 +12,8 @@ const Cta = () => {
           <h2 className="font-montserrat font-bold text-3xl md:text-4xl text-white mb-6">Ready to Solve Your Building Problems?</h2>
           <p className="text-white text-opacity-90 text-lg mb-8">Contact our experts today for a free consultation and site assessment. We'll help you find the perfect solution for your building repair needs.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact">
-              <a className="bg-white hover:bg-gray-100 text-primary px-8 py-4 rounded-md font-medium transition text-center">
-                Book A Site Visit
-              </a>
+            <Link to="/contact" className="bg-white hover:bg-gray-100 text-primary px-8 py-4 rounded-md font-medium transition text-center">
+              Book A Site Visit
             </Link>
             <a 
               href={`tel:${CONTACT.phone[0].replace(/\s+/g, '')}`}

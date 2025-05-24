@@ -1,0 +1,57 @@
+[16:57:42.137] Cloning github.com/ajithyaasaf/omvinayagaassociates (Branch: main, Commit: e17d5e2)
+[16:57:42.878] Previous build caches not available
+[16:57:43.233] Cloning completed: 1.095s
+[16:57:43.818] Running build in Washington, D.C., USA (East) – iad1
+[16:57:44.021] Running "vercel build"
+[16:57:44.403] Vercel CLI 41.6.0
+[16:57:44.520] WARN! Due to `builds` existing in your configuration file, the Build and Development Settings defined in your Project Settings will not apply. Learn More: https://vercel.link/unused-build-settings
+[16:57:45.126] Installing dependencies...
+[16:57:50.127] npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+[16:57:50.153] npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+[16:57:58.554] 
+[16:57:58.555] added 561 packages in 13s
+[16:57:58.556] 
+[16:57:58.556] 60 packages are looking for funding
+[16:57:58.557]   run `npm fund` for details
+[16:57:58.612] Running "npm run build"
+[16:57:58.725] 
+[16:57:58.726] > rest-express@1.0.0 build
+[16:57:58.726] > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+[16:57:58.726] 
+[16:57:59.249] [36mvite v5.4.14 [32mbuilding for production...[36m[39m
+[16:57:59.304] transforming...
+[16:57:59.593] Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+[16:57:59.595]   npx update-browserslist-db@latest
+[16:57:59.595]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[16:58:05.175] [32m✓[39m 2114 modules transformed.
+[16:58:05.449] rendering chunks...
+[16:58:05.694] computing gzip size...
+[16:58:05.717] [2m../dist/public/[22m[32mindex.html                                [39m[1m[2m  2.34 kB[22m[1m[22m[2m │ gzip:   0.95 kB[22m
+[16:58:05.717] [2m../dist/public/[22m[2massets/[22m[32mjeyaram-5UpTAgzC.jpg               [39m[1m[2m 45.78 kB[22m[1m[22m
+[16:58:05.718] [2m../dist/public/[22m[2massets/[22m[32mbuilding-doctor-icon-BoVDC8BN.png  [39m[1m[2m145.67 kB[22m[1m[22m
+[16:58:05.718] [2m../dist/public/[22m[2massets/[22m[32msealants-BhV9toIN.png              [39m[1m[2m325.49 kB[22m[1m[22m
+[16:58:05.719] [2m../dist/public/[22m[2massets/[22m[32mthermal-DhP24P2x.png               [39m[1m[2m376.67 kB[22m[1m[22m
+[16:58:05.719] [2m../dist/public/[22m[2massets/[22m[32mTile-Aids-CQw6-Ylx.png             [39m[1m[2m390.71 kB[22m[1m[22m
+[16:58:05.719] [2m../dist/public/[22m[2massets/[22m[32mimg1-C_SXjb03.png                  [39m[1m[2m754.45 kB[22m[1m[22m
+[16:58:05.719] [2m../dist/public/[22m[2massets/[22m[35mindex-DeVKWFum.css                 [39m[1m[2m113.50 kB[22m[1m[22m[2m │ gzip:  17.31 kB[22m
+[16:58:05.720] [2m../dist/public/[22m[2massets/[22m[36mjeyaram-BkYY01ru.js                [39m[1m[2m  0.06 kB[22m[1m[22m[2m │ gzip:   0.08 kB[22m
+[16:58:05.720] [2m../dist/public/[22m[2massets/[22m[36mnot-found-BxxzB05x.js              [39m[1m[2m  0.67 kB[22m[1m[22m[2m │ gzip:   0.39 kB[22m
+[16:58:05.720] [2m../dist/public/[22m[2massets/[22m[36mcard-D00cggbb.js                   [39m[1m[2m  1.00 kB[22m[1m[22m[2m │ gzip:   0.38 kB[22m
+[16:58:05.720] [2m../dist/public/[22m[2massets/[22m[36mServicesPage-D9gXkIeo.js           [39m[1m[2m  7.32 kB[22m[1m[22m[2m │ gzip:   2.47 kB[22m
+[16:58:05.720] [2m../dist/public/[22m[2massets/[22m[36mdialog-DNFE9mR6.js                 [39m[1m[2m  7.96 kB[22m[1m[22m[2m │ gzip:   3.02 kB[22m
+[16:58:05.721] [2m../dist/public/[22m[2massets/[22m[36mProductDetailPage-y-vlRKd9.js      [39m[1m[2m  9.18 kB[22m[1m[22m[2m │ gzip:   2.66 kB[22m
+[16:58:05.721] [2m../dist/public/[22m[2massets/[22m[36mContactPage-DD1h99gX.js            [39m[1m[2m 10.65 kB[22m[1m[22m[2m │ gzip:   2.95 kB[22m
+[16:58:05.721] [2m../dist/public/[22m[2massets/[22m[36mservices-1kMyrjdr.js               [39m[1m[2m 11.16 kB[22m[1m[22m[2m │ gzip:   3.00 kB[22m
+[16:58:05.722] [2m../dist/public/[22m[2massets/[22m[36mAboutPage-CiU1DYzO.js              [39m[1m[2m 12.99 kB[22m[1m[22m[2m │ gzip:   3.11 kB[22m
+[16:58:05.722] [2m../dist/public/[22m[2massets/[22m[36mProductsPage-E6h-MG1i.js           [39m[1m[2m 15.39 kB[22m[1m[22m[2m │ gzip:   4.79 kB[22m
+[16:58:05.722] [2m../dist/public/[22m[2massets/[22m[36mHomePage-D5QdBFJr.js               [39m[1m[2m 72.64 kB[22m[1m[22m[2m │ gzip:  15.42 kB[22m
+[16:58:05.723] [2m../dist/public/[22m[2massets/[22m[36mAdminPage-9HzRbB5B.js              [39m[1m[2m 83.36 kB[22m[1m[22m[2m │ gzip:  19.51 kB[22m
+[16:58:05.724] [2m../dist/public/[22m[2massets/[22m[36mindex-orG1chQ1.js                  [39m[1m[2m494.68 kB[22m[1m[22m[2m │ gzip: 160.42 kB[22m
+[16:58:05.724] [32m✓ built in 6.45s[39m
+[16:58:05.768] 
+[16:58:05.769]   dist/index.js  48.3kb
+[16:58:05.769] 
+[16:58:05.769] ⚡ Done in 8ms
+[16:58:05.787] Error: No Output Directory named "dist" found after the Build completed. You can configure the Output Directory in your Project Settings.
+[16:58:05.787] Learn More: https://vercel.link/missing-public-directory
+[16:58:06.066] 

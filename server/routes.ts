@@ -1,10 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from 'ws';
 import { storage } from "./storage";
 import { z } from "zod";
 import { 
-  contactSchema, productSchema, inquirySchema, serviceSchema, testimonialSchema, faqSchema,
-  type Product, type Contact, type Inquiry, type Service, type Testimonial, type Faq
+  contactSchema, productSchema, inquirySchema, intentSchema, serviceSchema, testimonialSchema, faqSchema,
+  type Product, type Contact, type Inquiry, type Intent, type Service, type Testimonial, type Faq
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -28,7 +29,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Contact form endpoint
-  app.post("/api/contact", async (req, res) => {
+  app.post("/api/contacts", async (req, res) => {
     try {
       const parsedData = contactSchema.parse(req.body);
       
@@ -715,8 +716,191 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ======================
+  // INTENT ENDPOINTS (Exit Intent Popup)
+  // ======================
+  
+  // Get all intents
+  app.get("/api/intents", async (req, res) => {
+    try {
+      const intents = await storage.getIntents();
+      res.status(200).json(intents);
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch intents"
+      });
+    }
+  });
+  
+  // Exit intent form endpoint
+  app.post("/api/intents", async (req, res) => {
+    try {
+      const parsedData = intentSchema.parse(req.body);
+      
+      // Create intent in Firebase
+      const newIntent = await storage.createIntent({
+        name: parsedData.name,
+        phone: parsedData.phone,
+        service: parsedData.service || "Urgent Consultation",
+        message: parsedData.message || "Building repair inquiry",
+        consent: parsedData.consent
+      });
+      
+      res.status(200).json({
+        success: true,
+        message: "Exit intent form submitted successfully",
+        intent: newIntent
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({
+          success: false,
+          message: "Invalid form data",
+          errors: error.errors
+        });
+      } else {
+        console.error('Intent creation error:', error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to process exit intent form"
+        });
+      }
+    }
+  });
+  
   // Create HTTP server
   const httpServer = createServer(app);
+  
+  // Create WebSocket server
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  // Store connected clients
+  const clients = new Set<WebSocket>();
+  
+  // Handle WebSocket connections
+  wss.on('connection', (ws: WebSocket) => {
+    console.log('WebSocket client connected');
+    clients.add(ws);
+    
+    // Send welcome message
+    ws.send(JSON.stringify({ type: 'connection', message: 'Connected to server' }));
+    
+    // Handle client disconnection
+    ws.on('close', () => {
+      console.log('WebSocket client disconnected');
+      clients.delete(ws);
+    });
+    
+    // Handle errors
+    ws.on('error', (error) => {
+      console.error('WebSocket error:', error);
+    });
+  });
+  
+  // Function to broadcast data to all connected clients
+  const broadcastData = (type: string, data: any) => {
+    const message = JSON.stringify({ type, data, timestamp: new Date().toISOString() });
+    
+    clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  };
+  
+  // Modify the DELETE endpoints to broadcast data changes
+  
+  // Update endpoints for broadcast instead of overriding method
+  // Define inquiry delete endpoint 
+  app.delete('/api/inquiries/:id', async (req, res) => {
+    try {
+      const inquiryId = parseInt(req.params.id);
+      const success = await storage.deleteInquiry(inquiryId);
+      
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: "Inquiry not found"
+        });
+      }
+      
+      // After successful deletion, broadcast update
+      const inquiries = await storage.getInquiries();
+      broadcastData('inquiries_updated', inquiries);
+      
+      res.status(200).json({
+        success: true,
+        message: "Inquiry deleted successfully"
+      });
+    } catch (error) {
+      console.error('Inquiry deletion error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete inquiry"
+      });
+    }
+  });
+  
+  // Modify contact delete endpoint
+  app.delete('/api/contacts/:id', async (req, res) => {
+    try {
+      const contactId = parseInt(req.params.id);
+      const success = await storage.deleteContact(contactId);
+      
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: "Contact not found"
+        });
+      }
+      
+      // After successful deletion, broadcast update
+      const contacts = await storage.getContacts();
+      broadcastData('contacts_updated', contacts);
+      
+      res.status(200).json({
+        success: true,
+        message: "Contact submission deleted successfully"
+      });
+    } catch (error) {
+      console.error('Contact deletion error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete contact"
+      });
+    }
+  });
+  
+  // Modify intent delete endpoint
+  app.delete('/api/intents/:id', async (req, res) => {
+    try {
+      const intentId = parseInt(req.params.id);
+      const success = await storage.deleteIntent(intentId);
+      
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: "Intent form not found"
+        });
+      }
+      
+      // After successful deletion, broadcast update
+      const intents = await storage.getIntents();
+      broadcastData('intents_updated', intents);
+      
+      res.status(200).json({
+        success: true,
+        message: "Intent form submission deleted successfully"
+      });
+    } catch (error) {
+      console.error('Intent deletion error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete intent form"
+      });
+    }
+  });
   
   return httpServer;
 }

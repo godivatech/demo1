@@ -11,22 +11,15 @@ import {
   type Testimonial,
   type Faq,
   type Contact,
-  type Inquiry
+  type Inquiry,
+  type Intent
 } from "@shared/schema";
 import MemStoreSession from 'memorystore';
 import session from 'express-session';
+import { getFirebaseConfig } from './firebase.config';
 
-// Initialize Firebase with your config
-const firebaseConfig = {
-  apiKey: "AIzaSyCMOdvQW248_4ul-ciFEEmuOghb4xdS3gs",
-  authDomain: "jpfinserv-892e1.firebaseapp.com",
-  databaseURL: "https://jpfinserv-892e1-default-rtdb.firebaseio.com",
-  projectId: "jpfinserv-892e1",
-  storageBucket: "jpfinserv-892e1.firebasestorage.app",
-  messagingSenderId: "166323272116",
-  appId: "1:166323272116:web:f440b4c76307ea463c5ae1",
-  measurementId: "G-GBS93JTW1R"
-};
+// Get Firebase config from environment variables or fallback
+const firebaseConfig = getFirebaseConfig();
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
@@ -458,12 +451,25 @@ export class FirebaseStorage {
 
       // Get the highest existing ID
       const snapshot = await get(ref(database, 'contacts'));
-      if (snapshot.exists()) {
+      if (snapshot.exists() && snapshot.val() !== null) {
         const contacts = snapshot.val();
-        const contactIds = Object.keys(contacts).map(id => parseInt(id));
-        if (contactIds.length > 0) {
-          id = Math.max(...contactIds) + 1;
+        // Make sure contacts is not null and has keys
+        if (contacts && Object.keys(contacts).length > 0) {
+          // Filter out non-numeric keys and convert to numbers
+          const contactIds = Object.keys(contacts)
+            .filter(key => !isNaN(parseInt(key)))
+            .map(key => parseInt(key));
+          
+          if (contactIds.length > 0) {
+            id = Math.max(...contactIds) + 1;
+          }
         }
+      }
+
+      // Ensure id is a valid number
+      if (isNaN(id)) {
+        id = 1; // Default to 1 if we somehow got NaN
+        console.warn('ID calculation resulted in NaN, defaulting to 1');
       }
 
       const createdAt = new Date();
@@ -472,6 +478,11 @@ export class FirebaseStorage {
         id, 
         createdAt 
       };
+      
+      // Extra validation to ensure we're not using NaN as an ID
+      if (isNaN(newContact.id)) {
+        throw new Error('Cannot create contact with invalid ID (NaN)');
+      }
       
       await set(ref(database, `contacts/${id}`), {
         ...newContact,
@@ -482,6 +493,19 @@ export class FirebaseStorage {
     } catch (error) {
       console.error('Firebase createContact error:', error);
       throw new Error('Failed to create contact in Firebase');
+    }
+  }
+  
+  async deleteContact(id: number): Promise<boolean> {
+    try {
+      const snapshot = await get(ref(database, `contacts/${id}`));
+      if (!snapshot.exists()) return false;
+
+      await remove(ref(database, `contacts/${id}`));
+      return true;
+    } catch (error) {
+      console.error('Firebase deleteContact error:', error);
+      return false;
     }
   }
 
@@ -512,12 +536,25 @@ export class FirebaseStorage {
 
       // Get the highest existing ID
       const snapshot = await get(ref(database, 'inquiries'));
-      if (snapshot.exists()) {
+      if (snapshot.exists() && snapshot.val() !== null) {
         const inquiries = snapshot.val();
-        const inquiryIds = Object.keys(inquiries).map(id => parseInt(id));
-        if (inquiryIds.length > 0) {
-          id = Math.max(...inquiryIds) + 1;
+        // Make sure inquiries is not null and has keys
+        if (inquiries && Object.keys(inquiries).length > 0) {
+          // Filter out non-numeric keys and convert to numbers
+          const inquiryIds = Object.keys(inquiries)
+            .filter(key => !isNaN(parseInt(key)))
+            .map(key => parseInt(key));
+          
+          if (inquiryIds.length > 0) {
+            id = Math.max(...inquiryIds) + 1;
+          }
         }
+      }
+
+      // Ensure id is a valid number
+      if (isNaN(id)) {
+        id = 1; // Default to 1 if we somehow got NaN
+        console.warn('ID calculation resulted in NaN, defaulting to 1');
       }
 
       const createdAt = new Date();
@@ -526,6 +563,11 @@ export class FirebaseStorage {
         id, 
         createdAt 
       };
+      
+      // Extra validation to ensure we're not using NaN as an ID
+      if (isNaN(newInquiry.id)) {
+        throw new Error('Cannot create inquiry with invalid ID (NaN)');
+      }
       
       await set(ref(database, `inquiries/${id}`), {
         ...newInquiry,
@@ -538,7 +580,104 @@ export class FirebaseStorage {
       throw new Error('Failed to create inquiry in Firebase');
     }
   }
+  
+  async deleteInquiry(id: number): Promise<boolean> {
+    try {
+      const snapshot = await get(ref(database, `inquiries/${id}`));
+      if (!snapshot.exists()) return false;
+
+      await remove(ref(database, `inquiries/${id}`));
+      return true;
+    } catch (error) {
+      console.error('Firebase deleteInquiry error:', error);
+      return false;
+    }
+  }
+
+  // ===============================
+  // Intent Form Methods (Exit Intent Popup)
+  // ===============================
+  async getIntents(): Promise<Intent[]> {
+    try {
+      const snapshot = await get(ref(database, 'intents'));
+      if (!snapshot.exists()) return [];
+
+      const intents = snapshot.val();
+      return Object.keys(intents).map(key => ({
+        ...intents[key],
+        id: parseInt(key),
+        createdAt: intents[key].createdAt ? new Date(intents[key].createdAt) : null
+      }));
+    } catch (error) {
+      console.error('Firebase getIntents error:', error);
+      return [];
+    }
+  }
+
+  async createIntent(intent: Omit<Intent, 'id' | 'createdAt'>): Promise<Intent> {
+    try {
+      // Generate a new ID
+      let id = 1;
+
+      // Get the highest existing ID
+      const snapshot = await get(ref(database, 'intents'));
+      if (snapshot.exists() && snapshot.val() !== null) {
+        const intents = snapshot.val();
+        // Make sure intents is not null and has keys
+        if (intents && Object.keys(intents).length > 0) {
+          // Filter out non-numeric keys and convert to numbers
+          const intentIds = Object.keys(intents)
+            .filter(key => !isNaN(parseInt(key)))
+            .map(key => parseInt(key));
+          
+          if (intentIds.length > 0) {
+            id = Math.max(...intentIds) + 1;
+          }
+        }
+      }
+
+      // Ensure id is a valid number
+      if (isNaN(id)) {
+        id = 1; // Default to 1 if we somehow got NaN
+        console.warn('ID calculation resulted in NaN, defaulting to 1');
+      }
+
+      const createdAt = new Date();
+      const newIntent: Intent = { 
+        ...intent,
+        id,
+        createdAt
+      };
+      
+      // Extra validation to ensure we're not using NaN as an ID
+      if (isNaN(newIntent.id)) {
+        throw new Error('Cannot create intent with invalid ID (NaN)');
+      }
+      
+      await set(ref(database, `intents/${id}`), {
+        ...newIntent,
+        createdAt: createdAt.toISOString() // Store as string in Firebase
+      });
+      
+      return newIntent;
+    } catch (error) {
+      console.error('Intent creation error:', error);
+      throw new Error('Failed to create intent form submission in Firebase');
+    }
+  }
+
+  async deleteIntent(id: number): Promise<boolean> {
+    try {
+      const snapshot = await get(ref(database, `intents/${id}`));
+      if (!snapshot.exists()) return false;
+
+      await remove(ref(database, `intents/${id}`));
+      return true;
+    } catch (error) {
+      console.error('Firebase deleteIntent error:', error);
+      return false;
+    }
+  }
 }
 
-// Export an instance of the Firebase storage
 export const firebaseStorage = new FirebaseStorage();

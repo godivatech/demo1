@@ -34,7 +34,7 @@ export const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be valid"),
   service: z.string().min(1, "Please select a service"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  message: z.string().min(5, "Message must be at least 5 characters"),
   consent: z.boolean().refine(val => val === true, "You must agree to the terms")
 });
 
@@ -160,3 +160,33 @@ export const faqSchema = createInsertSchema(faqs).omit({
 
 export type Faq = typeof faqs.$inferSelect;
 export type InsertFaq = z.infer<typeof faqSchema>;
+
+// Intent form schema (for exit intent popup)
+export const intents = pgTable("intents", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  phone: text("phone").notNull(),
+  service: text("service").notNull(),
+  message: text("message").notNull(),
+  consent: boolean("consent").notNull(),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+export const intentSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  phone: z.string().min(5, "Phone number is required"),
+  service: z.string().default("Urgent Consultation"),
+  message: z.string().default("Building repair inquiry"),
+  consent: z.boolean().refine(val => val === true, "You must agree to the terms")
+});
+
+export interface Intent {
+  id: number;
+  name: string;
+  phone: string;
+  service: string;
+  message: string;
+  consent: boolean;
+  createdAt: Date | null;
+}
+export type InsertIntent = z.infer<typeof intentSchema>;

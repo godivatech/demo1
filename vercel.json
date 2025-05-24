@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "buildCommand": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+  "outputDirectory": "dist/public",
+  "public": true,
+  "routes": [
+    {
+      "src": "/api/products(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/inquiries(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/contacts(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/intents(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/services(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/testimonials(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/faqs(.*)",
+      "dest": "/api/firebase-data.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/server.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+# Building Doctor Website Project Folder Structure
+
+## Client Structure
+
+### Main Application Files
+client/src/App.jsx                           # Main application component with routing
+client/src/index.jsx                         # Application entry point
+client/src/index.css                         # Global CSS styles
+
+### Pages
+client/src/pages_jsx/AdminPage.jsx           # Admin dashboard page
+client/src/pages_jsx/HomePage.jsx            # Home page
+client/src/pages_jsx/ProductsPage.jsx        # Products listing page
+client/src/pages_jsx/ProductDetailPage.jsx   # Single product detail page
+client/src/pages_jsx/ServicesPage.jsx        # Services listing page
+client/src/pages_jsx/ServiceDetailPage.jsx   # Single service detail page
+client/src/pages_jsx/ContactPage.jsx         # Contact us page
+client/src/pages_jsx/AboutPage.jsx           # About us page
+client/src/pages_jsx/PrivacyPage.jsx         # Privacy policy page
+client/src/pages_jsx/TermsPage.jsx           # Terms of service page
+client/src/pages_jsx/NotFoundPage.jsx        # 404 page
+
+### Components - Admin
+client/src/components/admin/ProductManager.jsx         # Admin product management
+client/src/components/admin/ServiceManager.jsx         # Admin service management
+client/src/components/admin/TestimonialManager.jsx     # Admin testimonial management
+client/src/components/admin/FaqManager.jsx             # Admin FAQ management
+client/src/components/admin/InquiryList.jsx            # Admin inquiry display
+client/src/components/admin/ContactList.jsx            # Admin contact form submissions
+client/src/components/admin/ProductForm.jsx            # Product add/edit form
+client/src/components/admin/ServiceForm.jsx            # Service add/edit form
+client/src/components/admin/TestimonialForm.jsx        # Testimonial add/edit form
+client/src/components/admin/FaqForm.jsx                # FAQ add/edit form
+client/src/components/admin/Dashboard.jsx              # Admin dashboard overview
+client/src/components/admin/AdminLayout.jsx            # Admin layout wrapper
+
+### Components - Home Page Sections
+client/src/components/home/Hero.jsx                # Hero banner section
+client/src/components/home/Benefits.jsx            # Benefits section
+client/src/components/home/Services.jsx            # Services section
+client/src/components/home/BeforeAfter.jsx         # Before/After projects section
+client/src/components/home/Products.jsx            # Products section
+client/src/components/home/Testimonials.jsx        # Testimonials section
+client/src/components/home/Faq.jsx                 # FAQ section
+client/src/components/home/About.jsx               # About section
+client/src/components/home/ContactSection.jsx      # Contact section
+client/src/components/home/Cta.jsx                 # Call to action section
+
+### Components - Layout
+client/src/components/layout/Header.jsx            # Website header
+client/src/components/layout/Footer.jsx            # Website footer
+client/src/components/layout/Navbar.jsx            # Navigation bar
+client/src/components/layout/PageWrapper.jsx       # Page wrapper with animations
+client/src/components/layout/Sidebar.jsx           # Admin sidebar
+client/src/components/layout/MobileNav.jsx         # Mobile navigation
+
+### Components - Common Forms
+client/src/components/HomePageForm.jsx             # Home page popup form
+client/src/components/ContactForm.jsx              # Contact page form
+client/src/components/InquiryForm.jsx              # Service inquiry form
+
+### Components - Product & Service
+client/src/components/products/ProductCard.jsx     # Product card component
+client/src/components/products/ProductGrid.jsx     # Grid of product cards
+client/src/components/products/ProductFilter.jsx   # Product filtering component
+client/src/components/products/ProductGallery.jsx  # Product image gallery
+client/src/components/products/RelatedProducts.jsx # Related products section
+client/src/components/services/ServiceCard.jsx     # Service card component
+client/src/components/services/ServicesList.jsx    # List of services
+client/src/components/services/ServiceFeatures.jsx # Service features list
+
+### Components - UI Elements
+client/src/components/ui/button.jsx                # Button component
+client/src/components/ui/input.jsx                 # Input component
+client/src/components/ui/form.jsx                  # Form wrapper component
+client/src/components/ui/card.jsx                  # Card component
+client/src/components/ui/accordion.jsx             # Accordion component
+client/src/components/ui/dialog.jsx                # Dialog/modal component
+client/src/components/ui/tabs.jsx                  # Tabs component
+client/src/components/ui/textarea.jsx              # Textarea component
+client/src/components/ui/select.jsx                # Select component
+client/src/components/ui/toast.jsx                 # Toast notification component
+client/src/components/ui/dropdown-menu.jsx         # Dropdown menu component
+client/src/components/ui/table.jsx                 # Table component
+client/src/components/ui/badge.jsx                 # Badge component
+client/src/components/ui/pagination.jsx            # Pagination component
+
+### Hooks
+client/src/hooks/use-toast.ts                      # Toast notification hook
+client/src/hooks/use-mobile.js                     # Mobile detection hook
+client/src/hooks/use-admin-auth.js                 # Admin authentication hook
+client/src/hooks/use-scroll-position.js            # Scroll position hook
+client/src/hooks/use-form-submit.js                # Form submission hook
+client/src/hooks/use-local-storage.js              # Local storage hook
+
+### Contexts
+client/src/context/AdminContext.jsx                # Admin authentication context
+client/src/context/ToastContext.jsx                # Toast notification context
+client/src/context/LoadingContext.jsx              # Loading state context
+client/src/context/FilterContext.jsx               # Product filtering context
+
+### Library & Utilities
+client/src/lib/firebase.js                         # Firebase client configuration
+client/src/lib/queryClient.js                      # React Query client setup
+client/src/lib/constants.ts                        # Application constants
+client/src/lib/validation.js                       # Form validation utilities
+client/src/lib/utils.js                            # General utilities
+client/src/lib/api.js                              # API request helpers
+
+### Types
+client/src/types/index.ts                          # TypeScript type definitions
+
+### Utilities
+client/src/utils/animations.js                     # Animation configurations
+client/src/utils/formatting.js                     # Data formatting utilities
+client/src/utils/validation.js                     # Additional validation utils
+
+### Data
+client/src/data/company.js                         # Company information data
+client/src/data/products.js                        # Product data
+client/src/data/services.js                        # Service data
+client/src/data/schema.js                          # Data validation schemas
+client/src/data_clean/company.js                   # Clean company data
+client/src/data_clean/products.js                  # Clean product data
+client/src/data_clean/services.js                  # Clean service data
+client/src/data_clean/schema.js                    # Clean schema data
+
+## Server Structure
+
+### Main Server Files
+server/index.ts                                    # Server entry point
+server/vite.ts                                     # Vite server configuration
+server/routes.ts                                   # API routes
+server/routes_firebase.ts                          # Firebase-specific routes
+server/firebase.ts                                 # Firebase server configuration
+server/storage.ts                                  # Storage interface
+server/data.ts                                     # Mock data generation
+
+## Shared Structure
+
+### Shared Files
+shared/schema.ts                                   # Shared database schemas
+
+## Root Configuration Files
+README.md                                          # Project documentation
+build-for-vercel.sh                                # Vercel build script
+cleanup_duplicates.sh                              # File cleanup script
+drizzle.config.ts                                  # Drizzle ORM configuration
+package.json                                       # NPM package configuration
+postcss.config.js                                  # PostCSS configuration
+start-dev.bat                                      # Windows dev startup script
+start-dev.sh                                       # Linux dev startup script
+start-windows-legacy.bat                           # Legacy Windows startup
+tailwind.config.ts                                 # Tailwind CSS configuration
+theme.json                                         # UI theme configuration
+tsconfig.json                                      # TypeScript configuration
+update_vite_config.sh                              # Vite config update script
+vercel.json                                        # Vercel deployment configuration
+vite.config.ts                                     # Vite configuration
+
+## Windows Compatibility
+windows_compat/create-batch-file.js                # Batch file creation
+windows_compat/start-windows-minimal.js            # Minimal Windows starter
+windows_compat/start-windows-simple.js             # Simple Windows starter
+windows_compat/start-windows.js                    # Standard Windows starter
+windows_compat/vite.config.windows.js              # Windows-specific vite config

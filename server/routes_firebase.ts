@@ -3,8 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { z } from "zod";
 import { 
-  contactSchema, productSchema, inquirySchema, serviceSchema, testimonialSchema, faqSchema,
-  type Product, type Contact, type Inquiry, type Service, type Testimonial, type Faq
+  contactSchema, productSchema, inquirySchema, serviceSchema, testimonialSchema, faqSchema, intentSchema,
+  type Product, type Contact, type Inquiry, type Service, type Testimonial, type Faq, type Intent
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -28,7 +28,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Contact form endpoint
-  app.post("/api/contact", async (req, res) => {
+  app.post("/api/contacts", async (req, res) => {
     try {
       const parsedData = contactSchema.parse(req.body);
       
@@ -42,6 +42,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.log('Contact form validation error:', JSON.stringify(error.errors, null, 2));
+        console.log('Contact form data received:', JSON.stringify(req.body, null, 2));
         res.status(400).json({
           success: false,
           message: "Invalid form data",
@@ -54,6 +56,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Failed to process contact form"
         });
       }
+    }
+  });
+  
+  // Delete a contact submission
+  app.delete("/api/contacts/:id", async (req, res) => {
+    try {
+      const contactId = parseInt(req.params.id);
+      
+      // Delete contact from Firebase
+      const success = await storage.deleteContact(contactId);
+      
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: "Contact submission not found"
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        message: "Contact submission deleted successfully"
+      });
+    } catch (error) {
+      console.error('Contact deletion error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete contact submission"
+      });
     }
   });
   
@@ -108,6 +138,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Failed to process inquiry"
         });
       }
+    }
+  });
+  
+  // Delete an inquiry
+  app.delete("/api/inquiries/:id", async (req, res) => {
+    try {
+      const inquiryId = parseInt(req.params.id);
+      
+      // Delete inquiry from Firebase
+      const success = await storage.deleteInquiry(inquiryId);
+      
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: "Inquiry not found"
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        message: "Inquiry deleted successfully"
+      });
+    } catch (error) {
+      console.error('Inquiry deletion error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete inquiry"
+      });
     }
   });
   
@@ -711,6 +769,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({
         success: false,
         message: "Failed to delete FAQ"
+      });
+    }
+  });
+
+  // ======================
+  // INTENT ENDPOINTS (Exit Intent Popup)
+  // ======================
+  
+  // Get all intents
+  app.get("/api/intents", async (req, res) => {
+    try {
+      const intents = await storage.getIntents();
+      res.status(200).json(intents);
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch intent form submissions"
+      });
+    }
+  });
+  
+  // Intent form submission endpoint
+  app.post("/api/intent", async (req, res) => {
+    try {
+      const parsedData = intentSchema.parse(req.body);
+      
+      // Ensure all required fields are provided
+      const intentData = {
+        name: parsedData.name,
+        phone: parsedData.phone,
+        service: parsedData.service || "Urgent Consultation",
+        message: parsedData.message || "Building repair inquiry",
+        consent: parsedData.consent
+      };
+      
+      // Create intent in Firebase
+      const newIntent = await storage.createIntent(intentData);
+      
+      res.status(200).json({
+        success: true,
+        message: "Intent form submitted successfully",
+        intent: newIntent
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({
+          success: false,
+          message: "Invalid form data",
+          errors: error.errors
+        });
+      } else {
+        console.error('Intent form creation error:', error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to process intent form"
+        });
+      }
+    }
+  });
+  
+  // Delete an intent form submission
+  app.delete("/api/intents/:id", async (req, res) => {
+    try {
+      const intentId = parseInt(req.params.id);
+      
+      // Delete intent from Firebase
+      const success = await storage.deleteIntent(intentId);
+      
+      if (!success) {
+        return res.status(404).json({
+          success: false,
+          message: "Intent form submission not found"
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        message: "Intent form submission deleted successfully"
+      });
+    } catch (error) {
+      console.error('Intent deletion error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete intent form submission"
       });
     }
   });

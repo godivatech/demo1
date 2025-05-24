@@ -2,6 +2,16 @@ import { useEffect, useState } from "react";
 import { CONTACT } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  Facebook, 
+  Twitter, 
+  Instagram, 
+  MessageCircle 
+} from "lucide-react";
 
 const ContactPage = () => {
   useEffect(() => {
@@ -44,7 +54,9 @@ const ContactPage = () => {
     try {
       setIsSubmitting(true);
 
-      const response = await apiRequest("POST", "/api/contact", formData);
+      const response = await apiRequest("POST", "/api/contacts", formData);
+      
+      const responseData = await response.json();
       
       if (response.ok) {
         toast({
@@ -62,13 +74,34 @@ const ContactPage = () => {
           consent: false
         });
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Something went wrong");
+        // Check for validation errors from the server
+        if (responseData.errors && responseData.errors.length > 0) {
+          throw { 
+            message: responseData.errors[0].message || responseData.message || "Validation error",
+            response: { data: responseData }
+          };
+        } else {
+          throw new Error(responseData.message || "Something went wrong");
+        }
       }
     } catch (error) {
+      console.error("Form submission error:", error);
+      
+      let errorMessage = "Failed to send your message. Please try again.";
+      
+      // Handle error response with validation errors
+      if (error.response && error.response.data && error.response.data.errors) {
+        const validationErrors = error.response.data.errors;
+        if (validationErrors.length > 0) {
+          errorMessage = validationErrors[0].message || errorMessage;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to send your message. Please try again.",
+        title: "Form Validation Error",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -98,18 +131,26 @@ const ContactPage = () => {
               
               <div className="space-y-6">
                 <div className="flex items-start">
-                  <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-map-marker-alt text-primary"></i>
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <MapPin className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Address</h4>
-                    <p className="text-gray-600">{CONTACT.address}</p>
+                    {CONTACT.addresses ? (
+                      CONTACT.addresses.map((address, index) => (
+                        <p key={index} className="text-gray-600 mb-2">
+                          {address}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="text-gray-600">{CONTACT.address}</p>
+                    )}
                   </div>
                 </div>
                 
                 <div className="flex items-start">
-                  <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-phone-alt text-primary"></i>
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <Phone className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Phone</h4>
@@ -124,8 +165,8 @@ const ContactPage = () => {
                 </div>
                 
                 <div className="flex items-start">
-                  <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-envelope text-primary"></i>
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <Mail className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Email</h4>
@@ -138,8 +179,8 @@ const ContactPage = () => {
                 </div>
                 
                 <div className="flex items-start">
-                  <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-clock text-primary"></i>
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                    <Clock className="text-white" size={20} strokeWidth={2.5} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Working Hours</h4>
@@ -154,30 +195,30 @@ const ContactPage = () => {
                 <div className="flex space-x-4">
                   <a 
                     href={`https://www.facebook.com/${CONTACT.social.facebook}`} 
-                    className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition"
+                    className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Facebook"
                   >
-                    <i className="fab fa-facebook-f"></i>
+                    <Facebook size={18} strokeWidth={2.5} />
                   </a>
                   <a 
                     href={`https://twitter.com/${CONTACT.social.twitter}`} 
-                    className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition"
+                    className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Twitter"
                   >
-                    <i className="fab fa-twitter"></i>
+                    <Twitter size={18} strokeWidth={2.5} />
                   </a>
                   <a 
                     href={`https://www.instagram.com/${CONTACT.social.instagram}`} 
-                    className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition"
+                    className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Instagram"
                   >
-                    <i className="fab fa-instagram"></i>
+                    <Instagram size={18} strokeWidth={2.5} />
                   </a>
                 </div>
               </div>
@@ -261,9 +302,15 @@ const ContactPage = () => {
                     onChange={handleChange}
                     rows={5} 
                     className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
-                    placeholder="Describe your building problem or requirements"
+                    placeholder="Describe your building problem or requirements (min. 10 characters)"
                     required
+                    minLength={10}
                   ></textarea>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {formData.message.length < 10 ? 
+                      `Please enter at least ${10 - formData.message.length} more character${10 - formData.message.length === 1 ? '' : 's'}` : 
+                      '✓ Message length valid'}
+                  </p>
                 </div>
                 
                 <div className="flex items-start">
@@ -295,14 +342,14 @@ const ContactPage = () => {
           <div className="mt-16 bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="h-96">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.0601693559646!2d78.1243226!3d9.924916499999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00c58aa4c24d85%3A0xb0e365ace1ab34dc!2sSS%20Colony%2C%20Madurai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1654523690280!5m2!1sen!2sin" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.8999114405763!2d78.12356181079485!3d9.9361916741588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00c59fc9ffd737%3A0x44e6b0aa1d66d76c!2sNorth%20Gate%2C%20SS%20Colony%2C%20Madurai%2C%20Tamil%20Nadu%20625010!5e0!3m2!1sen!2sin!4v1684758905019!5m2!1sen!2sin" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0 }} 
                 allowFullScreen={true} 
                 loading="lazy" 
                 referrerPolicy="no-referrer-when-downgrade"
-                title="OM Vinayaga Associates Location"
+                title="OM Vinayaga Associates - S.S Colony Location"
               ></iframe>
             </div>
           </div>
@@ -321,7 +368,7 @@ const ContactPage = () => {
                   href={`tel:${CONTACT.phone[0].replace(/\s+/g, '')}`}
                   className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md font-medium transition flex items-center justify-center"
                 >
-                  <i className="fas fa-phone-alt mr-2"></i> Call Now
+                  <Phone className="mr-2" size={18} strokeWidth={2.5} /> Call Now
                 </a>
                 <a 
                   href={CONTACT.social.whatsapp}
@@ -329,7 +376,7 @@ const ContactPage = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <i className="fab fa-whatsapp mr-2"></i> WhatsApp Chat
+                  <MessageCircle className="mr-2" size={18} strokeWidth={2.5} /> WhatsApp Chat
                 </a>
               </div>
             </div>

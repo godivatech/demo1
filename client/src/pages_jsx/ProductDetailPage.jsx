@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRoute, Link } from "wouter";
-import { apiRequest } from "@/lib/queryClient";
 import { PRODUCT_CATEGORIES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+
+// Import PRODUCTS array from ProductsPage for direct access
+// This ensures we can access product details without API calls
+import { PRODUCTS } from "./ProductsPage"; // All products hardcoded in ProductsPage
 
 const ProductDetailPage = () => {
   const [, params] = useRoute("/products/:id");
@@ -18,27 +21,25 @@ const ProductDetailPage = () => {
   }, [product]);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    // Using hardcoded data instead of API call
+    const loadProductDetails = () => {
       if (!productId) return;
       
       setIsLoading(true);
+      
       try {
-        const response = await apiRequest("GET", `/api/products/${productId}`);
-        const data = await response.json();
+        // Find product by ID in our local PRODUCTS array
+        const foundProduct = PRODUCTS.find(p => p.id === parseInt(productId));
         
-        if (data.success && data.product) {
-          setProduct(data.product);
+        if (foundProduct) {
+          setProduct(foundProduct);
           
-          // Fetch related products from same category
-          const relatedResponse = await apiRequest("GET", `/api/products?category=${data.product.category}`);
-          const relatedData = await relatedResponse.json();
+          // Find related products from the same category
+          const related = PRODUCTS
+            .filter(p => p.category === foundProduct.category && p.id !== parseInt(productId))
+            .slice(0, 4);
           
-          if (relatedData.success) {
-            const filtered = relatedData.products
-              .filter((p) => p.id !== parseInt(productId))
-              .slice(0, 4);
-            setRelatedProducts(filtered);
-          }
+          setRelatedProducts(related);
         } else {
           toast({
             title: "Error",
@@ -52,12 +53,13 @@ const ProductDetailPage = () => {
           description: "Failed to load product details",
           variant: "destructive"
         });
+        console.error("Error loading product details:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchProduct();
+    loadProductDetails();
   }, [productId, toast]);
 
   if (isLoading) {
@@ -112,12 +114,17 @@ const ProductDetailPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {/* Product Image */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="relative h-[300px] md:h-[500px] overflow-hidden bg-gray-300">
+            <div className="relative h-[300px] md:h-[500px] overflow-hidden">
+              <img 
+                src={product.image} 
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
               {product.isBestseller && (
                 <div className="absolute top-4 left-4 bg-primary text-white text-sm px-3 py-1 rounded z-10">BESTSELLER</div>
               )}
               {product.isNew && (
-                <div className="absolute top-4 left-4 bg-green-600 text-white text-sm px-3 py-1 rounded z-10">NEW</div>
+                <div className="absolute top-4 right-4 bg-green-600 text-white text-sm px-3 py-1 rounded z-10">NEW</div>
               )}
             </div>
           </div>
@@ -239,12 +246,16 @@ const ProductDetailPage = () => {
               {relatedProducts.map((relProduct) => (
                 <div key={relProduct.id} className="bg-white rounded-xl shadow-lg overflow-hidden group">
                   <div className="relative h-64 overflow-hidden">
-                    <div className="w-full h-full bg-gray-300 group-hover:scale-105 transition-transform duration-300"></div>
+                    <img 
+                      src={relProduct.image} 
+                      alt={relProduct.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                     {relProduct.isBestseller && (
                       <div className="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">BESTSELLER</div>
                     )}
                     {relProduct.isNew && (
-                      <div className="absolute top-3 left-3 bg-green-600 text-white text-xs px-2 py-1 rounded">NEW</div>
+                      <div className="absolute top-3 right-3 bg-green-600 text-white text-xs px-2 py-1 rounded">NEW</div>
                     )}
                   </div>
                   <div className="p-5">

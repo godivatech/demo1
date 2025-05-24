@@ -28,7 +28,7 @@ const WhatsappButton = () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
           transition={{ duration: 0.3 }}
-          className="fixed bottom-6 right-6 z-50"
+          className="fixed bottom-6 right-6 sm:right-6 md:right-6 lg:right-6 z-50"
         >
           <motion.div
             className="absolute inset-0 bg-green-500 rounded-full"
@@ -38,7 +38,7 @@ const WhatsappButton = () => {
             style={{ opacity: 0.4 }}
           />
           <motion.div
-            className="relative bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 flex items-center justify-center"
+            className="relative bg-green-500 text-white p-4 w-14 h-14 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 flex items-center justify-center"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >

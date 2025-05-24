@@ -6,7 +6,8 @@ import {
   type Testimonial,
   type Faq,
   type Contact,
-  type Inquiry
+  type Inquiry,
+  type Intent
 } from "@shared/schema";
 
 import { firebaseStorage, sessionStore } from './firebase';
@@ -48,10 +49,17 @@ export interface IStorage {
   // Contact methods
   getContacts(): Promise<Contact[]>;
   createContact(contact: Omit<Contact, 'id' | 'createdAt'>): Promise<Contact>;
+  deleteContact(id: number): Promise<boolean>;
   
   // Inquiry methods
   getInquiries(): Promise<Inquiry[]>;
   createInquiry(inquiry: Omit<Inquiry, 'id' | 'createdAt'>): Promise<Inquiry>;
+  deleteInquiry(id: number): Promise<boolean>;
+  
+  // Intent form methods
+  getIntents(): Promise<Intent[]>;
+  createIntent(intent: Omit<Intent, 'id' | 'createdAt'>): Promise<Intent>;
+  deleteIntent(id: number): Promise<boolean>;
   
   // Session store for authentication
   sessionStore: any;
@@ -95,10 +103,17 @@ export const storage: IStorage = {
   // Contact methods
   getContacts: () => firebaseStorage.getContacts(),
   createContact: (contact) => firebaseStorage.createContact(contact),
+  deleteContact: (id) => firebaseStorage.deleteContact(id),
   
   // Inquiry methods
   getInquiries: () => firebaseStorage.getInquiries(),
   createInquiry: (inquiry) => firebaseStorage.createInquiry(inquiry),
+  deleteInquiry: (id) => firebaseStorage.deleteInquiry(id),
+  
+  // Intent form methods
+  getIntents: () => firebaseStorage.getIntents(),
+  createIntent: (intent) => firebaseStorage.createIntent(intent),
+  deleteIntent: (id) => firebaseStorage.deleteIntent(id),
   
   // Session store
   sessionStore: sessionStore

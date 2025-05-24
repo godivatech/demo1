@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { CONTACT } from "@/lib/constants";
+import { SOCIAL_MEDIA } from "@/data/company";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { contactSchema } from "@/data/schema";
+import { MapPin, Phone, Mail, Clock, Facebook, Twitter, Instagram } from "lucide-react";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -28,21 +32,15 @@ const ContactSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.consent) {
-      toast({
-        title: "Consent Required",
-        description: "Please agree to the processing of your personal data.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
+    // Validate form using Zod schema
     try {
+      // Validate the form data against our schema
+      const validatedData = contactSchema.parse(formData);
+      
       setIsSubmitting(true);
       
-      // In a real implementation, this would send data to an API endpoint
-      // For now, we'll just simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Send validated data to the correct API endpoint
+      await apiRequest("POST", "/api/contacts", validatedData);
       
       toast({
         title: "Message Sent!",
@@ -50,6 +48,10 @@ const ContactSection = () => {
         variant: "default"
       });
       
+      // Invalidate any contacts cache to refresh admin panel
+      queryClient.invalidateQueries(["contacts"]);
+      
+      // Reset form data
       setFormData({
         name: "",
         email: "",
@@ -58,12 +60,27 @@ const ContactSection = () => {
         message: "",
         consent: false
       });
+      
+      // Scroll to the top of the form
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "There was a problem sending your message. Please try again.",
-        variant: "destructive"
-      });
+      if (error.errors) {
+        // Zod validation error
+        const errorMessages = error.errors.map(err => `${err.message}`).join(', ');
+        toast({
+          title: "Form validation error",
+          description: errorMessages,
+          variant: "destructive",
+        });
+      } else {
+        // API or other error
+        console.error("Error submitting contact form:", error);
+        toast({
+          title: "Error",
+          description: "There was a problem sending your message. Please try again.",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -74,7 +91,7 @@ const ContactSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="inline-block px-4 py-1 bg-primary bg-opacity-10 rounded-full mb-3">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider">Get In Touch</p>
+            <p className="text-xs font-semibold text-white uppercase tracking-wider">Get In Touch</p>
           </div>
           <h2 className="font-montserrat font-bold text-3xl md:text-4xl mb-4">Contact <span className="text-primary">Our Experts</span></h2>
           <p className="text-gray-600 max-w-2xl mx-auto">Reach out to us for consultations, quotes, or to schedule a site visit.</p>
@@ -86,18 +103,26 @@ const ContactSection = () => {
             
             <div className="space-y-6">
               <div className="flex items-start">
-                <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                  <i className="fas fa-map-marker-alt text-primary"></i>
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                  <MapPin className="text-white" size={20} strokeWidth={2.5} />
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">Address</h4>
-                  <p className="text-gray-600">{CONTACT.address}</p>
+                  {CONTACT.addresses ? (
+                    CONTACT.addresses.map((address, index) => (
+                      <p key={index} className="text-gray-600 mb-2">
+                        {address}
+                      </p>
+                    ))
+                  ) : (
+                    <p className="text-gray-600">{CONTACT.address}</p>
+                  )}
                 </div>
               </div>
               
               <div className="flex items-start">
-                <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                  <i className="fas fa-phone-alt text-primary"></i>
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                  <Phone className="text-white" size={20} strokeWidth={2.5} />
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">Phone</h4>
@@ -112,8 +137,8 @@ const ContactSection = () => {
               </div>
               
               <div className="flex items-start">
-                <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                  <i className="fas fa-envelope text-primary"></i>
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                  <Mail className="text-white" size={20} strokeWidth={2.5} />
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">Email</h4>
@@ -126,8 +151,8 @@ const ContactSection = () => {
               </div>
               
               <div className="flex items-start">
-                <div className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                  <i className="fas fa-clock text-primary"></i>
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                  <Clock className="text-white" size={20} strokeWidth={2.5} />
                 </div>
                 <div>
                   <h4 className="font-medium mb-1">Working Hours</h4>
@@ -140,14 +165,14 @@ const ContactSection = () => {
             <div className="mt-8">
               <h4 className="font-medium mb-3">Follow Us</h4>
               <div className="flex space-x-4">
-                <a href={`https://www.facebook.com/${CONTACT.social.facebook}`} className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                  <i className="fab fa-facebook-f"></i>
+                <a href={SOCIAL_MEDIA.facebook} className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <Facebook size={20} strokeWidth={2.5} />
                 </a>
-                <a href={`https://twitter.com/${CONTACT.social.twitter}`} className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                  <i className="fab fa-twitter"></i>
+                <a href={SOCIAL_MEDIA.twitter} className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                  <Twitter size={20} strokeWidth={2.5} />
                 </a>
-                <a href={`https://www.instagram.com/${CONTACT.social.instagram}`} className="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition">
-                  <i className="fab fa-instagram"></i>
+                <a href={SOCIAL_MEDIA.instagram} className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary/90 transition" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <Instagram size={20} strokeWidth={2.5} />
                 </a>
               </div>
             </div>
@@ -265,14 +290,14 @@ const ContactSection = () => {
         <div className="mt-16 bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="h-96 bg-gray-200">
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.0601693559646!2d78.1243226!3d9.924916499999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00c58aa4c24d85%3A0xb0e365ace1ab34dc!2sSS%20Colony%2C%20Madurai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1654523690280!5m2!1sen!2sin" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.8999114405763!2d78.12356181079485!3d9.9361916741588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00c59fc9ffd737%3A0x44e6b0aa1d66d76c!2sNorth%20Gate%2C%20SS%20Colony%2C%20Madurai%2C%20Tamil%20Nadu%20625010!5e0!3m2!1sen!2sin!4v1684758905019!5m2!1sen!2sin" 
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 
               allowFullScreen={true} 
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
-              title="OM Vinayaga Associates Location"
+              title="OM Vinayaga Associates - S.S Colony Location"
             ></iframe>
           </div>
         </div>

@@ -99,55 +99,73 @@ export const SERVICES = [
 // Products Categories
 export const PRODUCT_CATEGORIES = [
   { id: "all", name: "All Products" },
-  { id: "waterproofing", name: "Waterproofing" },
-  { id: "repair", name: "Repair Solutions" },
   { id: "admixtures", name: "Admixtures" },
+  { id: "bonding-agents", name: "Bonding Agents" },
+  { id: "corrosion-treatments", name: "Corrosion Treatments" },
+  { id: "crack-filling", name: "Crack Filling" },
+  { id: "grouts-anchors", name: "Grouts & Anchors" },
   { id: "sealants", name: "Sealants" },
-  { id: "coatings", name: "Coatings" }
+  { id: "special-products", name: "Special Products" },
+  { id: "tapes", name: "Tapes" },
+  { id: "thermal-insulation", name: "Thermal Insulation" },
+  { id: "tiling-aids", name: "Tiling Aids" },
+  { id: "waterproofing", name: "Waterproofing" }
 ];
 
-// Sample Featured Products (Top products from each category)
+// Featured Products based on the Building Doctor website
 export const FEATURED_PRODUCTS = [
   {
-    id: 1,
-    name: "BD Terrace Shield",
-    description: "Premium terrace waterproofing compound with UV resistance and thermal insulation properties.",
-    price: 2450,
-    image: "https://images.unsplash.com/photo-1620177123861-bbe8116e5de7?q=80&w=500&auto=format&fit=crop",
-    rating: 4.8,
-    isBestseller: true,
-    category: "waterproofing"
-  },
-  {
-    id: 2,
-    name: "BD Crack Seal Pro",
-    description: "High-strength polymer-modified crack filling compound for structural cracks in concrete and masonry.",
-    price: 1850,
-    image: "https://images.unsplash.com/photo-1590644286459-69bb243399f9?q=80&w=500&auto=format&fit=crop",
-    rating: 4.7,
-    isBestseller: false,
-    category: "repair"
-  },
-  {
     id: 3,
-    name: "BD Concrete Booster",
-    description: "Advanced concrete admixture that enhances strength, reduces water content, and improves workability.",
-    price: 1350,
-    image: "https://images.unsplash.com/photo-1621113171451-de62152b9e27?q=80&w=500&auto=format&fit=crop",
+    name: "Crack Stop XP",
+    description: "Premium crack filling solution with advanced polymer technology for structural cracks and movement joints.",
+    price: 460,
+    image: "https://buildingdoctor.owncart.shop/uploads/images/gaIIbPM5-D-crackstop%20xp.webp",
     rating: 4.9,
     isBestseller: false,
     isNew: true,
-    category: "admixtures"
+    category: "crack-filling"
   },
   {
-    id: 4,
-    name: "BD Flex Seal",
-    description: "Flexible polyurethane sealant for expansion joints and areas subject to movement with excellent adhesion.",
-    price: 950,
-    image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=500&auto=format&fit=crop",
+    id: 7,
+    name: "Instant Stop",
+    description: "Rapid-setting waterproof plug for active water leaks and seepages, hardening in minutes.",
+    price: 165,
+    image: "https://buildingdoctor.owncart.shop/uploads/images/HJnjDJZPJ7-instastop.webp",
+    rating: 4.7,
+    isBestseller: false,
+    category: "waterproofing"
+  },
+  {
+    id: 12,
+    name: "Nanguram Anchor Fix",
+    description: "Professional-grade chemical anchoring system for heavy-duty fixings in concrete and masonry. High load capacity and rapid setting.",
+    price: 700,
+    image: "https://buildingdoctor.owncart.shop/uploads/images/7BJUO_YDt--nanguram%20anchorfix.webp",
+    rating: 4.8,
+    isBestseller: false,
+    isNew: true,
+    category: "grouts-anchors"
+  },
+  {
+    id: 9,
+    name: "Seal Tape SA",
+    description: "Self-adhesive sealing tape for joints, edges, and connections in waterproofing applications. High flexibility and durability.",
+    price: 510,
+    image: "https://buildingdoctor.owncart.shop/uploads/images/RV2zw1fIn4-seal%20tape%20sa.webp",
     rating: 4.6,
     isBestseller: false,
-    category: "sealants"
+    category: "tapes"
+  },
+  {
+    id: 8,
+    name: "Thermoshield Coat",
+    description: "Advanced thermal insulation coating that reduces indoor temperature by reflecting solar radiation. Energy-efficient solution for roofs and exterior walls.",
+    price: 3340,
+    image: "https://buildingdoctor.owncart.shop/uploads/images/zEKKw5xPht-thermoshield-coat.webp",
+    rating: 4.9,
+    isBestseller: false,
+    isNew: true,
+    category: "thermal-insulation"
   }
 ];
 
