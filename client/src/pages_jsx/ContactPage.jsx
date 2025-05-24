@@ -138,12 +138,12 @@ const ContactPage = () => {
                     <h4 className="font-medium mb-1">Address</h4>
                     {CONTACT.addresses ? (
                       CONTACT.addresses.map((address, index) => (
-                        <p key={index} className="text-gray-600 mb-2">
+                        <p key={index} className="text-gray-600 text-sm mb-2 leading-relaxed">
                           {address}
                         </p>
                       ))
                     ) : (
-                      <p className="text-gray-600">{CONTACT.address}</p>
+                      <p className="text-gray-600 text-sm">{CONTACT.address}</p>
                     )}
                   </div>
                 </div>
